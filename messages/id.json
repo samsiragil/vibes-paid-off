@@ -55,5 +55,65 @@
     "title": "Halaman tidak ditemukan",
     "body": "Halaman ini belum ada, atau sudah pindah.",
     "back": "Balik ke beranda"
+  },
+  "auth": {
+    "metaTitle": "Masuk",
+    "eyebrow": "Masuk ke Vibes Paid Off",
+    "titleLead": "Masuk dulu,",
+    "titleTail": "lalu pamerin karyamu.",
+    "intro": "Pakai akun GitHub atau Google. Kami hanya menerima nama, email, dan foto profilmu, tanpa akses ke repo atau data lain.",
+    "github": "Lanjut dengan GitHub",
+    "google": "Lanjut dengan Google",
+    "note": "Dengan masuk, kamu setuju mengikuti aturan komunitas Vibes Paid Off.",
+    "errors": {
+      "oauth": "Gagal menghubungi penyedia login. Coba lagi, ya.",
+      "callback": "Login belum selesai. Coba lagi, ya.",
+      "provider": "Penyedia login tidak dikenal."
+    }
+  },
+  "onboarding": {
+    "metaTitle": "Pilih username",
+    "eyebrow": "Satu langkah lagi",
+    "titleLead": "Mau dipanggil",
+    "titleTail": "apa?",
+    "intro": "Username jadi alamat profilmu dan muncul di setiap obrolan yang kamu pamerkan.",
+    "username": "Username",
+    "usernameHint": "3–20 karakter: huruf kecil, angka, atau garis bawah.",
+    "checking": "Mengecek ketersediaan…",
+    "available": "@{username} tersedia.",
+    "unavailable": "@{username} tidak tersedia. Coba yang lain.",
+    "invalid": "Pakai 3–20 huruf kecil, angka, atau garis bawah.",
+    "displayName": "Nama tampilan",
+    "displayNameHint": "Boleh nama asli atau nama panggung. Maksimal 60 karakter.",
+    "submit": "Simpan dan lanjut",
+    "saving": "Menyimpan…",
+    "error": "Gagal menyimpan. Coba lagi, ya."
+  },
+  "me": {
+    "metaTitle": "Dashboard saya",
+    "greeting": "Halo, {name}!",
+    "soon": "Dashboard lengkap (proyek saya dan edit profil) segera hadir. Untuk sekarang kamu sudah bisa masuk dan keluar.",
+    "signOut": "Keluar"
+  },
+  "categories": {
+    "umkm": "UMKM",
+    "education": "Edukasi",
+    "community": "Komunitas",
+    "game": "Game",
+    "dev-tools": "Tools developer",
+    "productivity": "Alat produktivitas",
+    "lifestyle": "Gaya hidup",
+    "personal": "Personal",
+    "ai-wrapper": "AI wrapper",
+    "other": "Lainnya"
+  },
+  "toolKinds": {
+    "ai_agent": "Agen & editor AI",
+    "ai_builder": "App builder AI",
+    "ai_assistant": "Asisten AI",
+    "framework": "Framework & bahasa",
+    "backend": "Database & backend",
+    "hosting": "Hosting & deploy",
+    "service": "Layanan & integrasi"
   }
 }

@@ -273,7 +273,7 @@ Urutan mengikuti 4 minggu di brief, dipecah lebih kecil. Setiap fase memuat tuju
 - [x] Jawab Q1–Q6 (lihat bagian 4).
 - [x] Jawab Q23–Q28 (semua default disetujui).
 - [ ] Beli `vibespaidoff.dev` di Cloudflare Registrar (risiko domain diambil orang).
-- [ ] Buat project Supabase (region Singapore), R2 bucket `vpo-media` + domain publik, Turnstile site key, OAuth app GitHub dan Google.
+- [ ] Buat project Supabase (region Singapore) ✔ dev sudah dibuat (2026-10-15), R2 bucket `vpo-media` + domain publik, Turnstile site key, OAuth app GitHub dan Google.
 - [ ] Repo GitHub + project Vercel terhubung.
 
 **DoD:** semua kredensial tersimpan di Vercel env dan `.env.local`; `.env.example` dibuat tanpa nilai rahasia.
@@ -296,15 +296,17 @@ Urutan mengikuti 4 minggu di brief, dipecah lebih kecil. Setiap fase memuat tuju
 
 ### Fase 2 — Database, RLS & Auth (2 hari)
 
-- [ ] Supabase CLI lokal, migrasi awal: enum, semua tabel, index (slug, owner, status+published_at, GIN `search`), trigger, RPC, RLS.
-- [ ] `seed.sql`: katalog tools lengkap per jenis (§2.8) dengan deskripsi ID/EN, kategori, 1 admin.
-- [ ] Trigger turunan sesi (`build_time_hours`, `session_count`, `search`), `eligible_upvote_count`, RPC `popular_this_week`, function `compute_weekly_pick()` + jadwal pg_cron (§2.7).
-- [ ] Test SQL untuk rumus peringkat: vote dari akun < 72 jam tidak dihitung, tie-break benar, rotasi maker 4 minggu, ambang skor 3, fallback "Baru masuk".
-- [ ] Test RLS (SQL atau Vitest + supabase-js dengan 3 role: anon, user, admin).
-- [ ] Login GitHub + Google (`@supabase/ssr`), `/auth/callback`, trigger buat `profiles` saat user baru.
-- [ ] `/onboarding`: pilih username (cek ketersediaan live) sebelum bisa submit.
-- [ ] `/login` sesuai gaya desain ([Q6]).
-- [ ] Generate TypeScript types dari skema.
+- [x] Supabase CLI lokal, migrasi awal: enum, semua tabel, index (slug, owner, status+published_at, GIN `search`), trigger, RPC, RLS.
+- [x] `seed.sql`: katalog tools lengkap per jenis (§2.8) dengan deskripsi ID/EN, kategori. Admin diset manual lewat SQL setelah login pertama (Q18).
+- [x] Trigger turunan sesi (`build_time_hours`, `session_count`, `search`), `eligible_upvote_count`, RPC `popular_this_week`, function `compute_weekly_pick()` + jadwal pg_cron (§2.7).
+- [x] Test SQL untuk rumus peringkat: vote dari akun < 72 jam tidak dihitung, tie-break benar, rotasi maker 4 minggu, ambang skor 3, fallback "Baru masuk".
+- [x] Test RLS (SQL atau Vitest + supabase-js dengan 3 role: anon, user, admin).
+- [x] Login GitHub + Google (`@supabase/ssr`), `/auth/callback`, trigger buat `profiles` saat user baru.
+- [x] `/onboarding`: pilih username (cek ketersediaan live) sebelum bisa submit.
+- [x] `/login` sesuai gaya desain ([Q6]).
+- [x] Generate TypeScript types dari skema.
+
+**Status (2026-10-15):** dikerjakan di branch `feat/phase-2-db-auth` terhadap project Supabase dev (`vibes-paid-off-dev`, Singapore). Migrasi dan seed sudah di-push (`pnpm db:push`), 82 test SQL lulus (`pnpm db:test`: 19 peringkat, 63 RLS/trigger). Test berjalan lewat `supabase db query --linked` dalam satu transaksi yang selalu dibatalkan, jadi tidak butuh Docker dan tidak meninggalkan data. Typecheck, lint, dan build lolos. Redirect OAuth GitHub dan Google sudah dicek sampai halaman login penyedia. Belum: login end-to-end dengan akun asli, lalu set `is_admin` untuk akun admin. Catatan: job harian `refresh-eligible-upvotes` (item Fase 9) sudah terjadwal di pg_cron; `/me` masih placeholder (nama, username, tombol Keluar) sampai Fase 5. Keputusan kecil: `live_url` wajib, kategori memakai default Q9 (tabel `categories`, label di `messages/*.json`), username boleh kosong sampai onboarding.
 
 **DoD:** user bisa login/logout dengan kedua provider, profil terbentuk, test RLS lulus (anon tidak bisa membaca `pending`, user tidak bisa mengubah status sendiri, dan seterusnya).
 
@@ -375,7 +377,7 @@ Urutan mengikuti 4 minggu di brief, dipecah lebih kecil. Setiap fase memuat tuju
 ### Fase 9 — Job terjadwal: link checker, backup, keep-alive (1 hari)
 
 - [ ] `scripts/link-checker.ts` + GitHub Actions mingguan: HEAD/GET `live_url` (timeout, ikuti redirect), update `link_status`, `link_fail_count`, `last_checked_at` sesuai aturan [Q8].
-- [ ] Job harian: hitung ulang `eligible_upvote_count` untuk vote dari akun yang baru melewati 72 jam (§2.7).
+- [x] Job harian: hitung ulang `eligible_upvote_count` untuk vote dari akun yang baru melewati 72 jam (§2.7). Sudah via pg_cron di Fase 2.
 - [ ] Workflow keep-alive harian (query ringan) supaya Supabase Free tidak pause.
 - [ ] Backup mingguan: `pg_dump` ke bucket R2 privat (atau artifact GitHub privat), simpan 8 versi terakhir.
 

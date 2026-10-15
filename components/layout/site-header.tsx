@@ -1,7 +1,9 @@
+import { Suspense, type ReactNode } from "react";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { Avatar } from "@/components/ui/avatar";
 import { buttonStyles } from "@/components/ui/button";
+import { getCurrentUser } from "@/lib/auth/current-user";
 import { LocaleSwitcher } from "./locale-switcher";
 import { Wordmark } from "./logo";
 import { MobileMenu } from "./mobile-menu";
@@ -15,19 +17,22 @@ const navItems = [
   { href: "/support", key: "support" },
 ] as const;
 
-export async function SiteHeader({ user }: { user: HeaderUser | null }) {
+/**
+ * Pass `user` to render a fixed state (UI kit); leave it out to show the real session,
+ * which streams in behind a Suspense boundary so the rest of the header stays static.
+ */
+export async function SiteHeader({ user }: { user?: HeaderUser | null }) {
   const t = await getTranslations("nav");
   const tBrand = await getTranslations("brand");
 
-  const account = user ? (
-    <Link href="/me" aria-label={t("dashboard")} className="rounded-full">
-      <Avatar name={user.name} src={user.avatarUrl} />
-    </Link>
-  ) : (
-    <Link href="/login" className={buttonStyles({ variant: "ghost" })}>
-      {t("login")}
-    </Link>
-  );
+  const account: ReactNode =
+    user === undefined ? (
+      <Suspense fallback={<AccountPlaceholder />}>
+        <SessionAccount />
+      </Suspense>
+    ) : (
+      <AccountLink user={user} />
+    );
 
   return (
     <header className="relative border-b border-border">
@@ -82,4 +87,34 @@ export async function SiteHeader({ user }: { user: HeaderUser | null }) {
       </div>
     </header>
   );
+}
+
+async function SessionAccount() {
+  const user = await getCurrentUser();
+  return (
+    <AccountLink
+      user={
+        user ? { name: user.displayName || user.username || "?", avatarUrl: user.avatarUrl } : null
+      }
+    />
+  );
+}
+
+async function AccountLink({ user }: { user: HeaderUser | null }) {
+  const t = await getTranslations("nav");
+
+  return user ? (
+    <Link href="/me" aria-label={t("dashboard")} className="rounded-full">
+      <Avatar name={user.name} src={user.avatarUrl} />
+    </Link>
+  ) : (
+    <Link href="/login" className={buttonStyles({ variant: "ghost" })}>
+      {t("login")}
+    </Link>
+  );
+}
+
+/** Same footprint as the avatar so the header does not shift when the session arrives. */
+function AccountPlaceholder() {
+  return <span aria-hidden="true" className="inline-block size-10 rounded-full bg-bubble" />;
 }

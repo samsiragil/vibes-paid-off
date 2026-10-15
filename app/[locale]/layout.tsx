@@ -51,8 +51,7 @@ export default async function LocaleLayout({ children }: LayoutProps<"/[locale]"
       <body className="flex min-h-full flex-col">
         <ThemeProvider>
           <NextIntlClientProvider>
-            {/* Auth arrives in Fase 2; until then everyone is logged out. */}
-            <SiteHeader user={null} />
+            <SiteHeader />
             <div className="flex grow flex-col">{children}</div>
           </NextIntlClientProvider>
         </ThemeProvider>

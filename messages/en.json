@@ -55,5 +55,65 @@
     "title": "Page not found",
     "body": "This page doesn't exist yet, or it has moved.",
     "back": "Back to home"
+  },
+  "auth": {
+    "metaTitle": "Sign in",
+    "eyebrow": "Sign in to Vibes Paid Off",
+    "titleLead": "Sign in first,",
+    "titleTail": "then show off your work.",
+    "intro": "Use your GitHub or Google account. We only receive your name, email and profile photo, with no access to your repos or other data.",
+    "github": "Continue with GitHub",
+    "google": "Continue with Google",
+    "note": "By signing in, you agree to follow the Vibes Paid Off community rules.",
+    "errors": {
+      "oauth": "Could not reach the sign-in provider. Please try again.",
+      "callback": "Sign-in did not finish. Please try again.",
+      "provider": "Unknown sign-in provider."
+    }
+  },
+  "onboarding": {
+    "metaTitle": "Pick a username",
+    "eyebrow": "One more step",
+    "titleLead": "What should we",
+    "titleTail": "call you?",
+    "intro": "Your username becomes your profile address and appears on every chat you show off.",
+    "username": "Username",
+    "usernameHint": "3–20 characters: lowercase letters, numbers or underscores.",
+    "checking": "Checking availability…",
+    "available": "@{username} is available.",
+    "unavailable": "@{username} is not available. Try another one.",
+    "invalid": "Use 3–20 lowercase letters, numbers or underscores.",
+    "displayName": "Display name",
+    "displayNameHint": "Your real name or a handle. Up to 60 characters.",
+    "submit": "Save and continue",
+    "saving": "Saving…",
+    "error": "Could not save. Please try again."
+  },
+  "me": {
+    "metaTitle": "My dashboard",
+    "greeting": "Hi, {name}!",
+    "soon": "The full dashboard (my projects and profile editing) is coming soon. For now you can sign in and out.",
+    "signOut": "Sign out"
+  },
+  "categories": {
+    "umkm": "Small business",
+    "education": "Education",
+    "community": "Community",
+    "game": "Games",
+    "dev-tools": "Developer tools",
+    "productivity": "Productivity",
+    "lifestyle": "Lifestyle",
+    "personal": "Personal",
+    "ai-wrapper": "AI wrapper",
+    "other": "Other"
+  },
+  "toolKinds": {
+    "ai_agent": "AI agents & editors",
+    "ai_builder": "AI app builders",
+    "ai_assistant": "AI assistants",
+    "framework": "Frameworks & languages",
+    "backend": "Databases & backend",
+    "hosting": "Hosting & deploy",
+    "service": "Services & integrations"
   }
 }
