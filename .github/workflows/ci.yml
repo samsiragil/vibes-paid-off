@@ -20,3 +20,7 @@ jobs:
       - run: pnpm typecheck
       - run: pnpm format:check
       - run: pnpm build
+        env:
+          # Build never calls Supabase (session reads are dynamic); the client only needs well-formed values.
+          NEXT_PUBLIC_SUPABASE_URL: https://ci-placeholder.supabase.co
+          NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: sb_publishable_ci_placeholder
