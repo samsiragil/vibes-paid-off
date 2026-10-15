@@ -1,4 +1,5 @@
 import "server-only";
+import { connection } from "next/server";
 import { cache } from "react";
 import { createClient } from "@/lib/supabase/server";
 
@@ -17,6 +18,9 @@ export type CurrentUser = {
  * behind a <Suspense> boundary. Cached per request.
  */
 export const getCurrentUser = cache(async (): Promise<CurrentUser | null> => {
+  // Session checks compare the JWT expiry with the current time, which must never be prerendered
+  // (runtime prefetches can read cookies too).
+  await connection();
   const supabase = await createClient();
   const { data } = await supabase.auth.getClaims();
   const claims = data?.claims;
