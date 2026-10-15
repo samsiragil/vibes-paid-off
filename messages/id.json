@@ -115,5 +115,35 @@
     "backend": "Database & backend",
     "hosting": "Hosting & deploy",
     "service": "Layanan & integrasi"
+  },
+  "media": {
+    "add": "Tambah gambar",
+    "hint": "JPG, PNG, atau WebP, maksimal 3 gambar. Gambar pertama jadi sampul. Bisa juga seret file ke sini.",
+    "cover": "Sampul",
+    "imageAlt": "Gambar {position}",
+    "moveLeft": "Geser gambar {position} ke kiri",
+    "moveRight": "Geser gambar {position} ke kanan",
+    "remove": "Hapus gambar {position}",
+    "retry": "Coba lagi",
+    "status": {
+      "compressing": "Mengompres…",
+      "waiting": "Belum diunggah",
+      "queued": "Menunggu giliran…",
+      "uploading": "Mengunggah {percent}%",
+      "processing": "Memproses…",
+      "removing": "Menghapus…"
+    },
+    "errors": {
+      "unauthorized": "Sesi login habis. Masuk lagi, lalu coba lagi.",
+      "forbidden": "Kamu tidak bisa mengubah gambar proyek ini.",
+      "invalid": "Permintaan tidak valid. Muat ulang halaman, lalu coba lagi.",
+      "limit": "Maksimal 3 gambar per proyek.",
+      "too_large": "File terlalu besar. Maksimal 20 MB per gambar.",
+      "unsupported_type": "Format belum didukung. Pakai JPG, PNG, atau WebP.",
+      "not_found": "Upload belum sampai ke server. Coba lagi.",
+      "invalid_image": "Gambar tidak bisa dibaca. Coba file lain.",
+      "unavailable": "Upload gambar sedang tidak tersedia. Coba lagi nanti.",
+      "failed": "Gagal menyimpan gambar. Coba lagi, ya."
+    }
   }
 }

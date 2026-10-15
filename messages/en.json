@@ -115,5 +115,35 @@
     "backend": "Databases & backend",
     "hosting": "Hosting & deploy",
     "service": "Services & integrations"
+  },
+  "media": {
+    "add": "Add image",
+    "hint": "JPG, PNG, or WebP, up to 3 images. The first one is the cover. You can also drop files here.",
+    "cover": "Cover",
+    "imageAlt": "Image {position}",
+    "moveLeft": "Move image {position} left",
+    "moveRight": "Move image {position} right",
+    "remove": "Remove image {position}",
+    "retry": "Try again",
+    "status": {
+      "compressing": "Compressing…",
+      "waiting": "Not uploaded yet",
+      "queued": "Waiting…",
+      "uploading": "Uploading {percent}%",
+      "processing": "Processing…",
+      "removing": "Removing…"
+    },
+    "errors": {
+      "unauthorized": "Your session expired. Sign in again, then retry.",
+      "forbidden": "You cannot change the images of this project.",
+      "invalid": "Invalid request. Reload the page and try again.",
+      "limit": "Up to 3 images per project.",
+      "too_large": "File too large. Up to 20 MB per image.",
+      "unsupported_type": "Format not supported. Use JPG, PNG, or WebP.",
+      "not_found": "The upload did not reach the server. Try again.",
+      "invalid_image": "This image cannot be read. Try another file.",
+      "unavailable": "Image upload is unavailable right now. Try again later.",
+      "failed": "Could not save the image. Please try again."
+    }
   }
 }

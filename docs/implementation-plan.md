@@ -312,12 +312,20 @@ Urutan mengikuti 4 minggu di brief, dipecah lebih kecil. Setiap fase memuat tuju
 
 ### Fase 3 — Upload media ke R2 (1 hari)
 
-- [ ] Client R2 (S3 SDK), route `presign` dan `finalize` sesuai §2.4.
-- [ ] Lifecycle rule `tmp/`.
-- [ ] Komponen `MediaUploader` (3 slot, urutkan, hapus, progress).
-- [ ] Helper URL gambar publik + `next/image` dengan `unoptimized`.
+- [x] Client R2 (S3 SDK), route `presign` dan `finalize` sesuai §2.4.
+- [x] Lifecycle rule `tmp/` (skrip `pnpm r2:setup`, sekaligus CORS untuk upload dari browser).
+- [x] Komponen `MediaUploader` (3 slot, urutkan, hapus, progress).
+- [x] Helper URL gambar publik + `next/image` dengan `unoptimized`.
 
 **DoD:** upload JPG 5 MB menghasilkan WebP ≤300 KB tanpa EXIF di R2, upload ke-4 ditolak, file tmp terhapus.
+
+**Status (2026-10-15):** dikerjakan di branch `feat/phase-3-r2-media`. Kode R2 ada di `lib/r2/` (client S3 lazy dan `server-only`, layout key `tmp/{userId}/{uuid}` → `p/{projectId}/{uuid}.webp`), pipeline gambar di `lib/media/`, route di `app/api/media/{presign,finalize}`, komponen di `components/project/media-uploader.tsx`, dan `MediaImage` di `components/ui/`. `images.unoptimized` juga diset global di `next.config.ts`. Migrasi `20261015120000_media_order.sql` (RPC `reorder_project_media` dan trigger yang memadatkan `sort_order` setelah hapus) sudah di-push ke DB dev, dengan 9 test baru di `supabase/tests/03_media.sql`. Lint, typecheck, format, dan build lolos.
+
+Sudah diuji tanpa R2: encoder dengan JPEG 9 MB 4000×3000 ber-EXIF menghasilkan WebP 174 KB 1200×1600, orientasi diterapkan, dan EXIF hilang. URL presign hanya menandatangani `content-length;content-type;host` dan tanpa checksum. Uploader di `/dev/ui` (HP dan desktop) menolak GIF, membatasi 3 gambar, serta bisa menggeser dan menghapus gambar. Route membalas 401 bila belum login.
+
+Keputusan: di `/submit` proyek belum ada, jadi `MediaUploader` tanpa `projectId` menahan gambar terkompres di browser. Fase 4 memanggil `ref.uploadPending(projectId)` setelah `createProject` berhasil. Dengan `projectId` (halaman edit), setiap perubahan langsung disimpan. Baris `project_media` di-insert server memakai secret key setelah kepemilikan dicek.
+
+Belum (menunggu env R2 diisi): upload nyata ke R2 dan lifecycle `tmp/`. Cara uji: isi `R2_*` dan `NEXT_PUBLIC_MEDIA_BASE_URL` di `.env.local` (token R2 dengan izin Admin Read & Write), jalankan `pnpm r2:setup`, lalu login dan upload ke proyek milik sendiri lewat uploader dengan `projectId`. Cek objek `p/{projectId}/*.webp` ≤300 KB tanpa EXIF, pastikan tidak ada sisa di `tmp/`, dan pastikan upload ke-4 dibalas 409. Env yang sama juga perlu diisi di Vercel.
 
 ### Fase 4 — Submit & edit proyek (2–3 hari)
 

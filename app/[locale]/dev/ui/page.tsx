@@ -6,6 +6,7 @@ import { PromptBubble, ResultBubble, SystemMessage, TimeGap } from "@/components
 import { Button } from "@/components/ui/button";
 import { Field, Input, Select, Textarea } from "@/components/ui/field";
 import { pillStyles } from "@/components/ui/pill";
+import { MediaUploader } from "@/components/project/media-uploader";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SegmentedDemo } from "./segmented-demo";
@@ -187,6 +188,12 @@ export default function UiKitPage() {
           <Field id="demo-prompt" label="Prompt kunci" className="md:col-span-2">
             <Textarea id="demo-prompt" />
           </Field>
+        </div>
+      </Section>
+
+      <Section title="Media uploader (tanpa projectId: gambar ditahan di browser sampai submit)">
+        <div className="max-w-xl">
+          <MediaUploader />
         </div>
       </Section>
 

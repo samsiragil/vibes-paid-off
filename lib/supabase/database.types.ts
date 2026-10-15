@@ -649,6 +649,10 @@ export type Database = {
         Args: { p_tool_ids: number[] };
         Returns: undefined;
       };
+      reorder_project_media: {
+        Args: { p_media_ids: string[]; p_project_id: string };
+        Returns: undefined;
+      };
       username_available: { Args: { name: string }; Returns: boolean };
       wib_week_start: { Args: { p_at?: string }; Returns: string };
     };
