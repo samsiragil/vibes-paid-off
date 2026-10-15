@@ -1,0 +1,59 @@
+{
+  "meta": {
+    "title": "Vibes Paid Off",
+    "description": "Tempat maker vibe coding Indonesia memamerkan karya dan berbagi cara membuatnya."
+  },
+  "brand": {
+    "home": "Vibes Paid Off, ke beranda"
+  },
+  "nav": {
+    "label": "Navigasi utama",
+    "explore": "Jelajah",
+    "tools": "Tools",
+    "support": "Dukung kami",
+    "submit": "Pamerin proyekmu",
+    "login": "Masuk",
+    "dashboard": "Dashboard saya",
+    "openMenu": "Buka menu",
+    "closeMenu": "Tutup menu"
+  },
+  "locale": {
+    "label": "Bahasa",
+    "switchTo": "Ganti ke {language}",
+    "id": "Bahasa Indonesia",
+    "en": "English"
+  },
+  "theme": {
+    "label": "Tema",
+    "system": "Ikut sistem",
+    "light": "Terang",
+    "dark": "Gelap",
+    "current": "Tema: {theme}. Klik untuk ganti."
+  },
+  "footer": {
+    "tagline": "Tempat maker vibe coding Indonesia memamerkan karya dan berbagi cara membuatnya.",
+    "explore": "Jelajah",
+    "allProjects": "Semua proyek",
+    "byTools": "Per tools",
+    "community": "Komunitas",
+    "rules": "Aturan komunitas",
+    "about": "Tentang",
+    "freeNote": "Gratis, jalan dari donasi.",
+    "buyCoffee": "Beliin kopi",
+    "copyright": "© {year} Vibes Paid Off"
+  },
+  "home": {
+    "eyebrow": "Katalog vibe coding Indonesia",
+    "titleLead": "Kamu bilang apa,",
+    "titleTail": "AI bikin apa.",
+    "lede": "Setiap proyek di sini dimulai dari satu pesan, dan vibes-nya terbayar. Lihat percakapannya, hasilnya, dan apa yang terjadi di antaranya.",
+    "ctaSubmit": "Pamerin proyekmu",
+    "ctaExplore": "Jelajahi proyek",
+    "soon": "Katalognya lagi disiapkan. Proyek pertama segera tayang di sini."
+  },
+  "notFound": {
+    "title": "Halaman tidak ditemukan",
+    "body": "Halaman ini belum ada, atau sudah pindah.",
+    "back": "Balik ke beranda"
+  }
+}

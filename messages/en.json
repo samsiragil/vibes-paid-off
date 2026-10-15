@@ -1,0 +1,59 @@
+{
+  "meta": {
+    "title": "Vibes Paid Off",
+    "description": "Where Indonesian vibe coders show off their work and share how they built it."
+  },
+  "brand": {
+    "home": "Vibes Paid Off, go to home"
+  },
+  "nav": {
+    "label": "Main navigation",
+    "explore": "Explore",
+    "tools": "Tools",
+    "support": "Support us",
+    "submit": "Show off your project",
+    "login": "Sign in",
+    "dashboard": "My dashboard",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu"
+  },
+  "locale": {
+    "label": "Language",
+    "switchTo": "Switch to {language}",
+    "id": "Bahasa Indonesia",
+    "en": "English"
+  },
+  "theme": {
+    "label": "Theme",
+    "system": "System",
+    "light": "Light",
+    "dark": "Dark",
+    "current": "Theme: {theme}. Click to change."
+  },
+  "footer": {
+    "tagline": "Where Indonesian vibe coders show off their work and share how they built it.",
+    "explore": "Explore",
+    "allProjects": "All projects",
+    "byTools": "By tools",
+    "community": "Community",
+    "rules": "Community rules",
+    "about": "About",
+    "freeNote": "Free, powered by donations.",
+    "buyCoffee": "Buy us a coffee",
+    "copyright": "© {year} Vibes Paid Off"
+  },
+  "home": {
+    "eyebrow": "Indonesia's vibe coding catalog",
+    "titleLead": "You said what,",
+    "titleTail": "AI built what.",
+    "lede": "Every project here started with a single message, and the vibes paid off. See the conversation, the result, and everything in between.",
+    "ctaSubmit": "Show off your project",
+    "ctaExplore": "Explore projects",
+    "soon": "The catalog is being prepared. The first projects will show up here soon."
+  },
+  "notFound": {
+    "title": "Page not found",
+    "body": "This page doesn't exist yet, or it has moved.",
+    "back": "Back to home"
+  }
+}

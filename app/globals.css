@@ -1,0 +1,85 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+/*
+ * Design tokens, taken from the VPO artboards (light) and derived for dark.
+ * Components use the Tailwind names mapped in @theme below (bg-bg, text-ink, ...),
+ * never raw hex values.
+ */
+:root {
+  --bg: #f7f6f2;
+  --surface: #ffffff;
+  --ink: #191919;
+  --ink-2: #4a4a46;
+  --muted: #6b6b66;
+  --border: #e4e2db;
+  --border-strong: #d6d4cc;
+  --accent: #1e5446;
+  --on-accent: #f7f6f2;
+  --accent-text: #1e5446;
+  --accent-soft: #e3eee9;
+  --accent-ink: #123a30;
+  --bubble: #f1f0ea;
+  --placeholder: #efeee8;
+  --dashed: #b9b8b1;
+  color-scheme: light;
+}
+
+[data-theme="dark"] {
+  --bg: #121211;
+  --surface: #1b1b19;
+  --ink: #edebe5;
+  --ink-2: #c4c1b9;
+  --muted: #949189;
+  --border: #2c2b28;
+  --border-strong: #3d3c37;
+  --accent: #2e7a63;
+  --on-accent: #f7f6f2;
+  --accent-text: #8fd1b5;
+  --accent-soft: #1c2e28;
+  --accent-ink: #a6dcc4;
+  --bubble: #252522;
+  --placeholder: #23231f;
+  --dashed: #57554f;
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-accent: var(--accent);
+  --color-on-accent: var(--on-accent);
+  --color-accent-text: var(--accent-text);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-ink: var(--accent-ink);
+  --color-bubble: var(--bubble);
+  --color-placeholder: var(--placeholder);
+  --color-dashed: var(--dashed);
+
+  --font-display: var(--font-fraunces), Georgia, serif;
+  --font-sans: var(--font-geist-sans), system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-sans);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent-text);
+    outline-offset: 2px;
+  }
+}

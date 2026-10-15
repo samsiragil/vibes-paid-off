@@ -1,0 +1,489 @@
+# Vibes Paid Off: Spec & Implementation Plan
+
+Sumber:
+- Brief: "Brief Katalog Vibe Coding" (rev 23, 2026-10-13), https://claude.ai/artifact/GdKYEymPs4dLgXxafuvRgw
+- Desain: canvas "Vibes Paid Off — Desain", halaman **Vibes Paid Off · Desktop (Percakapan)** (artboard `VPO-*`), https://claude.ai/artifact/QthNSkEWsozvZLuTP6qfLZ
+
+Dokumen ini dipakai sebagai acuan implementasi bertahap. Setiap fase bisa di-merge dan di-deploy sendiri. Bagian yang masih bergantung pada jawaban pertanyaan diberi tanda **[Q#]**, lengkap dengan asumsi default supaya pekerjaan tetap bisa jalan.
+
+---
+
+## 1. Ringkasan analisis
+
+### 1.1 Yang sudah jelas
+
+- Produk: katalog + portfolio proyek vibe coding, bilingual ID/EN, gratis, didanai donasi, jalan di free tier.
+- Stack: Next.js App Router + TypeScript + Tailwind, Supabase (Postgres, Auth GitHub/Google, RLS), Cloudflare R2 (gambar), Cloudflare (DNS, Turnstile, Web Analytics), Vercel Hobby, next-intl.
+- Larangan portabilitas: tidak memakai Vercel Blob/KV/Postgres maupun optimasi gambar bawaan Vercel (`next/image` harus `unoptimized` atau memakai loader custom ke R2).
+- Moderasi hybrid: proyek pertama di-review, setelah disetujui maker menjadi "terpercaya" dan proyek berikutnya langsung tayang. Proyek otomatis disembunyikan setelah dilaporkan 3 akun berbeda.
+- 9 halaman MVP sudah punya desain desktop: `/`, `/explore`, `/p/[slug]`, `/u/[username]`, `/tools/[slug]`, `/submit`, `/me`, `/support`, `/admin`.
+
+### 1.2 Arah desain final (halaman `VPO-*`)
+
+Desain memakai konsep **"Percakapan"**: setiap proyek tampil sebagai obrolan. Bubble gelap/abu di kanan berisi *prompt kunci* dari maker, diikuti label "X jam kemudian", lalu bubble putih di kiri berisi screenshot + judul (hasil dari AI). Istilah di UI:
+
+| Istilah brief | Istilah di desain |
+|---|---|
+| Proyek | Obrolan |
+| Upvote | Worth it |
+| Komentar | Balasan |
+| Submit | Pamerin proyekmu |
+| Donasi | Beliin kopi / Traktir kopi |
+
+**Design tokens** (diambil dari artboard):
+
+| Token | Nilai | Pemakaian |
+|---|---|---|
+| `bg` | `#F7F6F2` | Latar halaman |
+| `surface` | `#FFFFFF` | Kartu, input |
+| `ink` | `#191919` | Teks utama, tombol primer gelap, bubble prompt |
+| `ink-2` | `#4A4A46` | Teks sekunder |
+| `muted` | `#6B6B66` | Label mono, meta |
+| `border` | `#E4E2DB` | Garis pemisah, border kartu |
+| `border-strong` | `#D6D4CC` | Border tombol sekunder/pill |
+| `accent` | `#1E5446` | Aksen tunggal (CTA, avatar, link) |
+| `accent-ink` | `#123A30` | Teks di atas `accent-soft` |
+| `accent-soft` | `#E3EEE9` | Badge, state voted |
+| `bubble` | `#F1F0EA` | Bubble prompt (varian terang) |
+| `placeholder` | `#EFEEE8` | Placeholder screenshot |
+| `dashed` | `#B9B8B1` | Slot upload kosong |
+
+- Font: **Fraunces** (display, sering italic untuk aksen), **Geist** (body/UI), **Geist Mono** (label kecil berhuruf kapital, meta).
+- Bentuk: pill (radius penuh) untuk tombol/chip, kartu radius 22px, bubble dengan satu sudut 4–6px (ekor bubble).
+- Kontainer: `max-width: 1200px`, gutter 24px. Tinggi target sentuh minimal 44px.
+- Avatar AI/sistem: lingkaran outline berisi huruf "V" italic (Fraunces), dipakai untuk pesan sistem (empty state, sukses submit, banner link offline).
+
+### 1.3 Inventaris komponen (dari desain)
+
+`SiteHeader` (logo, nav Jelajah/Tools/Dukung kami, toggle ID/EN, avatar ke `/me`, CTA "Pamerin proyekmu"), `SiteFooter` (versi lengkap di beranda, versi ringkas di halaman lain), `PromptBubble`, `ResultBubble` (screenshot + judul), `SystemMessage` (avatar "V" + bubble), `ProjectCard` (kartu obrolan grid), `ProjectRow` (baris "Baru masuk"), `WorthItButton` (toggle, state voted), `Pill`/`Chip` (tools, filter, segmented sort), `Badge` (Live/Offline/Diarsipkan, ID/EN, Maker terpercaya, Pilihan minggu ini), `Avatar` (inisial atau foto), `StatBlock` (profil), `MediaGallery` (3 thumbnail + video), `CommentList` + `CommentForm`, `ReportButton`, `FilterSidebar`, `SearchBar`, `CopyLinkField`, `ProcessTimeline` ("Cara membuatnya"), `ProjectMetaSidebar` (tools, lama bikin, kategori, repo, status link, traktir), `ConversationalForm` (submit), `LiveCardPreview`, `CostTable` (support), `AdminTabs`, `ReviewQueueItem`, `ReportItem`, `ToolsTable`.
+
+### 1.4 Gap dan konflik brief vs desain
+
+| # | Temuan | Dampak |
+|---|---|---|
+| G1 | Brief: "Galeri dulu, gambar adalah bintangnya". Desain: prompt kunci jadi pembuka kartu, screenshot jadi "balasan". | ✔ **Diputuskan:** prompt kunci **wajib**. |
+| G2 | Detail proyek menampilkan "Cara membuatnya" per **sesi** (Sesi 1 · Sabtu malam · 4 jam: prompt, hasil, kendala, solusi). Form submit dan skema brief hanya punya field datar: prompt kunci, kendala+solusi, pelajaran. | ✔ **Diputuskan:** model **per sesi** (tabel `project_sessions`), form submit ikut per sesi. Lihat §2.2 dan Fase 4. |
+| G3 | Desain memasukkan Supabase dan Tailwind sebagai "tools", padahal tabel `tools` di brief berisi AI tools. | ✔ **Diputuskan:** katalog tools dibuat **selengkap mungkin** (AI dan stack), dikelompokkan per jenis. Lihat §2.8. |
+| G4 | Beranda punya badge "Pilihan minggu ini" (hero). Kurasi masuk v2 di brief. | ✔ **Diputuskan:** **tanpa kurasi manual**; dipilih otomatis dengan rumus yang adil dan transparan. Lihat §2.7. |
+| G5 | Brief: mode gelap sejak awal dan mobile-first. Desain VPO hanya light dan desktop (artboard HP hanya ada untuk konsep lama "Hold My Prompt"). | ✔ **Diputuskan:** diturunkan sendiri saat coding. |
+| G6 | Tidak ada desain untuk login, onboarding username, edit proyek, logged-out header, halaman aturan komunitas, 404/500. | ✔ **Diputuskan:** dibuat mengikuti gaya desain yang ada. |
+| G7 | Jelajah mencari dari "prompt, judul, atau tagline". Brief: tsvector dari judul, tagline, deskripsi. | Tambahkan prompt ke tsvector (sudah diasumsikan). |
+| G8 | Lama pengerjaan bisa "jam" atau "hari". Kartu menampilkan "6 jam kemudian". | ✔ Terjawab lewat G2: lama pengerjaan = jumlah durasi semua sesi (dalam jam). Lihat Q23. |
+| G9 | Status link "Diarsipkan" dan aturan kapan link dianggap offline belum jelas. | **[Q8]** |
+| G10 | Kategori di desain tidak konsisten (Jelajah: 5, Submit: 6, kartu: "Gaya hidup", "Personal"). Brief juga menandai ini sebagai keputusan terbuka. | **[Q9]** |
+| G11 | "Tonton demo · 1:42" butuh durasi video. YouTube oEmbed tidak memberi durasi, Data API butuh API key. | Default: durasi tidak ditampilkan. **[Q15]** |
+| G12 | Profil edit di desain tidak punya field foto. | Default: foto dari avatar OAuth, fallback inisial. **[Q14]** |
+| G13 | Email persetujuan/penolakan butuh layanan email transaksional, belum ada di stack. | **[Q10]** |
+
+---
+
+## 2. Spesifikasi teknis
+
+### 2.1 Struktur repo (usulan)
+
+```
+vibes-paid-off/
+├─ app/
+│  ├─ [locale]/
+│  │  ├─ layout.tsx               # header, footer, provider tema & i18n
+│  │  ├─ page.tsx                 # Beranda
+│  │  ├─ explore/page.tsx
+│  │  ├─ p/[slug]/page.tsx
+│  │  ├─ p/[slug]/edit/page.tsx
+│  │  ├─ u/[username]/page.tsx
+│  │  ├─ tools/[slug]/page.tsx
+│  │  ├─ submit/page.tsx
+│  │  ├─ me/page.tsx
+│  │  ├─ support/page.tsx
+│  │  ├─ rules/page.tsx           # aturan komunitas
+│  │  ├─ login/page.tsx
+│  │  ├─ onboarding/page.tsx      # pilih username
+│  │  └─ admin/page.tsx
+│  ├─ auth/callback/route.ts
+│  ├─ api/media/presign/route.ts
+│  ├─ api/media/finalize/route.ts
+│  ├─ sitemap.ts, robots.ts
+├─ components/ (ui/, project/, layout/, admin/)
+├─ lib/ (supabase/, r2/, turnstile.ts, slug.ts, format.ts, validation/)
+├─ messages/ (id.json, en.json)
+├─ supabase/ (migrations/, seed.sql, config.toml)
+├─ scripts/ (link-checker.ts, export-db.ts)
+└─ .github/workflows/ (ci.yml, link-check.yml, backup.yml)
+```
+
+Library: `@supabase/ssr`, `next-intl`, `zod`, `react-hook-form`, `@aws-sdk/client-s3` + `@aws-sdk/s3-request-presigner` (R2 kompatibel S3), `sharp`, `next-themes`, `geist` (font). Package manager default: pnpm.
+
+### 2.2 Model data (revisi dari brief)
+
+Perubahan terhadap brief ditandai ✱.
+
+**Enum**
+- `project_status`: `pending`, `published`, `hidden`, `rejected`, ✱`removed` (soft delete oleh admin/maker)
+- `link_status`: `live`, `offline`, `archived`
+- `content_lang`: `id`, `en`
+- ✱`tool_kind`: `ai_agent`, `ai_builder`, `ai_assistant`, `framework`, `backend`, `hosting`, `service` (lihat §2.8)
+- ✱`report_reason`: `spam`, `scam`, `adult_illegal`, `harassment`, `personal_data`, `other`
+- `comment_status`: `visible`, `hidden`
+
+**profiles**: `id` (= auth.users.id), `username` (unik, citext, regex `^[a-z0-9_]{3,20}$`, plus daftar nama terlarang seperti `admin`, `me`, `api`), `display_name`, `avatar_url`, `bio` (maks 280), `location`, `links` jsonb `{github, linkedin, x, website}`, `tip_url`, `is_trusted`, `is_admin`, `created_at`.
+
+**projects**: `id`, `owner_id`, `slug` (unik, stabil setelah dibuat), `title`, `tagline` (≤80), `description`, ✱`key_prompt` (**wajib**, ≤280, pembuka kartu), `lessons` (opsional, "Pelajaran dari {maker}"), `live_url`, `repo_url`, `video_url`, `category` (slug), ✱`build_time_hours` numeric (**turunan**: jumlah `duration_hours` semua sesi, diisi trigger, tidak diinput langsung), ✱`session_count` (turunan), `content_lang`, `status`, `link_status`, `last_checked_at`, ✱`link_fail_count`, `upvote_count`, ✱`comment_count`, ✱`report_count`, ✱`published_at`, ✱`reviewed_by`, ✱`reviewed_at`, ✱`reject_reason`, ✱`search` tsvector (dari title, tagline, key_prompt, description, plus prompt semua sesi; diperbarui trigger karena melibatkan tabel lain; config `simple` karena Postgres tidak punya kamus bahasa Indonesia), `created_at`, ✱`updated_at`.
+
+Kolom `challenges` di brief dipindah ke level sesi (kendala + solusi per sesi).
+
+✱**project_sessions** (wajib, minimal 1, maksimal 10 per proyek): `id`, `project_id`, `sort_order`, `label` (opsional, contoh "Sabtu malam"), `duration_hours` numeric (wajib, kelipatan 0,5, maks 24 per sesi), `prompt` (wajib, ≤1000), `result` (wajib, ≤500, "apa yang jadi"), `challenge` (opsional), `solution` (opsional, hanya bermakna bila `challenge` diisi), `created_at`.
+
+- Detail proyek menampilkan "X jam dan N sesi kemudian" dari `build_time_hours` + `session_count`; kartu cukup "X jam kemudian".
+- Metrik brief "60% proyek dengan bagian proses terisi" diukur sebagai: minimal satu sesi punya `challenge`, atau `lessons` terisi.
+
+✱**weekly_picks**: `week_start` (date, PK, Senin WIB), `project_id`, `score`, `breakdown` jsonb (jumlah vote layak, jumlah pembalas layak, kandidat lain teratas), `computed_at`. Hasil perhitungan otomatis "Pilihan minggu ini" (§2.7), dibekukan selama seminggu dan bisa diaudit.
+
+**project_media**: `id`, `project_id`, `r2_key`, `width`, `height`, `bytes`, `sort_order` (maks 3 per proyek, dijaga trigger).
+
+**tools**: `id`, `slug`, `name`, `url`, `logo_url`, ✱`kind` (`tool_kind`), ✱`description_id`, ✱`description_en` (dipakai halaman `/tools/[slug]`), ✱`is_active`, ✱`project_count` (turunan, untuk urutan filter).
+
+✱**tool_suggestions**: `id`, `name`, `url`, `suggested_by`, `project_id`, `status` (`pending`/`merged`/`rejected`), `created_at`. Dipakai saat maker tidak menemukan tools-nya di daftar (§2.8).
+
+**project_tools**, **upvotes** (PK `user_id, project_id`, ada `created_at`), **comments** (`id`, `project_id`, `user_id`, `body` ≤1000, `status`, `created_at`).
+
+**reports**: `id`, `reporter_id`, `target_type` (`project`|`comment`), `target_id`, `reason`, ✱`note`, `resolved`, ✱`resolved_by`, ✱`resolution`, `created_at`. ✱Unique `(reporter_id, target_type, target_id)` supaya satu akun hanya menghitung satu laporan.
+
+**Kategori**: daftar slug tetap (enum atau tabel kecil `categories`) dengan label di `messages/*.json`. Tergantung [Q9].
+
+**Trigger / function**
+- `upvote_count` dan `comment_count` diperbarui via trigger.
+- `report_count` + auto-hide: saat laporan unik ke-3 masuk, proyek `published` → `hidden` (komentar `visible` → `hidden`).
+- Setelah admin menyetujui proyek pertama: `profiles.is_trusted = true`.
+- Insert proyek: status `published` bila owner terpercaya, selain itu `pending` (diset di DB, bukan di klien).
+- Batas harian: function `check_rate_limit()` di trigger insert, 3 proyek dan 30 komentar per akun per 24 jam.
+- `build_time_hours`, `session_count`, dan `search` dihitung ulang via trigger setiap kali sesi berubah.
+- RPC `popular_this_week(limit)` dan job `compute_weekly_pick()`: rumus di §2.7.
+- RPC `search_projects(q, tools[], categories[], lang, sort, cursor)` untuk halaman jelajah.
+- View `profile_stats`: jumlah obrolan tayang, total jam, total worth it, tools andalan.
+
+**RLS (ringkas)**
+- Publik: baca `projects` dengan status `published`, plus media/tools/komentar `visible` milik proyek tersebut; baca `profiles` (kolom publik).
+- Owner: baca semua proyek miliknya (status apa pun), insert, update field konten (bukan `status`, `upvote_count`, dan sejenisnya; dikunci dengan trigger `BEFORE UPDATE` atau dengan memisahkan kolom yang boleh diubah).
+- Upvote/komentar/laporan: hanya user login, hanya untuk dirinya sendiri.
+- Admin (`is_admin`): semua operasi moderasi. Operasi admin lewat server action yang memakai service role hanya bila benar-benar perlu.
+
+### 2.3 Alur status proyek
+
+```
+                 ┌── (owner terpercaya) ──────────────┐
+submit ──► pending ──approve──► published ◄──pulihkan── hidden
+             │                    │   ▲                   ▲
+          reject                  │   └── edit oleh owner │
+             ▼                    └── 3 laporan / admin ──┘
+          rejected ──(edit & kirim ulang? [Q11])──► pending
+admin/owner hapus ──► removed
+```
+
+### 2.4 Pipeline gambar
+
+1. Browser mengompres dulu (resize ke sisi terpanjang 1600px) supaya upload ringan.
+2. `POST /api/media/presign` (login, cek kuota 3 gambar) → presigned PUT ke `tmp/{userId}/{uuid}`.
+3. Browser upload langsung ke R2.
+4. `POST /api/media/finalize` → server mengambil objek tmp, `sharp` re-encode ke WebP (buang EXIF, turunkan quality sampai ≤300 KB), simpan ke `p/{projectId}/{uuid}.webp`, hapus tmp, insert `project_media`.
+5. Lifecycle rule R2 menghapus `tmp/` yang berumur lebih dari 1 hari.
+6. Gambar disajikan dari domain publik R2 (`img.vibespaidoff.dev`). Catatan: subdomain `r2.dev` dibatasi rate-nya dan tidak untuk produksi, jadi domain sebaiknya dibeli sebelum peluncuran.
+
+### 2.5 i18n
+
+- `next-intl`, `localePrefix: 'always'` (`/id/...`, `/en/...`). Middleware mendeteksi bahasa browser dan menyimpan cookie saat user mengganti bahasa.
+- Semua teks UI ada di `messages/id.json` dan `messages/en.json`, tidak ada teks hardcode di komponen (cek otomatis dengan lint/skrip di CI).
+- Konten maker tidak diterjemahkan; ditampilkan dengan badge `ID`/`EN`.
+- `hreflang` di metadata setiap halaman, sitemap per bahasa.
+- Link donasi footer mengikuti bahasa aktif.
+
+### 2.6 Keamanan
+
+- Tidak ada iframe aplikasi maker.
+- Semua link keluar: `rel="nofollow ugc noopener noreferrer"` + `target="_blank"`. Validasi URL wajib `https:`, video hanya domain YouTube/Loom.
+- Turnstile diverifikasi di server pada submit proyek dan komentar.
+- Validasi zod yang sama dipakai di klien dan server action.
+- Header keamanan (CSP dasar, `X-Content-Type-Options`, `Referrer-Policy`).
+- Secret (R2 key, service role, Turnstile secret) hanya ada di server.
+
+### 2.7 Peringkat otomatis yang adil (tanpa kurasi manual)
+
+Prinsip: tidak ada tombol "feature" untuk admin. Semua peringkat di situs dihitung dari rumus yang sama, deterministik, bisa diaudit, dan dijelaskan terbuka di halaman "Cara kami memilih" (bagian dari `/support` atau `/about`).
+
+**Vote layak (eligible vote).** Hanya vote yang memenuhi semua syarat berikut yang dihitung untuk peringkat:
+- Akun pemberi vote sudah berumur ≥ 72 jam **pada saat skor dihitung** (meredam akun dadakan).
+- Pemberi vote bukan pemilik proyek (sudah dicegah di DB).
+- Proyek berstatus `published`.
+
+Vote dari akun yang belum layak tetap tersimpan dan tetap terlihat di angka "Worth it" (`upvote_count`); vote itu hanya belum ikut peringkat. Setelah akunnya berumur 72 jam, vote yang sama otomatis ikut terhitung dengan `created_at` aslinya, jadi tetap masuk jendela minggu saat vote itu diberikan. Lihat Q24.
+
+**Pembalas layak.** Akun berbeda (bukan pemilik proyek, umur ≥ 72 jam) yang menulis balasan `visible` dalam jendela waktu yang sama. Satu akun dihitung satu kali per proyek, berapa pun jumlah balasannya.
+
+**A. "Obrolan terpopuler minggu ini" (beranda, rolling 7 hari, real time)**
+
+```
+skor = vote_layak_7_hari + 0,5 × pembalas_layak_7_hari
+```
+
+Urutan tie-break: `vote_layak_7_hari` lebih banyak → `published_at` lebih awal → `id`. Satu maker maksimal tampil 1 kali di daftar ini, supaya satu orang tidak memenuhi semua slot.
+
+**B. "Pilihan minggu ini" (hero beranda, dibekukan per minggu)**
+
+- Jendela: Senin 00:00 sampai Minggu 23:59 WIB. Job `compute_weekly_pick()` berjalan setiap Senin 00:05 WIB (pg_cron di Supabase, cadangan lewat GitHub Actions) dan menyimpan pemenang di `weekly_picks`.
+- Kandidat: proyek `published`, `link_status` bukan `archived`, punya ≥ 1 screenshot, belum pernah menjadi pilihan minggu ini, dan makernya tidak terpilih dalam 4 minggu terakhir (rotasi supaya adil).
+- Skor memakai rumus yang sama seperti A, tetapi pada jendela minggu sebelumnya.
+- Ambang minimum: skor ≥ 3. Bila tidak ada kandidat yang lolos, hero menampilkan proyek `published` terbaru dengan label "Baru masuk", bukan "Pilihan minggu ini".
+- Bila pemenang kemudian disembunyikan (laporan) atau diarsipkan, peringkat kedua dari `breakdown` otomatis naik tanpa campur tangan admin.
+- `breakdown` disimpan apa adanya, sehingga setiap pilihan bisa dijelaskan ("dipilih karena 23 vote layak dan 6 pembalas minggu lalu").
+
+**C. Urutan "Paling worth it" di jelajah dan halaman tools**: `eligible_upvote_count` (total vote layak sepanjang waktu), tie-break `published_at` lebih baru.
+
+Implikasi skema: kolom turunan `projects.eligible_upvote_count` (diperbarui trigger; job harian menambahkan vote yang baru menjadi layak), index `upvotes(project_id, created_at)` dan `comments(project_id, created_at)`.
+
+### 2.8 Katalog tools selengkap mungkin
+
+Tools adalah sumbu penemuan utama (filter jelajah, halaman `/tools/[slug]`, chip di kartu), jadi daftarnya dibuat lengkap sejak awal dan dikelompokkan per jenis.
+
+| Jenis (`kind`) | Label UI | Seed awal |
+|---|---|---|
+| `ai_agent` | Agen & editor AI | Claude Code, Cursor, Windsurf, GitHub Copilot, Cline, Roo Code, Kilo Code, Aider, OpenAI Codex, Gemini CLI, Amp, Kiro, Trae, Zed, Warp, Devin, Jules, Continue, JetBrains Junie, Augment Code, Qodo |
+| `ai_builder` | App builder AI | Lovable, Bolt, v0, Replit, Firebase Studio, Google AI Studio, Create/Anything, Tempo, Same, Rocket, Base44, Softgen, Dyad, Bubble AI, Webflow AI, Framer AI, Glide, FlutterFlow |
+| `ai_assistant` | Asisten AI | Claude, ChatGPT, Gemini, DeepSeek, Grok, Perplexity, Qwen, Mistral Le Chat, Meta AI, Microsoft Copilot |
+| `framework` | Framework & bahasa | Next.js, React, Vue, Nuxt, Svelte/SvelteKit, Astro, Remix, Angular, Solid, Tailwind CSS, shadcn/ui, Laravel, Django, FastAPI, Flask, Express, Hono, NestJS, Ruby on Rails, Flutter, React Native, Expo, Electron, Tauri, Python, TypeScript, Go, PHP |
+| `backend` | Database & backend | Supabase, Firebase, Convex, PocketBase, Appwrite, Neon, PlanetScale, Turso, MongoDB, PostgreSQL, MySQL, SQLite, Redis, Prisma, Drizzle |
+| `hosting` | Hosting & deploy | Vercel, Netlify, Cloudflare, Railway, Render, Fly.io, Heroku, GitHub Pages, AWS, Google Cloud, DigitalOcean, Coolify |
+| `service` | Layanan & integrasi | Stripe, Midtrans, Xendit, Clerk, Auth0, Resend, Twilio, WhatsApp Cloud API, Telegram Bot API, OpenAI API, Anthropic API, Gemini API, OpenRouter, Hugging Face, ElevenLabs, Replicate, n8n, Make, Zapier, Google Sheets, Notion API |
+
+Catatan: daftar seed di atas perlu dicek ulang (nama, URL, slug, duplikat) saat menulis `seed.sql`.
+
+Perilaku:
+- **Form submit**: pilih banyak dengan combobox yang bisa dicari, dikelompokkan per jenis; 8 tools paling populer tampil sebagai chip cepat (seperti desain). Minimal 1 tools jenis `ai_*` wajib dipilih, karena ini katalog vibe coding.
+- **Tools belum ada**: maker bisa mengetik nama + URL; tersimpan di `tool_suggestions` dan langsung tampil sebagai teks biasa di proyek itu. Admin cukup menggabungkannya ke katalog (merge), lalu relasi `project_tools` dibuat otomatis untuk semua proyek yang menyarankan nama yang sama.
+- **Filter jelajah**: dikelompokkan per jenis; setiap grup menampilkan 6 tools dengan proyek terbanyak + tombol "Lihat semua (N)" + kotak cari. Tools dengan 0 proyek disembunyikan dari filter tetapi tetap punya halaman.
+- **Halaman `/tools/[slug]`**: tersedia untuk semua tools; switcher di atas menampilkan tools teratas per jenis.
+- **Kartu proyek**: menampilkan tools `ai_*` dulu, sisanya "+N".
+
+---
+
+## 3. Rencana implementasi bertahap
+
+Urutan mengikuti 4 minggu di brief, dipecah lebih kecil. Setiap fase memuat tujuan, tugas, dan *Definition of Done* (DoD).
+
+### Fase 0 — Persiapan akun & keputusan (½ hari)
+
+- [x] Jawab Q1–Q6 (lihat bagian 4).
+- [x] Jawab Q23–Q28 (semua default disetujui).
+- [ ] Beli `vibespaidoff.dev` di Cloudflare Registrar (risiko domain diambil orang).
+- [ ] Buat project Supabase (region Singapore), R2 bucket `vpo-media` + domain publik, Turnstile site key, OAuth app GitHub dan Google.
+- [ ] Repo GitHub + project Vercel terhubung.
+
+**DoD:** semua kredensial tersimpan di Vercel env dan `.env.local`; `.env.example` dibuat tanpa nilai rahasia.
+
+### Fase 1 — Fondasi aplikasi & design system (1–2 hari)
+
+- [x] `create-next-app` (TS, App Router, Tailwind, ESLint), pnpm, Prettier.
+- [x] Token warna sebagai CSS variables di `:root` + `[data-theme=dark]`, dipetakan ke Tailwind theme. Token dark diturunkan dari palet light ([Q5]).
+- [x] Font Fraunces, Geist, Geist Mono via `next/font`.
+- [x] `next-intl` dengan rute `[locale]`, middleware, `messages/id.json` + `en.json`.
+- [x] `next-themes`: ikut sistem + toggle.
+- [x] Komponen dasar: `Button` (primary ink, primary accent, outline), `Pill`, `Badge`, `Avatar`, `PromptBubble`, `ResultBubble`, `SystemMessage`, `Input`/`Textarea`/`Select` dengan label.
+- [x] `SiteHeader` dan `SiteFooter` (state login dan logout), toggle bahasa.
+- [x] Halaman `/[locale]/dev/ui` (non-produksi) untuk memeriksa komponen di light/dark dan lebar 375px.
+- [x] CI: lint, typecheck, build.
+
+**Status (2026-10-15):** selesai secara lokal: lint, typecheck, dan build lolos; dicek di 1440px dan 375px (tanpa scroll horizontal), light/dark, ganti bahasa, menu HP. Belum: deploy ke Vercel (butuh akun, Fase 0) dan audit Lighthouse.
+
+**DoD:** deploy ke `vibespaidoff.vercel.app`, `/id` dan `/en` tampil dengan header/footer, dark mode jalan, Lighthouse a11y ≥ 95 di halaman kosong.
+
+### Fase 2 — Database, RLS & Auth (2 hari)
+
+- [ ] Supabase CLI lokal, migrasi awal: enum, semua tabel, index (slug, owner, status+published_at, GIN `search`), trigger, RPC, RLS.
+- [ ] `seed.sql`: katalog tools lengkap per jenis (§2.8) dengan deskripsi ID/EN, kategori, 1 admin.
+- [ ] Trigger turunan sesi (`build_time_hours`, `session_count`, `search`), `eligible_upvote_count`, RPC `popular_this_week`, function `compute_weekly_pick()` + jadwal pg_cron (§2.7).
+- [ ] Test SQL untuk rumus peringkat: vote dari akun < 72 jam tidak dihitung, tie-break benar, rotasi maker 4 minggu, ambang skor 3, fallback "Baru masuk".
+- [ ] Test RLS (SQL atau Vitest + supabase-js dengan 3 role: anon, user, admin).
+- [ ] Login GitHub + Google (`@supabase/ssr`), `/auth/callback`, trigger buat `profiles` saat user baru.
+- [ ] `/onboarding`: pilih username (cek ketersediaan live) sebelum bisa submit.
+- [ ] `/login` sesuai gaya desain ([Q6]).
+- [ ] Generate TypeScript types dari skema.
+
+**DoD:** user bisa login/logout dengan kedua provider, profil terbentuk, test RLS lulus (anon tidak bisa membaca `pending`, user tidak bisa mengubah status sendiri, dan seterusnya).
+
+### Fase 3 — Upload media ke R2 (1 hari)
+
+- [ ] Client R2 (S3 SDK), route `presign` dan `finalize` sesuai §2.4.
+- [ ] Lifecycle rule `tmp/`.
+- [ ] Komponen `MediaUploader` (3 slot, urutkan, hapus, progress).
+- [ ] Helper URL gambar publik + `next/image` dengan `unoptimized`.
+
+**DoD:** upload JPG 5 MB menghasilkan WebP ≤300 KB tanpa EXIF di R2, upload ke-4 ditolak, file tmp terhapus.
+
+### Fase 4 — Submit & edit proyek (2–3 hari)
+
+- [ ] `/submit` mengikuti gaya `VPO-Submit`, dengan alur yang disesuaikan ke model sesi: prompt kunci (wajib) → judul/tagline/deskripsi/link → screenshot/video → tools (combobox per jenis + chip cepat + "tools belum ada") /kategori/bahasa → **Sesi pembuatan** → pelajaran → aturan komunitas + Turnstile.
+- [ ] Blok **Sesi pembuatan**: kartu sesi berulang (label opsional, durasi jam, prompt, hasil, kendala + solusi opsional), tombol "Tambah sesi", hapus, ubah urutan; minimal 1, maksimal 10. Total jam dan jumlah sesi tampil live di pratinjau ("6 jam dan 2 sesi kemudian"). Field lama pengerjaan terpisah dihapus dari form.
+- [ ] `LiveCardPreview` sticky di kanan (stack di bawah pada HP).
+- [ ] Counter tagline 80, validasi zod, slug otomatis dari judul (unik, ditambah suffix bila bentrok).
+- [ ] Server action `createProject`: verifikasi Turnstile, rate limit, status ditentukan DB.
+- [ ] Pesan sukses (SystemMessage) dengan ajakan traktir kopi, muncul sekali.
+- [ ] `/p/[slug]/edit` memakai form yang sama, hanya untuk owner.
+- [ ] Simpan draf di `localStorage` agar isian tidak hilang ([Q12]); draf sesi ikut tersimpan.
+- [ ] Server action menyimpan proyek + sesi + tools dalam satu transaksi (RPC `upsert_project`).
+
+**DoD:** maker baru mengirim proyek → status `pending`; maker terpercaya → langsung `published`; edit oleh owner tersimpan; owner lain ditolak.
+
+### Fase 5 — Detail proyek, profil, dashboard (2–3 hari)
+
+- [ ] `/p/[slug]` sesuai `VPO-Proyek`: breadcrumb, judul + tagline, badge (status link, bahasa, kategori), Worth it (sementara read-only), "Coba live ↗", tombol Bagikan, blok prompt kunci → "X jam dan N sesi kemudian" → galeri/video, "Cara membuatnya" (timeline per sesi: label · durasi, prompt, hasil, kendala + solusi), "Pelajaran dari {maker}", sidebar meta, "Obrolan lain dari {maker}".
+- [ ] Owner bisa melihat proyeknya sendiri saat `pending`/`rejected` dengan banner status.
+- [ ] Link status Offline: tetap tampilkan screenshot/video + label jelas.
+- [ ] `/u/[username]` sesuai `VPO-Profil`: header, bio sebagai bubble, link sosial, salin link profil, traktir maker, 4 stat, grid obrolan (termasuk yang diarsipkan dengan label).
+- [ ] `/me` sesuai `VPO-Me`: tab "Proyek saya" (tabel status tayang, status link, worth it, balasan, Edit/Lihat), banner link offline, badge maker terpercaya; tab "Edit profil".
+- [ ] Metadata + OG image per proyek dan profil (`next/og`).
+
+**DoD:** ketiga halaman tampil benar dengan data seed di desktop dan 375px, dalam light dan dark.
+
+### Fase 6 — Penemuan: beranda, jelajah, tools (2–3 hari)
+
+- [ ] `/` sesuai `VPO-Beranda`: hero dari `weekly_picks` minggu berjalan (fallback "Baru masuk"), "Obrolan terpopuler minggu ini" (RPC rolling 7 hari, maks 1 per maker), chip tools, "Baru masuk", ajakan submit, footer lengkap.
+- [ ] `/explore` sesuai `VPO-Jelajah`: search, filter tools (dikelompokkan per jenis, "Lihat semua (N)" + cari, §2.8)/kategori/bahasa (state di URL query supaya bisa dibagikan), sort Paling worth it/Terbaru, cursor pagination "Muat obrolan lainnya", empty state SystemMessage. Di HP, filter pindah ke bottom sheet.
+- [ ] `/tools/[slug]` sesuai `VPO-Tools`: switcher tools, deskripsi, jumlah obrolan, link situs tools, grid, empty state.
+- [ ] Caching: ISR/`revalidateTag` saat proyek dipublikasikan atau di-vote.
+
+**DoD:** filter dan search memberi hasil benar (diuji dengan 30 proyek seed), URL filter bisa dibagikan, halaman beranda TTFB cepat dari cache.
+
+### Fase 7 — Interaksi: Worth it, balasan, lapor (2 hari)
+
+- [ ] `WorthItButton` dengan optimistic update; logged-out diarahkan ke login lalu kembali ke halaman semula. Vote proyek sendiri sesuai [Q13].
+- [ ] Balasan satu tingkat: daftar, form (Turnstile + rate limit), hapus balasan sendiri.
+- [ ] `ReportButton` untuk proyek dan balasan: dialog pilih alasan + catatan opsional.
+- [ ] Auto-hide 3 laporan (trigger dari Fase 2) diverifikasi end-to-end.
+
+**DoD:** satu akun satu vote, counter konsisten, laporan ganda dari akun yang sama ditolak, laporan ke-3 menyembunyikan proyek.
+
+### Fase 8 — Admin (1–2 hari)
+
+- [ ] `/admin` (hanya `is_admin`, dicek di server) sesuai `VPO-Admin`, dengan 3 tab:
+  - Antrean review: pending urut paling lama, sisa waktu 48 jam, Setujui/Tolak (+ alasan, [Q11]).
+  - Laporan: proyek/balasan yang dilaporkan, Pulihkan / Hapus / Cabut status terpercaya / Biarkan / Sembunyikan.
+  - Kelola tools: tambah/edit (nama, slug, url, logo, jenis, deskripsi ID/EN), plus antrean `tool_suggestions` dengan aksi Gabungkan ke tools yang ada / Jadikan tools baru / Tolak.
+- [ ] Panel baca-saja "Pilihan minggu ini": riwayat `weekly_picks` dan `breakdown`-nya. Admin tidak bisa mengubah pemenang.
+- [ ] Email notifikasi setuju/tolak ([Q10]).
+- [ ] Log aksi admin minimal (`reviewed_by`, `resolved_by`).
+
+**DoD:** alur pending → approve → maker jadi terpercaya → proyek ke-2 langsung tayang berjalan end-to-end, email terkirim.
+
+### Fase 9 — Job terjadwal: link checker, backup, keep-alive (1 hari)
+
+- [ ] `scripts/link-checker.ts` + GitHub Actions mingguan: HEAD/GET `live_url` (timeout, ikuti redirect), update `link_status`, `link_fail_count`, `last_checked_at` sesuai aturan [Q8].
+- [ ] Job harian: hitung ulang `eligible_upvote_count` untuk vote dari akun yang baru melewati 72 jam (§2.7).
+- [ ] Workflow keep-alive harian (query ringan) supaya Supabase Free tidak pause.
+- [ ] Backup mingguan: `pg_dump` ke bucket R2 privat (atau artifact GitHub privat), simpan 8 versi terakhir.
+
+**DoD:** workflow jalan manual (`workflow_dispatch`) dan terjadwal, proyek dengan URL mati berubah status sesuai aturan, file backup bisa di-restore ke Supabase lokal.
+
+### Fase 10 — Dukung kami, SEO, analitik, polish (2 hari)
+
+- [ ] `/support` sesuai `VPO-Support`: tanya-jawab bergaya chat, dua kartu donasi (lokal/global, [Q16]), tabel biaya transparan, target pertama.
+- [ ] `/rules` aturan komunitas, halaman 404/500 bergaya SystemMessage.
+- [ ] Bagian "Cara kami memilih": rumus §2.7 dijelaskan dengan bahasa santai + contoh perhitungan pilihan minggu lalu.
+- [ ] Sitemap per bahasa, `robots.txt`, `hreflang`, canonical, JSON-LD (`CreativeWork` untuk proyek, `Person` untuk profil).
+- [ ] Cloudflare Web Analytics.
+- [ ] Audit HP (375px, Android lama), a11y (keyboard, kontras dark mode, label form), performa (LCP gambar R2).
+- [ ] Lengkapi semua copy EN ([Q17]).
+
+**DoD:** Lighthouse mobile ≥ 90 (performa) dan ≥ 95 (a11y, SEO) di beranda dan detail proyek.
+
+### Fase 11 — Isi konten & peluncuran
+
+- [ ] Isi 30 proyek awal (milik sendiri + teman yang diundang langsung).
+- [ ] Pindah ke `vibespaidoff.dev`: tambah domain di Vercel, 301 dari `vibespaidoff.vercel.app`, update redirect URL OAuth dan Supabase Auth.
+- [ ] Checklist peluncuran: env produksi, rate limit aktif, Turnstile mode produksi, backup terakhir OK, admin kedua (bila ada).
+- [ ] Umumkan (komunitas, X/Threads, LinkedIn, grup kampus).
+
+**DoD:** situs publik di domain final, 30 proyek tayang, metrik mulai tercatat.
+
+### Pemetaan ke jadwal brief
+
+| Minggu brief | Fase |
+|---|---|
+| Minggu 1 — Fondasi | 0, 1, 2, 3 |
+| Minggu 2 — Inti | 4, 5, 6 |
+| Minggu 3 — Interaksi & moderasi | 7, 8, 9 |
+| Minggu 4 — Isi & poles | 10, 11 |
+
+---
+
+## 4. Pertanyaan terbuka
+
+Setiap pertanyaan diberi **default**, yaitu asumsi yang dipakai bila belum dijawab.
+
+### Sudah diputuskan (2026-10-14)
+
+| # | Pertanyaan | Keputusan | Dampak di plan |
+|---|---|---|---|
+| Q1 | Prompt kunci wajib? | **Wajib** | `projects.key_prompt` NOT NULL, langkah pertama form submit |
+| Q2 | "Cara membuatnya" per sesi atau datar? | **Per sesi** | Tabel `project_sessions`, blok sesi di form, timeline di detail (§2.2, Fase 4–5) |
+| Q3 | Stack non-AI termasuk tools? | **Maksimalkan semua tools** | Katalog lengkap 7 jenis + saran tools dari maker (§2.8) |
+| Q4 | Cara memilih "Pilihan minggu ini"? | **Tanpa proses manual, dihitung secara adil** | Rumus vote layak + rotasi + tabel `weekly_picks` yang dibekukan dan bisa diaudit (§2.7) |
+| Q5 | Dark mode & versi HP? | **Diturunkan sendiri saat coding** | Fase 1 dan 10 |
+| Q6 | Halaman tanpa desain? | **Mengikuti gaya desain yang ada** | Fase 2, 4, 10 |
+| Q7 | Konversi "hari" pada lama pengerjaan | Gugur karena Q2: lama pengerjaan = jumlah durasi sesi (jam) | Lihat Q23 |
+
+### Pertanyaan lanjutan dari keputusan di atas
+
+**Q23. Aturan sesi.** ✔ Disetujui (default). Default yang dipakai: minimal 1 sesi wajib (prompt, hasil, durasi), maksimal 10 sesi, durasi per sesi dalam jam (kelipatan 0,5, maks 24), label sesi opsional. Apakah setuju? Pertanyaan terkait: untuk proyek yang dikerjakan berminggu-minggu, apakah 10 sesi cukup, atau maker boleh menggabungkan beberapa hari menjadi satu sesi (durasi > 24 jam)?
+
+**Q24. Ambang akun untuk vote layak.** ✔ Disetujui (default). Default: akun ≥ 72 jam, dan vote lama ikut terhitung setelah akunnya cukup umur. Mau lebih ketat (misalnya akun harus punya username dan login lewat GitHub/Google yang berumur > 30 hari), atau lebih longgar (semua vote dihitung)? Lebih ketat berarti lebih tahan manipulasi, tetapi di masa awal yang sepi vote jadi lebih sedikit.
+
+**Q25. Bobot balasan dalam skor.** ✔ Disetujui (default). Default: 1 pembalas layak = 0,5 vote. Atau peringkat murni dari vote saja (lebih sederhana dijelaskan, tetapi mengabaikan diskusi)?
+
+**Q26. Rotasi maker.** ✔ Disetujui (default). Default: maker yang terpilih tidak bisa terpilih lagi selama 4 minggu, dan satu proyek hanya bisa terpilih sekali. Apakah sesuai?
+
+**Q27. Ambang minimum skor 3** ✔ Disetujui (default). untuk "Pilihan minggu ini". Di minggu-minggu awal kemungkinan sering tidak ada yang lolos, sehingga hero menampilkan "Baru masuk". Apakah itu oke, atau ambangnya diturunkan ke 1?
+
+**Q28. Saran tools dari maker** ✔ Disetujui (default). masih butuh admin untuk menggabungkan ke katalog. Ini moderasi data, bukan kurasi peringkat, jadi menurutku tidak bertentangan dengan Q4. Setuju, atau saran tools langsung masuk katalog tanpa review?
+
+### Menengah (aturan bisnis)
+
+**Q8. Aturan status link.**
+- Kapan dianggap offline? *Default:* 2 kali cek gagal berturut-turut (HTTP ≥ 400 atau timeout 10 detik).
+- "Diarsipkan" diset oleh siapa? *Default:* oleh maker secara manual dari `/me` (misalnya proyek yang sengaja dimatikan); tidak otomatis.
+- Apakah checker mingguan cukup? *Default:* ya.
+
+**Q9. Daftar kategori final.**
+*Default:* UMKM, Edukasi, Komunitas, Game, Tools developer, Alat produktivitas, Gaya hidup, Personal, AI wrapper, Lainnya. Satu kategori per proyek.
+
+**Q10. Layanan email untuk notifikasi review.** Supabase Auth hanya mengirim email auth (dengan batas ketat).
+*Default:* Resend free tier (3.000 email/bulan) dengan domain pengirim `vibespaidoff.dev`. Sebelum domain siap, notifikasi cukup tampil di `/me`.
+
+**Q11. Proyek yang ditolak.** Apakah admin wajib menulis alasan? Apakah maker bisa mengedit lalu mengirim ulang?
+*Default:* alasan wajib (dipilih dari daftar + catatan), maker bisa edit dan kirim ulang (kembali ke `pending`).
+
+**Q12. Draf submit.** Perlu disimpan di server (bisa lanjut di perangkat lain) atau cukup di browser?
+*Default:* cukup `localStorage`.
+
+**Q13. Boleh vote proyek sendiri?**
+*Default:* tidak boleh.
+
+**Q14. Foto profil.** Cukup dari avatar GitHub/Google, atau maker bisa upload sendiri?
+*Default:* dari OAuth, fallback inisial; upload sendiri masuk v2.
+
+**Q15. Durasi video ("Tonton demo · 1:42").** Perlu ditampilkan? Butuh YouTube Data API key dan tidak tersedia untuk Loom.
+*Default:* tidak ditampilkan, cukup "Tonton demo".
+
+**Q16. Platform donasi.** Pilih satu lokal (Saweria/Trakteer) dan satu global (Buy Me a Coffee/Ko-fi), beserta URL akunnya.
+*Default:* placeholder di config (`NEXT_PUBLIC_DONATE_URL_ID`, `NEXT_PUBLIC_DONATE_URL_EN`) sampai diputuskan.
+
+### Kecil (bisa diputuskan belakangan)
+
+**Q17. Copy bahasa Inggris** ditulis sendiri atau dibuatkan draf dulu lalu direview? Istilah "obrolan", "Worth it", dan "Pamerin proyekmu" perlu padanan EN yang konsisten. *Default:* dibuatkan draf.
+
+**Q18. Admin selain kamu?** *Default:* hanya kamu dulu; `is_admin` diset manual lewat SQL.
+
+**Q19. Komentar tetap masuk MVP?** Brief menandainya opsional, tetapi desain sudah memuatnya. *Default:* masuk (Fase 7), dan bisa dipotong bila waktu sempit tanpa memengaruhi fase lain.
+
+**Q20. Badge "Maker terpercaya" ditampilkan publik?** Desain menampilkannya di profil dan detail proyek. Ini bisa terkesan sebagai badge hierarki, padahal badge maker masuk v2. *Default:* tampil.
+
+**Q21. Halaman konsep lama ("Hold My Prompt", ronde 1–2, variasi beranda) di canvas** diabaikan sepenuhnya, dan hanya artboard `VPO-*` yang menjadi acuan? *Default:* ya.
+
+**Q22. Testing.** Seberapa jauh? *Default:* Vitest untuk util + test RLS, satu suite Playwright smoke (login mock, submit, vote) di CI.

@@ -1,0 +1,206 @@
+import type { ReactNode } from "react";
+import { notFound } from "next/navigation";
+import { Avatar } from "@/components/ui/avatar";
+import { Badge, MonoLabel } from "@/components/ui/badge";
+import { PromptBubble, ResultBubble, SystemMessage, TimeGap } from "@/components/ui/bubble";
+import { Button } from "@/components/ui/button";
+import { Field, Input, Select, Textarea } from "@/components/ui/field";
+import { pillStyles } from "@/components/ui/pill";
+import { SiteHeader } from "@/components/layout/site-header";
+import { SiteFooter } from "@/components/layout/site-footer";
+import { SegmentedDemo } from "./segmented-demo";
+
+// Internal component gallery (not translated on purpose). Hidden on Vercel production.
+export const metadata = { title: "UI kit", robots: { index: false } };
+
+const colorTokens = [
+  "bg",
+  "surface",
+  "ink",
+  "ink-2",
+  "muted",
+  "border",
+  "border-strong",
+  "accent",
+  "accent-text",
+  "accent-soft",
+  "accent-ink",
+  "bubble",
+  "placeholder",
+  "dashed",
+];
+
+function Section({ title, children }: { title: string; children: ReactNode }) {
+  return (
+    <section className="flex flex-col gap-4 border-t border-border py-8">
+      <MonoLabel>{title}</MonoLabel>
+      {children}
+    </section>
+  );
+}
+
+export default function UiKitPage() {
+  if (process.env.VERCEL_ENV === "production") notFound();
+
+  return (
+    <main className="mx-auto w-full max-w-[1200px] px-4 pt-10 sm:px-6">
+      <h1 className="pb-6 font-display text-5xl font-normal tracking-[-1px]">
+        UI <span className="italic">kit</span>
+      </h1>
+
+      <Section title="Warna (ganti tema di header untuk cek mode gelap)">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-7">
+          {colorTokens.map((token) => (
+            <div key={token} className="flex flex-col gap-1.5">
+              <div
+                className="h-14 rounded-xl border border-border"
+                style={{ background: `var(--${token})` }}
+              />
+              <span className="font-mono text-xs text-muted">{token}</span>
+            </div>
+          ))}
+        </div>
+      </Section>
+
+      <Section title="Tipografi">
+        <p className="font-display text-[68px] leading-[1.02] tracking-[-1.8px]">
+          Kamu bilang apa, <span className="italic">AI bikin apa.</span>
+        </p>
+        <p className="font-display text-[38px] tracking-[-0.6px]">
+          Obrolan <span className="italic">terpopuler minggu ini</span>
+        </p>
+        <p className="max-w-xl text-lg leading-relaxed text-ink-2">
+          Geist untuk teks badan. Setiap proyek di sini dimulai dari satu pesan.
+        </p>
+        <MonoLabel>Geist Mono · label kecil</MonoLabel>
+      </Section>
+
+      <Section title="Tombol">
+        <div className="flex flex-wrap items-center gap-3">
+          <Button>Pamerin proyekmu</Button>
+          <Button variant="accent" size="lg">
+            Pamerin proyekmu
+          </Button>
+          <Button variant="outline" size="lg">
+            Jelajahi proyek
+          </Button>
+          <Button variant="outline-accent">Beliin kopi</Button>
+          <Button variant="ghost">Masuk</Button>
+          <Button size="sm" variant="outline">
+            Worth it · 128
+          </Button>
+          <Button disabled>Nonaktif</Button>
+        </div>
+      </Section>
+
+      <Section title="Pill, segmented, badge">
+        <SegmentedDemo />
+        <div className="flex flex-wrap gap-2">
+          <span className={pillStyles({ tone: "accent", className: "h-11 px-[18px] text-sm" })}>
+            Claude Code
+          </span>
+          <span className={pillStyles({ tone: "accent", className: "h-11 px-[18px] text-sm" })}>
+            Cursor
+          </span>
+        </div>
+        <div className="flex flex-wrap items-center gap-2">
+          <Badge>Maker terpercaya</Badge>
+          <Badge className="font-mono text-[11px] font-normal">PILIHAN MINGGU INI</Badge>
+          <Badge variant="live">● Live</Badge>
+          <Badge variant="offline">○ Offline</Badge>
+          <Badge variant="archived">Diarsipkan</Badge>
+          <Badge variant="lang">ID</Badge>
+          <Badge variant="lang">EN</Badge>
+          <Badge variant="outline">UMKM</Badge>
+        </div>
+      </Section>
+
+      <Section title="Avatar">
+        <div className="flex items-center gap-3">
+          <Avatar name="Ragil Samsi" size="xs" />
+          <Avatar name="Dimas Pratama" size="sm" />
+          <Avatar name="Nina Kurnia" />
+          <Avatar name="Ragil Samsi" size="lg" />
+        </div>
+      </Section>
+
+      <Section title="Obrolan">
+        <div className="grid gap-6 md:grid-cols-2">
+          <div className="flex flex-col gap-3.5">
+            <div className="flex items-end justify-end gap-2.5">
+              <PromptBubble tone="ink" size="lg" className="max-w-[82%]">
+                Bikin kasir buat warung kelontong, tombolnya gede, bisa dipakai ibu-ibu tanpa
+                tutorial.
+              </PromptBubble>
+              <Avatar name="Ragil Samsi" />
+            </div>
+            <TimeGap>6 jam kemudian</TimeGap>
+            <ResultBubble size="lg">
+              <div className="h-48 rounded-[14px] bg-placeholder" />
+              <div className="px-1.5 pb-1">
+                <div className="font-semibold">Kasir Warung Bu Tini</div>
+                <div className="text-[13px] text-muted">
+                  Jadinya pakai Claude Code dan Supabase.
+                </div>
+              </div>
+            </ResultBubble>
+          </div>
+          <div className="flex flex-col gap-2.5 rounded-[22px] border border-border bg-surface p-[18px]">
+            <PromptBubble>Pengingat jadwal ronda RT, kirim lewat WhatsApp tiap sore.</PromptBubble>
+            <TimeGap>3 jam kemudian</TimeGap>
+            <ResultBubble>
+              <div className="h-32 rounded-[10px] bg-placeholder" />
+              <div className="px-1 text-sm font-semibold">Jadwal Ronda</div>
+            </ResultBubble>
+          </div>
+        </div>
+        <SystemMessage className="max-w-xl">
+          Belum ada yang pakai kombinasi ini. Jadilah yang pertama?
+        </SystemMessage>
+        <SystemMessage tone="soft" className="max-w-xl">
+          Proyekmu sudah masuk! Kami review paling lama 2×24 jam.
+        </SystemMessage>
+      </Section>
+
+      <Section title="Form">
+        <div className="grid max-w-3xl gap-5 md:grid-cols-2">
+          <Field id="demo-title" label="Judul">
+            <Input id="demo-title" placeholder="Kasir Warung Bu Tini" />
+          </Field>
+          <Field id="demo-tagline" label="Tagline" counter="58/80" hint="Maksimal 80 karakter.">
+            <Input id="demo-tagline" aria-describedby="demo-tagline-hint" maxLength={80} />
+          </Field>
+          <Field id="demo-cat" label="Kategori">
+            <Select id="demo-cat" defaultValue="umkm">
+              <option value="umkm">UMKM</option>
+              <option value="edukasi">Edukasi</option>
+            </Select>
+          </Field>
+          <Field id="demo-url" label="Link live" error="Link harus diawali https://">
+            <Input
+              id="demo-url"
+              aria-invalid
+              aria-describedby="demo-url-error"
+              defaultValue="http://kasir.app"
+            />
+          </Field>
+          <Field id="demo-prompt" label="Prompt kunci" className="md:col-span-2">
+            <Textarea id="demo-prompt" />
+          </Field>
+        </div>
+      </Section>
+
+      <Section title="Header saat login">
+        <div className="overflow-hidden rounded-2xl border border-border">
+          <SiteHeader user={{ name: "Ragil Samsi" }} />
+        </div>
+      </Section>
+
+      <Section title="Footer ringkas">
+        <div className="overflow-hidden rounded-2xl border border-border [&>footer]:mt-0">
+          <SiteFooter />
+        </div>
+      </Section>
+    </main>
+  );
+}
