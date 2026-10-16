@@ -3,6 +3,7 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { buttonStyles } from "@/components/ui/button";
 import { MonoLabel } from "@/components/ui/badge";
+import { donateUrl } from "@/lib/donate";
 import { Wordmark } from "./logo";
 
 async function getCurrentYear() {
@@ -13,8 +14,7 @@ async function getCurrentYear() {
 
 /** Donation link follows the active language: local platform for /id, global for /en. */
 function DonateLink({ locale, label }: { locale: string; label: string }) {
-  const external =
-    locale === "id" ? process.env.NEXT_PUBLIC_DONATE_URL_ID : process.env.NEXT_PUBLIC_DONATE_URL_EN;
+  const external = donateUrl(locale);
   const className = buttonStyles({ variant: "outline-accent" });
 
   if (!external) {

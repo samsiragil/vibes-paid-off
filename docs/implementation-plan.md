@@ -312,26 +312,42 @@ Urutan mengikuti 4 minggu di brief, dipecah lebih kecil. Setiap fase memuat tuju
 
 ### Fase 3 — Upload media ke R2 (1 hari)
 
-- [ ] Client R2 (S3 SDK), route `presign` dan `finalize` sesuai §2.4.
-- [ ] Lifecycle rule `tmp/`.
-- [ ] Komponen `MediaUploader` (3 slot, urutkan, hapus, progress).
-- [ ] Helper URL gambar publik + `next/image` dengan `unoptimized`.
+- [x] Client R2 (S3 SDK), route `presign` dan `finalize` sesuai §2.4.
+- [x] Lifecycle rule `tmp/` (skrip `pnpm r2:setup`, sekaligus CORS untuk upload dari browser).
+- [x] Komponen `MediaUploader` (3 slot, urutkan, hapus, progress).
+- [x] Helper URL gambar publik + `next/image` dengan `unoptimized`.
 
 **DoD:** upload JPG 5 MB menghasilkan WebP ≤300 KB tanpa EXIF di R2, upload ke-4 ditolak, file tmp terhapus.
 
+**Status (2026-10-15):** dikerjakan di branch `feat/phase-3-r2-media`. Kode R2 ada di `lib/r2/` (client S3 lazy dan `server-only`, layout key `tmp/{userId}/{uuid}` → `p/{projectId}/{uuid}.webp`), pipeline gambar di `lib/media/`, route di `app/api/media/{presign,finalize}`, komponen di `components/project/media-uploader.tsx`, dan `MediaImage` di `components/ui/`. `images.unoptimized` juga diset global di `next.config.ts`. Migrasi `20261015120000_media_order.sql` (RPC `reorder_project_media` dan trigger yang memadatkan `sort_order` setelah hapus) sudah di-push ke DB dev, dengan 9 test baru di `supabase/tests/03_media.sql`. Lint, typecheck, format, dan build lolos.
+
+Sudah diuji tanpa R2: encoder dengan JPEG 9 MB 4000×3000 ber-EXIF menghasilkan WebP 174 KB 1200×1600, orientasi diterapkan, dan EXIF hilang. URL presign hanya menandatangani `content-length;content-type;host` dan tanpa checksum. Uploader di `/dev/ui` (HP dan desktop) menolak GIF, membatasi 3 gambar, serta bisa menggeser dan menghapus gambar. Route membalas 401 bila belum login.
+
+Keputusan: di `/submit` proyek belum ada, jadi `MediaUploader` tanpa `projectId` menahan gambar terkompres di browser. Fase 4 memanggil `ref.uploadPending(projectId)` setelah `createProject` berhasil. Dengan `projectId` (halaman edit), setiap perubahan langsung disimpan. Baris `project_media` di-insert server memakai secret key setelah kepemilikan dicek.
+
+Belum (menunggu env R2 diisi): upload nyata ke R2 dan lifecycle `tmp/`. Cara uji: isi `R2_*` dan `NEXT_PUBLIC_MEDIA_BASE_URL` di `.env.local` (token R2 dengan izin Admin Read & Write), jalankan `pnpm r2:setup`, lalu login dan upload ke proyek milik sendiri lewat uploader dengan `projectId`. Cek objek `p/{projectId}/*.webp` ≤300 KB tanpa EXIF, pastikan tidak ada sisa di `tmp/`, dan pastikan upload ke-4 dibalas 409. Env yang sama juga perlu diisi di Vercel.
+
 ### Fase 4 — Submit & edit proyek (2–3 hari)
 
-- [ ] `/submit` mengikuti gaya `VPO-Submit`, dengan alur yang disesuaikan ke model sesi: prompt kunci (wajib) → judul/tagline/deskripsi/link → screenshot/video → tools (combobox per jenis + chip cepat + "tools belum ada") /kategori/bahasa → **Sesi pembuatan** → pelajaran → aturan komunitas + Turnstile.
-- [ ] Blok **Sesi pembuatan**: kartu sesi berulang (label opsional, durasi jam, prompt, hasil, kendala + solusi opsional), tombol "Tambah sesi", hapus, ubah urutan; minimal 1, maksimal 10. Total jam dan jumlah sesi tampil live di pratinjau ("6 jam dan 2 sesi kemudian"). Field lama pengerjaan terpisah dihapus dari form.
-- [ ] `LiveCardPreview` sticky di kanan (stack di bawah pada HP).
-- [ ] Counter tagline 80, validasi zod, slug otomatis dari judul (unik, ditambah suffix bila bentrok).
-- [ ] Server action `createProject`: verifikasi Turnstile, rate limit, status ditentukan DB.
-- [ ] Pesan sukses (SystemMessage) dengan ajakan traktir kopi, muncul sekali.
-- [ ] `/p/[slug]/edit` memakai form yang sama, hanya untuk owner.
-- [ ] Simpan draf di `localStorage` agar isian tidak hilang ([Q12]); draf sesi ikut tersimpan.
-- [ ] Server action menyimpan proyek + sesi + tools dalam satu transaksi (RPC `upsert_project`).
+- [x] `/submit` mengikuti gaya `VPO-Submit`, dengan alur yang disesuaikan ke model sesi: prompt kunci (wajib) → judul/tagline/deskripsi/link → screenshot/video → tools (combobox per jenis + chip cepat + "tools belum ada") /kategori/bahasa → **Sesi pembuatan** → pelajaran → aturan komunitas + Turnstile.
+- [x] Blok **Sesi pembuatan**: kartu sesi berulang (label opsional, durasi jam, prompt, hasil, kendala + solusi opsional), tombol "Tambah sesi", hapus, ubah urutan; minimal 1, maksimal 10. Total jam dan jumlah sesi tampil live di pratinjau ("6 jam dan 2 sesi kemudian"). Field lama pengerjaan terpisah dihapus dari form.
+- [x] `LiveCardPreview` sticky di kanan (stack di bawah pada HP).
+- [x] Counter tagline 80, validasi zod, slug otomatis dari judul (unik, ditambah suffix bila bentrok).
+- [x] Server action `createProject`: verifikasi Turnstile, rate limit, status ditentukan DB.
+- [x] Pesan sukses (SystemMessage) dengan ajakan traktir kopi, muncul sekali.
+- [x] `/p/[slug]/edit` memakai form yang sama, hanya untuk owner.
+- [x] Simpan draf di `localStorage` agar isian tidak hilang ([Q12]); draf sesi ikut tersimpan.
+- [x] Server action menyimpan proyek + sesi + tools dalam satu transaksi (RPC `upsert_project`).
 
 **DoD:** maker baru mengirim proyek → status `pending`; maker terpercaya → langsung `published`; edit oleh owner tersimpan; owner lain ditolak.
+
+**Status (2026-10-16):** dikerjakan di branch `feat/phase-4-submit` (lanjutan Fase 3). RPC `upsert_project(p_project, p_slug_base, p_project_id)` di migrasi `20261016090000_upsert_project.sql` berjalan sebagai pemanggil (security invoker), jadi RLS, grant kolom, dan trigger yang sudah ada tetap menentukan status, rate limit, dan kepemilikan. Slug dibuat dari judul (`lib/slug.ts`), bentrok jadi `-2` … `-9` lalu suffix acak, dan tidak berubah setelah dibuat. Sesi yang id-nya dikirim ulang diperbarui di tempat, sisanya diganti. Saran tools pending mengikuti daftar terbaru. 24 test baru di `supabase/tests/04_upsert_project.sql` (DoD di atas, validasi, rate limit lewat RPC, proyek ditolak yang diedit kembali ke `pending`) lulus terhadap DB dev dalam transaksi yang dibatalkan. Migrasi sudah di-push ke DB dev; tipe RPC di `database.types.ts` ditulis tangan sesuai keluaran `db:types`.
+
+Kode: validasi bersama di `lib/validation/project.ts` (kode error → `projectForm.errors.*`), server action `saveProject` di `lib/projects/actions.ts` (Turnstile hanya untuk proyek baru, `lib/turnstile.ts`), katalog tools/kategori ber-`use cache` di `lib/projects/catalog.ts`, form di `components/project/` (`project-form`, `session-editor`, `tool-picker`, `project-card` untuk pratinjau dan dipakai lagi di Fase 5–6, `turnstile`). Form baru dirender setelah hidrasi supaya draf `localStorage` bisa langsung jadi state awal; gambar tidak ikut draf. `/p/[slug]/edit` memakai `instant = false` (header memakai `usePathname()`, jadi rute dinamis tanpa `generateStaticParams` tidak bisa punya static shell).
+
+Keputusan kecil: minimal 1 tools jenis `ai_*` dari katalog dicek di klien dan di RPC (saran tools tidak dihitung); chip cepat = 8 tools dengan `project_count` terbanyak, seri dipecah urutan cadangan (Claude Code, Cursor, Lovable, Bolt, v0, Replit, ChatGPT, Supabase); edit tidak butuh Turnstile; deskripsi opsional. Proyek ditolak yang hanya diubah sesi/tools-nya (tanpa ubah field konten) tetap `rejected`, ditangani saat alur admin Fase 8.
+
+Sudah dicek: lint, typecheck, format, build; demo form di `/dev/ui` (1440px dan 375px tanpa scroll horizontal, light/dark): validasi menandai field dan memfokuskan yang pertama, pratinjau live (jam + sesi, tools AI dulu + "+N"), combobox tools (cari, Enter, saran tools baru), tambah sesi, dan server action menjawab `unauthorized` tanpa login. `/id/submit` mengarahkan ke login bila belum masuk. Submit end-to-end dengan akun asli sudah dicoba: proyek pertama masuk `pending`, lalu disetujui lewat SQL (`/admin` baru ada di Fase 8) dan makernya otomatis jadi terpercaya. Belum: edit end-to-end, Turnstile dengan key asli, dan upload gambar setelah submit (butuh env R2). Tombol "Lihat proyek" di pesan sukses mengarah ke `/p/[slug]` yang baru dibuat di Fase 5.
 
 ### Fase 5 — Detail proyek, profil, dashboard (2–3 hari)
 

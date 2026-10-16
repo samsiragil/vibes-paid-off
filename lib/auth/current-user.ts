@@ -9,6 +9,8 @@ export type CurrentUser = {
   username: string | null;
   displayName: string;
   avatarUrl: string | null;
+  /** Approved before: new projects publish without review. */
+  isTrusted: boolean;
   /** From the OAuth provider; used to suggest a username during onboarding. */
   providerHandle: string | null;
 };
@@ -28,7 +30,7 @@ export const getCurrentUser = cache(async (): Promise<CurrentUser | null> => {
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("username, display_name, avatar_url")
+    .select("username, display_name, avatar_url, is_trusted")
     .eq("id", claims.sub)
     .maybeSingle();
 
@@ -45,6 +47,7 @@ export const getCurrentUser = cache(async (): Promise<CurrentUser | null> => {
     username: profile?.username ?? null,
     displayName: profile?.display_name || providerHandle || "",
     avatarUrl: profile?.avatar_url ?? null,
+    isTrusted: profile?.is_trusted ?? false,
     providerHandle,
   };
 });

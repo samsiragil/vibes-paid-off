@@ -12,9 +12,12 @@
     "format:check": "prettier --check .",
     "db:push": "supabase db push --linked",
     "db:types": "supabase gen types typescript --linked --schema public > lib/supabase/database.types.ts && prettier --write lib/supabase/database.types.ts",
-    "db:test": "node scripts/db-test.mjs"
+    "db:test": "node scripts/db-test.mjs",
+    "r2:setup": "node --env-file=.env.local scripts/r2-setup.mjs"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.1152.0",
+    "@aws-sdk/s3-request-presigner": "^3.1152.0",
     "@supabase/ssr": "^0.12.7",
     "@supabase/supabase-js": "^2.117.3",
     "next": "16.4.0",
@@ -23,6 +26,7 @@
     "react": "19.3.0",
     "react-dom": "19.3.0",
     "server-only": "^0.0.1",
+    "sharp": "^0.35.5",
     "tailwind-merge": "^3.7.0",
     "zod": "^4.6.7"
   },
