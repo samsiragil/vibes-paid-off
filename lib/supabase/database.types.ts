@@ -653,6 +653,10 @@ export type Database = {
         Args: { p_media_ids: string[]; p_project_id: string };
         Returns: undefined;
       };
+      upsert_project: {
+        Args: { p_project: Json; p_project_id?: string; p_slug_base?: string };
+        Returns: Json;
+      };
       username_available: { Args: { name: string }; Returns: boolean };
       wib_week_start: { Args: { p_at?: string }; Returns: string };
     };
