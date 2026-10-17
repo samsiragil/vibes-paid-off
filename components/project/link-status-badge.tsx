@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import { getTranslations } from "next-intl/server";
 import { Badge } from "@/components/ui/badge";
 import type { LinkStatus } from "@/lib/projects/types";
@@ -23,9 +24,9 @@ export async function LinkStatusBadge({
   );
 }
 
-/** The same status as compact mono text, for card corners. */
-export async function LinkStatusText({ status }: { status: LinkStatus }) {
-  const t = await getTranslations("linkStatus");
+/** The same status as compact mono text, for card corners (server or client). */
+export function LinkStatusText({ status }: { status: LinkStatus }) {
+  const t = useTranslations("linkStatus");
   return (
     <span className={status === "live" ? "shrink-0 text-accent-text" : "shrink-0 text-muted"}>
       {status === "live" ? "● " : status === "offline" ? "○ " : ""}

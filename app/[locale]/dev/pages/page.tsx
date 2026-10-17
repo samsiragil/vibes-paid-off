@@ -2,10 +2,14 @@ import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { Link } from "@/i18n/navigation";
 import { SiteFooter } from "@/components/layout/site-footer";
+import { HomeHeroCard } from "@/components/discovery/home-hero";
+import { ProjectRow } from "@/components/discovery/project-row";
 import { ProjectDetailView } from "@/components/project/project-detail";
+import { ProjectGridCard } from "@/components/project/project-grid-card";
 import { SystemMessage } from "@/components/ui/bubble";
 import { pillStyles } from "@/components/ui/pill";
 import type { MyProject } from "@/lib/profiles/me";
+import type { ProjectCardData } from "@/lib/projects/cards";
 import type { ProjectDetail } from "@/lib/projects/detail";
 import { MeTabs } from "../../me/me-tabs";
 import { MyProjects, OfflineNotice } from "../../me/my-projects";
@@ -14,9 +18,10 @@ import { ProfileForm } from "../../me/profile-form";
 export const metadata = { title: "Page states", robots: { index: false } };
 
 // Non-production preview of page states that need special data or a session: an offline or
-// archived project, the owner's view of a pending one, and the /me dashboard.
+// archived project, the owner's view of a pending one, the /me dashboard, and the home lists
+// (pick hero, popular cards, "Baru masuk" rows) with more projects than the dev database has.
 
-const views = ["offline", "archived", "pending", "me", "me-empty"] as const;
+const views = ["offline", "archived", "pending", "me", "me-empty", "home"] as const;
 type View = (typeof views)[number];
 
 const baseProject: ProjectDetail = {
@@ -144,6 +149,71 @@ const myProjects: MyProject[] = [
   },
 ];
 
+function sampleCard(
+  n: number,
+  title: string,
+  keyPrompt: string,
+  maker: string,
+  tools: { name: string; ai: boolean }[],
+  hours: number,
+  votes: number,
+): ProjectCardData {
+  return {
+    id: `00000000-0000-4000-8000-00000000010${n}`,
+    slug: title.toLowerCase().replaceAll(" ", "-"),
+    title,
+    tagline: "",
+    keyPrompt,
+    category: ["umkm", "community", "lifestyle", "game"][n % 4],
+    contentLang: n === 3 ? "en" : "id",
+    buildTimeHours: hours,
+    upvoteCount: votes,
+    commentCount: n % 3,
+    linkStatus: "live",
+    publishedAt: `2026-10-1${n}T03:00:00Z`,
+    coverKey: null,
+    tools,
+    maker: { username: maker.toLowerCase(), displayName: maker, avatarUrl: null },
+  };
+}
+
+const sampleCards: ProjectCardData[] = [
+  sampleCard(
+    1,
+    "Jadwal Ronda",
+    "Pengingat jadwal ronda RT, kirim lewat WhatsApp tiap sore.",
+    "Dimas Pratama",
+    [
+      { name: "Lovable", ai: true },
+      { name: "WhatsApp Cloud API", ai: false },
+    ],
+    3,
+    94,
+  ),
+  sampleCard(
+    2,
+    "Bot Resep Kulkas",
+    "Foto isi kulkas, kasih tiga resep yang bisa dimasak dalam 20 menit.",
+    "Ragil Samsi",
+    [{ name: "Claude Code", ai: true }],
+    9,
+    87,
+  ),
+  sampleCard(
+    3,
+    "Rupiah Rates",
+    "A rupiah exchange dashboard for online sellers who import goods.",
+    "Sari Lestari",
+    [
+      { name: "v0", ai: true },
+      { name: "Vercel", ai: false },
+      { name: "Supabase", ai: false },
+    ],
+    13,
+    61,
+  ),
+];
+
 export default function DevPagesPage({ searchParams }: PageProps<"/[locale]/dev/pages">) {
   if (process.env.VERCEL_ENV === "production") notFound();
 
@@ -194,6 +264,38 @@ async function Preview({
             </SystemMessage>
           }
         />
+      ) : null}
+      {view === "home" ? (
+        <main className="mx-auto flex w-full max-w-[1200px] flex-col gap-14 px-4 pt-12 sm:px-6">
+          <div className="max-w-[560px]">
+            <HomeHeroCard
+              hero={{
+                kind: "weekly_pick",
+                project: {
+                  ...sampleCards[1],
+                  title: "Kasir Warung Bu Tini",
+                  keyPrompt: baseProject.keyPrompt,
+                  upvoteCount: 128,
+                  commentCount: 2,
+                  tools: [
+                    { name: "Claude Code", ai: true },
+                    { name: "Supabase", ai: false },
+                  ],
+                },
+              }}
+            />
+          </div>
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {sampleCards.map((project) => (
+              <ProjectGridCard key={project.id} project={project} />
+            ))}
+          </div>
+          <div>
+            {sampleCards.map((project) => (
+              <ProjectRow key={project.id} project={project} />
+            ))}
+          </div>
+        </main>
       ) : null}
       {view === "me" || view === "me-empty" ? (
         <main className="mx-auto w-full max-w-[1200px] px-4 pt-12 sm:px-6">

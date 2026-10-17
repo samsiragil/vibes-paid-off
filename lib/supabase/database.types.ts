@@ -619,6 +619,7 @@ export type Database = {
           score: number;
         }[];
       };
+      prefix_tsquery: { Args: { p_query: string }; Returns: unknown };
       project_scores: {
         Args: { p_from: string; p_now?: string; p_to: string };
         Returns: {
@@ -652,6 +653,23 @@ export type Database = {
       reorder_project_media: {
         Args: { p_media_ids: string[]; p_project_id: string };
         Returns: undefined;
+      };
+      search_projects: {
+        Args: {
+          p_after?: Json;
+          p_categories?: string[];
+          p_lang?: Database["public"]["Enums"]["content_lang"];
+          p_limit?: number;
+          p_query?: string;
+          p_sort?: string;
+          p_tools?: string[];
+        };
+        Returns: {
+          eligible_upvote_count: number;
+          project_id: string;
+          published_at: string;
+          total_count: number;
+        }[];
       };
       set_project_archived: {
         Args: { p_archived: boolean; p_project_id: string };

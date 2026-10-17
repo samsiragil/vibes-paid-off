@@ -1,5 +1,6 @@
 import "server-only";
 import { cacheLife, cacheTag } from "next/cache";
+import { TOOLS_TAG } from "@/lib/cache-tags";
 import { createPublicClient } from "@/lib/supabase/public";
 import type { CatalogTool } from "./types";
 
@@ -24,7 +25,7 @@ export const QUICK_PICK_COUNT = 8;
 export async function getToolCatalog(): Promise<CatalogTool[]> {
   "use cache";
   cacheLife("hours");
-  cacheTag("tools");
+  cacheTag(TOOLS_TAG);
 
   const { data, error } = await createPublicClient()
     .from("tools")

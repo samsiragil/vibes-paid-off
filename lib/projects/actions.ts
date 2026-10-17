@@ -3,7 +3,7 @@
 import { updateTag } from "next/cache";
 import { headers } from "next/headers";
 import { z } from "zod";
-import { makerTag, projectSlugTag, projectTag } from "@/lib/cache-tags";
+import { LISTINGS_TAG, makerTag, projectSlugTag, projectTag, TOOLS_TAG } from "@/lib/cache-tags";
 import { slugify } from "@/lib/slug";
 import { createClient } from "@/lib/supabase/server";
 import { verifyTurnstile } from "@/lib/turnstile";
@@ -94,5 +94,10 @@ export async function saveProject(request: {
   updateTag(projectTag(saved.data.id));
   updateTag(projectSlugTag(saved.data.slug));
   updateTag(makerTag(claims.claims.sub));
+  // Published projects also show in home/explore/tools lists and in the tool counts.
+  if (saved.data.status === "published") {
+    updateTag(LISTINGS_TAG);
+    updateTag(TOOLS_TAG);
+  }
   return { ok: true, ...saved.data };
 }

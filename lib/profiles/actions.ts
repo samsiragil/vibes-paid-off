@@ -1,7 +1,7 @@
 "use server";
 
 import { updateTag } from "next/cache";
-import { makerTag, usernameTag } from "@/lib/cache-tags";
+import { LISTINGS_TAG, makerTag, usernameTag } from "@/lib/cache-tags";
 import { createClient } from "@/lib/supabase/server";
 import {
   PROFILE_FIELDS,
@@ -75,6 +75,8 @@ export async function updateProfile(
   }
 
   updateTag(makerTag(userId));
+  // Maker name and avatar on cards everywhere.
+  updateTag(LISTINGS_TAG);
   updateTag(usernameTag(parsed.data.username));
   if (before?.username && before.username !== parsed.data.username) {
     updateTag(usernameTag(before.username));
