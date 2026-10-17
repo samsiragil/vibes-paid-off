@@ -1,4 +1,5 @@
 import Image from "next/image";
+import type { ReactNode } from "react";
 import { Avatar } from "@/components/ui/avatar";
 import { PromptBubble, ResultBubble, TimeGap } from "@/components/ui/bubble";
 import { cn } from "@/lib/cn";
@@ -19,6 +20,8 @@ export function ProjectCardView({
   tools,
   worthIt,
   muted = false,
+  showMaker = true,
+  status,
   className,
 }: {
   makerName: string;
@@ -32,6 +35,10 @@ export function ProjectCardView({
   worthIt: string;
   /** Placeholder text (empty preview fields) in a softer color. */
   muted?: boolean;
+  /** False on a maker's own profile, where every card is theirs: the category moves left. */
+  showMaker?: boolean;
+  /** Top-right label, e.g. the link status on profile cards. */
+  status?: ReactNode;
   className?: string;
 }) {
   return (
@@ -41,13 +48,20 @@ export function ProjectCardView({
         className,
       )}
     >
-      <div className="flex items-center gap-2 text-xs text-muted">
-        <Avatar name={makerName} src={makerAvatarUrl} size="xs" />
-        <span className="min-w-0 truncate">{makerName}</span>
-        {category ? (
-          <span className="ml-auto shrink-0 font-mono text-[11px]">{category}</span>
-        ) : null}
-      </div>
+      {showMaker ? (
+        <div className="flex items-center gap-2 text-xs text-muted">
+          <Avatar name={makerName} src={makerAvatarUrl} size="xs" />
+          <span className="min-w-0 truncate">{makerName}</span>
+          {category ? (
+            <span className="ml-auto shrink-0 font-mono text-[11px]">{category}</span>
+          ) : null}
+        </div>
+      ) : (
+        <div className="flex min-h-[26px] items-center justify-between gap-3 font-mono text-[11px] text-muted uppercase">
+          <span className="min-w-0 truncate">{category}</span>
+          {status}
+        </div>
+      )}
       <PromptBubble className={cn("break-words", muted && "text-muted")}>{prompt}</PromptBubble>
       <TimeGap>{timeLabel}</TimeGap>
       <ResultBubble>

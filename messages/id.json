@@ -91,9 +91,92 @@
   },
   "me": {
     "metaTitle": "Dashboard saya",
-    "greeting": "Halo, {name}!",
-    "soon": "Dashboard lengkap (proyek saya dan edit profil) segera hadir. Untuk sekarang kamu sudah bisa masuk dan keluar.",
-    "signOut": "Keluar"
+    "hello": "Halo,",
+    "viewProfile": "Lihat profil publik",
+    "signOut": "Keluar",
+    "tabs": {
+      "label": "Bagian dashboard",
+      "projects": "Proyek saya · {count}",
+      "profile": "Edit profil"
+    },
+    "table": {
+      "project": "Obrolan",
+      "status": "Status",
+      "link": "Link",
+      "worthIt": "Worth it",
+      "replies": "Balasan"
+    },
+    "status": {
+      "published": "Tayang",
+      "pending": "Menunggu review",
+      "rejected": "Ditolak",
+      "hidden": "Disembunyikan",
+      "removed": "Dihapus"
+    },
+    "rejectReason": "Alasan ditolak: {reason}",
+    "edit": "Edit",
+    "view": "Lihat",
+    "offlineNotice": "Link <strong>{title}</strong> sedang offline (terakhir dicek {date}). Tenang, screenshot dan videonya tetap tampil. Kalau sudah hidup lagi, kami tandai Live otomatis.",
+    "offlineNoticeNoDate": "Link <strong>{title}</strong> sedang offline. Tenang, screenshot dan videonya tetap tampil. Kalau sudah hidup lagi, kami tandai Live otomatis.",
+    "trusted": "Maker terpercaya",
+    "trustedNote": "Proyek barumu langsung tayang tanpa antre review.",
+    "notTrustedNote": "Proyek pertamamu direview admin dulu (paling lama 2×24 jam). Setelah disetujui, proyek berikutnya langsung tayang.",
+    "empty": "Kamu belum memamerkan obrolan apa pun. Mulai dari proyek yang paling kamu banggakan, sekecil apa pun.",
+    "emptyCta": "Pamerin proyekmu",
+    "profileForm": {
+      "displayName": "Nama tampilan",
+      "username": "Username",
+      "usernameHint": "Mengganti username juga mengganti alamat profilmu.",
+      "bio": "Bio singkat",
+      "bioHint": "Maksimal {max} karakter. Tampil sebagai bubble di profilmu.",
+      "bioPlaceholder": "Ceritakan singkat apa yang suka kamu bikin bersama AI.",
+      "location": "Lokasi",
+      "locationPlaceholder": "Misalnya Yogyakarta",
+      "tipUrl": "Link traktir saya",
+      "tipUrlHint": "Saweria, Trakteer, Ko-fi, atau sejenisnya. Muncul sebagai tombol di profil dan proyekmu.",
+      "links": {
+        "github": "GitHub",
+        "linkedin": "LinkedIn",
+        "x": "X",
+        "website": "Website"
+      },
+      "linkPlaceholders": {
+        "github": "https://github.com/…",
+        "linkedin": "https://linkedin.com/in/…",
+        "x": "https://x.com/…",
+        "website": "https://…"
+      },
+      "avatarNote": "Foto profil diambil dari akun GitHub atau Google yang kamu pakai untuk masuk.",
+      "cancel": "Batal",
+      "save": "Simpan profil",
+      "saving": "Menyimpan…",
+      "saved": "Profil tersimpan.",
+      "errors": {
+        "required": "Wajib diisi.",
+        "too_long": "Maksimal {max} karakter.",
+        "invalid_url": "Pakai alamat lengkap yang diawali https://",
+        "invalid_username": "Pakai 3–20 huruf kecil, angka, atau garis bawah (bukan nama yang dicadangkan).",
+        "taken": "Username ini sudah dipakai. Coba yang lain.",
+        "invalid": "Isian tidak valid.",
+        "unauthorized": "Sesi login habis. Masuk lagi, lalu coba lagi.",
+        "failed": "Gagal menyimpan. Coba lagi, ya."
+      }
+    },
+    "archive": {
+      "archive": "Arsipkan",
+      "unarchive": "Aktifkan lagi",
+      "saving": "Menyimpan…",
+      "confirmLabel": "Arsipkan {title}?",
+      "confirm": "Arsipkan proyek ini? Tombol Coba live disembunyikan, tapi halaman, screenshot, dan ceritanya tetap ada. Bisa diaktifkan lagi kapan saja.",
+      "confirmYes": "Ya, arsipkan",
+      "cancel": "Batal",
+      "errors": {
+        "unauthorized": "Sesi login habis. Masuk lagi, lalu coba lagi.",
+        "forbidden": "Kamu tidak bisa mengubah proyek ini.",
+        "invalid": "Permintaan tidak valid. Muat ulang halaman.",
+        "failed": "Gagal menyimpan. Coba lagi, ya."
+      }
+    }
   },
   "categories": {
     "umkm": "UMKM",
@@ -291,5 +374,96 @@
     },
     "saved": "Perubahan tersimpan.",
     "savedPending": "Perubahan tersimpan. Proyekmu masuk antrean review lagi."
+  },
+  "linkStatus": {
+    "live": "Live",
+    "offline": "Offline",
+    "archived": "Diarsipkan"
+  },
+  "share": {
+    "share": "Bagikan",
+    "copy": "Salin link",
+    "copied": "Tersalin",
+    "copiedAnnouncement": "Link tersalin"
+  },
+  "project": {
+    "metaFallbackTitle": "Obrolan",
+    "breadcrumb": "Lokasi halaman",
+    "explore": "Jelajah",
+    "contentLang": "Konten ditulis dalam {lang, select, id {bahasa Indonesia} en {bahasa Inggris} other {{lang}}}",
+    "tryLive": "Coba live",
+    "tryLiveOffline": "Coba buka link",
+    "newTab": "(buka di tab baru)",
+    "edit": "Edit proyek",
+    "offlineNotice": "Link proyek ini sedang offline. Screenshot dan videonya tetap bisa kamu lihat di sini.",
+    "archivedNotice": "Makernya sudah mengarsipkan proyek ini, jadi link live-nya tidak dibuka lagi. Ceritanya tetap di sini.",
+    "keyPrompt": "Prompt kunci",
+    "about": "Tentang proyek ini",
+    "howLead": "Cara",
+    "howTail": "membuatnya",
+    "lessonsFrom": "Pelajaran dari {name}",
+    "trusted": "maker terpercaya",
+    "viewProfile": "Lihat profil",
+    "tip": "Traktir {name} kopi",
+    "others": "Obrolan lain dari {name}",
+    "meta": {
+      "tools": "Tools",
+      "buildTime": "Lama bikin",
+      "buildTimeValue": "{hours, number} jam, {sessions} sesi",
+      "category": "Kategori",
+      "repo": "Repo",
+      "linkStatus": "Status link",
+      "linkChecked": "{status} · dicek {date}"
+    },
+    "gallery": {
+      "imageAlt": "Screenshot {position} dari {title}",
+      "show": "Tampilkan screenshot {position}",
+      "empty": "Belum ada screenshot untuk proyek ini.",
+      "watchDemo": "Tonton demo",
+      "newTab": "(buka di tab baru)"
+    },
+    "timeline": {
+      "session": "Sesi {number}",
+      "hours": "{hours, number} jam",
+      "prompt": "Prompt",
+      "result": "Hasil",
+      "challenge": "Kendala",
+      "solution": "Solusi"
+    },
+    "ownerStatus": {
+      "onlyYou": "Cuma kamu yang bisa melihat halaman ini.",
+      "pending": "Proyek ini masih menunggu review admin (paling lama 2×24 jam).",
+      "rejected": "Proyek ini ditolak admin: “{reason}”. Perbaiki lewat Edit proyek untuk mengirim ulang ke review.",
+      "rejectedNoReason": "Proyek ini ditolak admin. Perbaiki lewat Edit proyek untuk mengirim ulang ke review.",
+      "hidden": "Proyek ini sedang disembunyikan karena dilaporkan. Admin akan meninjaunya."
+    }
+  },
+  "profile": {
+    "metaFallbackTitle": "Profil",
+    "metaDescription": "{count, plural, =0 {Profil maker {name}} other {# obrolan vibe coding dari {name}}} di Vibes Paid Off.",
+    "makerSince": "maker sejak {date}",
+    "trusted": "Maker terpercaya",
+    "shareLabel": "Bagikan profil ini",
+    "tip": "Traktir {name} kopi",
+    "links": {
+      "github": "GitHub",
+      "linkedin": "LinkedIn",
+      "x": "X",
+      "website": "Website"
+    },
+    "stats": {
+      "projects": "Obrolan tayang",
+      "hours": "Total waktu bikin",
+      "hoursUnit": "jam",
+      "upvotes": "Orang bilang worth it",
+      "topTool": "Tools andalan"
+    },
+    "projectsLead": "Obrolan {name} yang",
+    "projectsTail": "jadi beneran",
+    "empty": "{name} belum memamerkan obrolan. Kalau nanti sudah ada, muncul di sini.",
+    "og": {
+      "projects": "{count} obrolan",
+      "hours": "{hours, number} jam bikin"
+    }
   }
 }

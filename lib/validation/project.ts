@@ -36,7 +36,7 @@ export type ProjectErrorCode =
   | "invalid";
 
 /** Same rule as public.is_https_url(). */
-const httpsUrlPattern = /^https:\/\/[^\s/]+\.[^\s]+$/;
+export const httpsUrlPattern = /^https:\/\/[^\s/]+\.[^\s]+$/;
 /** Demo videos: YouTube or Loom only (projects.video_url check). */
 const videoUrlPattern = /^https:\/\/((www|m)\.)?(youtube\.com|youtu\.be|loom\.com)\//;
 const slugPattern = /^[a-z0-9]+(-[a-z0-9]+)*$/;

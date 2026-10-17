@@ -1,7 +1,9 @@
 "use server";
 
+import { updateTag } from "next/cache";
 import { headers } from "next/headers";
 import { z } from "zod";
+import { makerTag, projectSlugTag, projectTag } from "@/lib/cache-tags";
 import { slugify } from "@/lib/slug";
 import { createClient } from "@/lib/supabase/server";
 import { verifyTurnstile } from "@/lib/turnstile";
@@ -86,5 +88,11 @@ export async function saveProject(request: {
 
   const saved = resultSchema.safeParse(data);
   if (!saved.success) return { ok: false, error: "failed" };
+
+  // Public pages read cached data: the project page, its slug lookup (a new or re-approved
+  // project stops being a cached 404) and the maker's profile list and stats.
+  updateTag(projectTag(saved.data.id));
+  updateTag(projectSlugTag(saved.data.slug));
+  updateTag(makerTag(claims.claims.sub));
   return { ok: true, ...saved.data };
 }

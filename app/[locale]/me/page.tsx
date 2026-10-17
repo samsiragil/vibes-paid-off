@@ -2,25 +2,29 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import { getLocale, getTranslations } from "next-intl/server";
-import { Avatar } from "@/components/ui/avatar";
-import { SystemMessage } from "@/components/ui/bubble";
-import { Button } from "@/components/ui/button";
+import { Link } from "@/i18n/navigation";
 import { SiteFooter } from "@/components/layout/site-footer";
+import { Button, buttonStyles } from "@/components/ui/button";
 import { signOut } from "@/lib/auth/actions";
 import { getCurrentUser } from "@/lib/auth/current-user";
+import { getMyProfileForm, getMyProjects } from "@/lib/profiles/me";
+import { displayUrl } from "@/lib/site";
+import { MeTabs, type MeTab } from "./me-tabs";
+import { MyProjects, OfflineNotice } from "./my-projects";
+import { ProfileForm } from "./profile-form";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("me");
   return { title: t("metaTitle"), robots: { index: false } };
 }
 
-// Placeholder until the full dashboard (VPO-Me) lands in Fase 5: shows who is signed in and a sign-out button.
-export default function MePage() {
+// Per-user dashboard (VPO-Me): everything below the heading depends on the session.
+export default function MePage({ searchParams }: PageProps<"/[locale]/me">) {
   return (
     <>
-      <main className="mx-auto flex w-full max-w-[720px] flex-col gap-6 px-4 pt-14 pb-20 sm:px-6 sm:pt-20">
-        <Suspense fallback={<div className="h-40 rounded-[22px] bg-bubble" aria-hidden="true" />}>
-          <MeContent />
+      <main className="mx-auto w-full max-w-[1200px] px-4 pt-12 sm:px-6">
+        <Suspense fallback={<MeSkeleton />}>
+          <MeContent searchParams={searchParams} />
         </Suspense>
       </main>
       <SiteFooter />
@@ -28,7 +32,11 @@ export default function MePage() {
   );
 }
 
-async function MeContent() {
+async function MeContent({
+  searchParams,
+}: {
+  searchParams: PageProps<"/[locale]/me">["searchParams"];
+}) {
   const locale = await getLocale();
   const t = await getTranslations("me");
   const user = await getCurrentUser();
@@ -36,24 +44,76 @@ async function MeContent() {
   if (!user) redirect(`/${locale}/login?next=${encodeURIComponent(`/${locale}/me`)}`);
   if (!user.username) redirect(`/${locale}/onboarding?next=${encodeURIComponent(`/${locale}/me`)}`);
 
+  const [projects, profileValues, { tab }] = await Promise.all([
+    getMyProjects(user.id),
+    getMyProfileForm(user.id),
+    searchParams,
+  ]);
+  const initialTab: MeTab = tab === "profile" ? "profile" : "projects";
+  const name = user.displayName || user.username;
+  const offline = projects.filter(
+    (project) => project.status === "published" && project.linkStatus === "offline",
+  );
+
   return (
     <>
-      <div className="flex items-center gap-4">
-        <Avatar name={user.displayName || user.username} src={user.avatarUrl} size="lg" />
-        <div className="flex flex-col gap-1">
-          <h1 className="font-display text-[36px] leading-tight font-normal tracking-[-0.5px]">
-            {t("greeting", { name: user.displayName || user.username })}
+      <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between sm:gap-6">
+        <div className="min-w-0">
+          <p className="font-mono text-xs text-muted">/me</p>
+          <h1 className="mt-1.5 font-display text-[44px] leading-none font-normal tracking-[-1px] break-words sm:text-[56px] sm:tracking-[-1.2px]">
+            {t("hello")} <span className="italic">{name}.</span>
           </h1>
-          <p className="font-mono text-sm text-muted">@{user.username}</p>
+        </div>
+        <div className="flex flex-wrap items-center gap-2">
+          <Link href={`/u/${user.username}`} className={buttonStyles({ variant: "outline" })}>
+            {t("viewProfile")} <span aria-hidden="true">↗</span>
+          </Link>
+          <form action={signOut}>
+            <input type="hidden" name="locale" value={locale} />
+            <Button type="submit" variant="ghost">
+              {t("signOut")}
+            </Button>
+          </form>
         </div>
       </div>
-      <SystemMessage>{t("soon")}</SystemMessage>
-      <form action={signOut}>
-        <input type="hidden" name="locale" value={locale} />
-        <Button type="submit" variant="outline">
-          {t("signOut")}
-        </Button>
-      </form>
+
+      {offline.length > 0 ? (
+        <div className="mt-7 flex max-w-[760px] flex-col gap-3">
+          {offline.map((project) => (
+            <OfflineNotice key={project.id} project={project} />
+          ))}
+        </div>
+      ) : null}
+
+      <MeTabs
+        initialTab={initialTab}
+        label={t("tabs.label")}
+        tabLabels={{
+          projects: t("tabs.projects", { count: projects.length }),
+          profile: t("tabs.profile"),
+        }}
+        panels={{
+          projects: <MyProjects projects={projects} isTrusted={user.isTrusted} />,
+          profile: profileValues ? (
+            <ProfileForm initialValues={profileValues} profileHost={displayUrl("/u/")} />
+          ) : null,
+        }}
+      />
     </>
+  );
+}
+
+function MeSkeleton() {
+  return (
+    <div aria-hidden="true">
+      <div className="h-3 w-10 rounded bg-bubble" />
+      <div className="mt-3 h-14 w-80 max-w-full rounded-2xl bg-bubble" />
+      <div className="mt-12 h-[46px] border-b border-border" />
+      <div className="mt-6 flex flex-col gap-4">
+        {[0, 1, 2].map((index) => (
+          <div key={index} className="h-[84px] rounded-2xl bg-bubble" />
+        ))}
+      </div>
+    </div>
   );
 }
