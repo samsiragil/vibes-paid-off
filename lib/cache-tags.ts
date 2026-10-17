@@ -14,6 +14,9 @@ export const projectSlugTag = (slug: string) => `project-slug:${slug}`;
 /** Everything shown about a maker: profile, their project list and stats, maker blocks on projects. */
 export const makerTag = (profileId: string) => `maker:${profileId}`;
 
+/** The public replies under one project (posted, deleted or hidden after reports). */
+export const repliesTag = (projectId: string) => `replies:${projectId}`;
+
 /** A username lookup, including "not found" (a username can be claimed or changed later). */
 export const usernameTag = (username: string) => `username:${username.toLowerCase()}`;
 

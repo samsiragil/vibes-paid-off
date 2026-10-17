@@ -654,6 +654,15 @@ export type Database = {
         Args: { p_media_ids: string[]; p_project_id: string };
         Returns: undefined;
       };
+      report_content: {
+        Args: {
+          p_note?: string;
+          p_reason: Database["public"]["Enums"]["report_reason"];
+          p_target_id: string;
+          p_target_type: Database["public"]["Enums"]["report_target"];
+        };
+        Returns: Json;
+      };
       search_projects: {
         Args: {
           p_after?: Json;

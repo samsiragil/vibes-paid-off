@@ -456,6 +456,96 @@
       "hidden": "Proyek ini sedang disembunyikan karena dilaporkan. Admin akan meninjaunya."
     }
   },
+  "interactions": {
+    "worthIt": {
+      "label": "Worth it",
+      "voted": "Worth it ✓",
+      "loginHint": "Masuk dulu untuk kasih Worth it",
+      "ownProject": "Ini proyekmu sendiri, jadi tidak bisa kamu Worth it-in",
+      "errors": {
+        "unauthorized": "Sesi login habis. Masuk lagi, ya.",
+        "own_project": "Proyek sendiri tidak bisa di-Worth it-in.",
+        "unavailable": "Proyek ini sedang tidak tayang.",
+        "invalid": "Ada yang aneh. Muat ulang halaman, ya.",
+        "failed": "Gagal menyimpan. Coba lagi sebentar."
+      }
+    },
+    "replies": {
+      "title": "Balasan",
+      "empty": "Belum ada balasan. Jadi yang pertama, ya.",
+      "maker": "maker",
+      "label": "Tulis balasan",
+      "placeholder": "Tulis balasan yang membangun…",
+      "mentionHint": "Ketik @ untuk menandai orang di obrolan ini.",
+      "suggestions": "Saran orang untuk di-tag",
+      "send": "Kirim",
+      "sending": "Mengirim…",
+      "loginPrompt": "Masuk dulu untuk ikut membalas.",
+      "login": "Masuk",
+      "usernamePrompt": "Pilih username dulu sebelum membalas.",
+      "pickUsername": "Pilih username",
+      "report": "Laporkan",
+      "reply": "Balas",
+      "delete": "Hapus",
+      "deleteConfirm": "Hapus balasan ini?",
+      "deleteYes": "Hapus",
+      "deleting": "Menghapus…",
+      "cancel": "Batal",
+      "errors": {
+        "required": "Balasannya masih kosong.",
+        "too_long": "Kepanjangan. Maksimal 1.000 karakter.",
+        "captcha_needed": "Selesaikan verifikasi di bawah dulu.",
+        "captcha": "Verifikasi gagal. Coba lagi.",
+        "rate_limit": "Kamu sudah membalas 30 kali hari ini. Lanjut besok, ya.",
+        "unauthorized": "Sesi login habis. Masuk lagi, ya.",
+        "username_required": "Pilih username dulu sebelum membalas.",
+        "unavailable": "Proyek ini sedang tidak tayang, jadi tidak bisa dibalas.",
+        "not_found": "Balasan ini sudah tidak ada.",
+        "invalid": "Balasan ini belum valid.",
+        "failed": "Gagal mengirim. Coba lagi sebentar."
+      }
+    },
+    "report": {
+      "trigger": {
+        "project": "Laporkan proyek ini",
+        "reply": "Laporkan"
+      },
+      "reported": "Sudah dilaporkan",
+      "title": {
+        "project": "Laporkan proyek ini",
+        "reply": "Laporkan balasan ini"
+      },
+      "intro": "Laporan tidak ditampilkan ke siapa pun selain admin. Kalau tiga akun berbeda melapor, kontennya disembunyikan dulu sampai admin meninjau.",
+      "reasonLabel": "Alasannya",
+      "reasons": {
+        "spam": "Spam atau promosi",
+        "scam": "Penipuan atau link berbahaya",
+        "adult_illegal": "Konten dewasa atau ilegal",
+        "harassment": "Pelecehan atau ujaran kebencian",
+        "personal_data": "Membocorkan data pribadi",
+        "other": "Lainnya"
+      },
+      "noteLabel": "Catatan (opsional)",
+      "notePlaceholder": "Ceritakan singkat apa masalahnya",
+      "cancel": "Batal",
+      "submit": "Kirim laporan",
+      "sending": "Mengirim…",
+      "close": "Tutup",
+      "done": {
+        "sent": "Makasih, laporanmu sudah kami terima. Admin akan meninjaunya.",
+        "already": "Kamu sudah pernah melaporkan ini. Satu akun dihitung satu laporan.",
+        "hidden_project": "Makasih. Proyek ini sekarang disembunyikan sampai admin meninjaunya.",
+        "hidden_reply": "Makasih. Balasan ini sekarang disembunyikan sampai admin meninjaunya."
+      },
+      "errors": {
+        "unauthorized": "Sesi login habis. Masuk lagi, ya.",
+        "own_content": "Kamu tidak bisa melaporkan kontenmu sendiri.",
+        "not_found": "Konten ini sudah tidak tayang.",
+        "invalid": "Pilih salah satu alasan dulu.",
+        "failed": "Gagal mengirim laporan. Coba lagi sebentar."
+      }
+    }
+  },
   "profile": {
     "metaFallbackTitle": "Profil",
     "metaDescription": "{count, plural, =0 {Profil maker {name}} other {# obrolan vibe coding dari {name}}} di Vibes Paid Off.",
