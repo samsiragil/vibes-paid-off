@@ -1,0 +1,41 @@
+name: Link check
+
+# Weekly live_url check (Fase 9, Q8): the second failed check in a row marks a project offline,
+# one success makes it live again. Needs the repository variable NEXT_PUBLIC_SUPABASE_URL (already
+# used by CI) and the repository secret SUPABASE_SECRET_KEY.
+
+on:
+  schedule:
+    # Monday 02:00 UTC = 09:00 WIB.
+    - cron: "0 2 * * 1"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Check only, record nothing"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: link-check
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Check links
+        run: pnpm links:check ${{ inputs.dry_run && '--dry-run' || '' }}
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ vars.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}

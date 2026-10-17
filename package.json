@@ -13,7 +13,9 @@
     "db:push": "supabase db push --linked",
     "db:types": "supabase gen types typescript --linked --schema public > lib/supabase/database.types.ts && prettier --write lib/supabase/database.types.ts",
     "db:test": "node scripts/db-test.mjs",
-    "r2:setup": "node --env-file=.env.local scripts/r2-setup.mjs"
+    "r2:setup": "node --env-file=.env.local scripts/r2-setup.mjs",
+    "links:check": "node --env-file-if-exists=.env.local scripts/link-checker.mjs",
+    "backup:r2": "node --env-file-if-exists=.env.local scripts/backup-r2.mjs"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1152.0",
