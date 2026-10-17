@@ -57,6 +57,7 @@ export type ProjectDetail = {
   category: string;
   contentLang: ContentLang;
   status: ProjectStatus;
+  rejectCode: string | null;
   rejectReason: string | null;
   linkStatus: LinkStatus;
   lastCheckedAt: string | null;
@@ -79,7 +80,7 @@ const OTHER_PROJECTS = 3;
 
 const DETAIL_SELECT = `
   id, slug, owner_id, title, tagline, description, key_prompt, lessons, live_url, repo_url,
-  video_url, category, content_lang, status, reject_reason, link_status, last_checked_at,
+  video_url, category, content_lang, status, reject_code, reject_reason, link_status, last_checked_at,
   build_time_hours, session_count, upvote_count, published_at, created_at,
   owner:profiles!projects_owner_id_fkey (id, username, display_name, avatar_url, bio, tip_url, is_trusted),
   project_sessions (id, sort_order, label, duration_hours, prompt, result, challenge, solution),
@@ -144,6 +145,7 @@ async function loadProject(
     category: row.category,
     contentLang: row.content_lang,
     status: row.status,
+    rejectCode: row.reject_code,
     rejectReason: row.reject_reason,
     linkStatus: row.link_status,
     lastCheckedAt: row.last_checked_at,
@@ -217,4 +219,12 @@ export async function getOwnProject(slug: string, userId: string): Promise<Proje
   const project = await loadProject(await createClient(), slug);
   if (!project || project.maker.id !== userId || project.status === "removed") return null;
   return project;
+}
+
+/**
+ * Any project in any state, for an admin previewing the review queue or a report. RLS only
+ * returns non-public projects to admins (is_admin()); the caller checks the role first.
+ */
+export async function getProjectForAdmin(slug: string): Promise<ProjectDetail | null> {
+  return loadProject(await createClient(), slug);
 }

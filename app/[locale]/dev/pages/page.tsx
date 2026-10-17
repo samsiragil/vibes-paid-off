@@ -11,22 +11,44 @@ import { ProjectDetailView } from "@/components/project/project-detail";
 import { ProjectGridCard } from "@/components/project/project-grid-card";
 import { SystemMessage } from "@/components/ui/bubble";
 import { pillStyles } from "@/components/ui/pill";
+import type {
+  AdminTool,
+  QueueItem,
+  ReportGroup,
+  SuggestionGroup,
+  WeeklyPickView,
+} from "@/lib/admin/data";
 import type { MyProject } from "@/lib/profiles/me";
 import type { ProjectCardData } from "@/lib/projects/cards";
 import type { ProjectDetail } from "@/lib/projects/detail";
 import { MeTabs } from "../../me/me-tabs";
-import { MyProjects, OfflineNotice } from "../../me/my-projects";
+import { MyProjects, OfflineNotice, ReviewNotice } from "../../me/my-projects";
 import { ProfileForm } from "../../me/profile-form";
+import { ActionLogProvider } from "../../admin/action-log";
+import { ReportCard } from "../../admin/reports";
+import { PanelHeading, QueueCard } from "../../admin/review-queue";
+import { ToolsAdmin } from "../../admin/tools-admin";
+import { PickCard } from "../../admin/weekly-picks";
 
 export const metadata = { title: "Page states", robots: { index: false } };
 
 // Non-production preview of page states that need special data or a session: an offline or
 // archived project, the owner's view of a pending one, the /me dashboard, and the home lists
 // (pick hero, popular cards, "Baru masuk" rows) with more projects than the dev database has,
-// and the signed-in interactions (Worth it toggle, replies with your own one, report dialogs).
+// the signed-in interactions (Worth it toggle, replies with your own one, report dialogs), and
+// the /admin cards (queue, reports, tools, weekly picks).
 // Actions here run against made-up ids, so saving answers with an error by design.
 
-const views = ["offline", "archived", "pending", "interactions", "me", "me-empty", "home"] as const;
+const views = [
+  "offline",
+  "archived",
+  "pending",
+  "interactions",
+  "me",
+  "me-empty",
+  "home",
+  "admin",
+] as const;
 type View = (typeof views)[number];
 
 const baseProject: ProjectDetail = {
@@ -45,6 +67,7 @@ const baseProject: ProjectDetail = {
   category: "umkm",
   contentLang: "id",
   status: "published",
+  rejectCode: null,
   rejectReason: null,
   linkStatus: "offline",
   lastCheckedAt: "2026-10-15T03:00:00Z",
@@ -106,7 +129,9 @@ const myProjects: MyProject[] = [
     title: "Kasir Warung Bu Tini",
     keyPrompt: baseProject.keyPrompt,
     status: "published",
+    rejectCode: null,
     rejectReason: null,
+    recentlyApproved: false,
     linkStatus: "live",
     lastCheckedAt: null,
     upvoteCount: 128,
@@ -119,7 +144,9 @@ const myProjects: MyProject[] = [
     title: "Bot Resep Kulkas",
     keyPrompt: "Foto isi kulkas, kasih tiga resep yang bisa dimasak dalam 20 menit.",
     status: "published",
+    rejectCode: null,
     rejectReason: null,
+    recentlyApproved: false,
     linkStatus: "offline",
     lastCheckedAt: "2026-10-15T03:00:00Z",
     upvoteCount: 87,
@@ -132,7 +159,9 @@ const myProjects: MyProject[] = [
     title: "Undangan Nikahan Kakak",
     keyPrompt: "Undangan digital satu halaman, ada peta, RSVP, dan amplop digital.",
     status: "rejected",
-    rejectReason: "Link live mengarah ke halaman login, tidak bisa dicoba.",
+    rejectCode: "broken_link",
+    rejectReason: "Link live mengarah ke halaman login.",
+    recentlyApproved: false,
     linkStatus: "archived",
     lastCheckedAt: null,
     upvoteCount: 0,
@@ -145,7 +174,9 @@ const myProjects: MyProject[] = [
     title: "Jadwal Ronda RT 05",
     keyPrompt: "Bikin jadwal ronda yang otomatis gilir dan kirim pengingat ke grup WA.",
     status: "pending",
+    rejectCode: null,
     rejectReason: null,
+    recentlyApproved: false,
     linkStatus: "live",
     lastCheckedAt: null,
     upvoteCount: 0,
@@ -255,6 +286,190 @@ const sampleReplies = [
   },
 ];
 
+const sampleMaker = {
+  id: "00000000-0000-4000-8000-0000000000d1",
+  username: "fajar",
+  displayName: "Fajar Nugroho",
+  avatarUrl: null,
+  isTrusted: false,
+};
+
+const sampleQueue: QueueItem[] = [
+  {
+    id: "00000000-0000-4000-8000-0000000000e1",
+    slug: "absen-lab-kampus",
+    title: "Absen Lab Kampus",
+    tagline: "Absensi praktikum pakai QR, rekap mingguan otomatis.",
+    keyPrompt: "Absensi praktikum pakai QR, asisten lab bisa rekap per minggu.",
+    liveUrl: "https://absenlab.example.com",
+    category: "education",
+    buildTimeHours: 5,
+    sessionCount: 2,
+    submittedAt: "2026-10-17T00:00:00Z",
+    resubmitted: false,
+    coverKey: null,
+    tools: ["Lovable", "Supabase", "QR Kilat"],
+    maker: sampleMaker,
+  },
+  {
+    id: "00000000-0000-4000-8000-0000000000e2",
+    slug: "kalkulator-ongkir-umkm",
+    title: "Kalkulator Ongkir UMKM",
+    tagline: "Hitung ongkir beberapa kurir sekaligus.",
+    keyPrompt: "Hitung ongkir beberapa kurir sekaligus, tinggal tempel alamat dari chat pembeli.",
+    liveUrl: "https://ongkirumkm.example.com",
+    category: "umkm",
+    buildTimeHours: 6,
+    sessionCount: 1,
+    submittedAt: "2026-10-14T00:00:00Z",
+    resubmitted: true,
+    coverKey: null,
+    tools: ["Bolt"],
+    maker: {
+      ...sampleMaker,
+      id: "00000000-0000-4000-8000-0000000000d2",
+      username: "rina",
+      displayName: "Rina Wijaya",
+    },
+  },
+];
+
+const sampleReports: ReportGroup[] = [
+  {
+    targetType: "project",
+    targetId: "00000000-0000-4000-8000-0000000000f1",
+    count: 3,
+    reasons: [
+      { reason: "scam", count: 2 },
+      { reason: "spam", count: 1 },
+    ],
+    notes: [{ reporter: "wulan", note: "Minta transfer dulu sebelum bisa dipakai." }],
+    firstAt: "2026-10-16T03:00:00Z",
+    project: {
+      id: "00000000-0000-4000-8000-0000000000f1",
+      slug: "generator-follower-instan",
+      title: "Generator Follower Instan",
+      tagline: "Tambah 10.000 follower dalam semalam.",
+      status: "hidden",
+      owner: { ...sampleMaker, username: "akunbaru92", displayName: "Akun Baru", isTrusted: true },
+    },
+    comment: null,
+    hidden: true,
+  },
+  {
+    targetType: "comment",
+    targetId: "00000000-0000-4000-8000-0000000000f2",
+    count: 1,
+    reasons: [{ reason: "harassment", count: 1 }],
+    notes: [],
+    firstAt: "2026-10-16T05:00:00Z",
+    project: {
+      id: "00000000-0000-4000-8000-0000000000f3",
+      slug: "jadwal-ronda",
+      title: "Jadwal Ronda",
+      tagline: "Pengingat ronda RT.",
+      status: "published",
+      owner: sampleMaker,
+    },
+    comment: {
+      body: "Aplikasi kayak gini mah anak SD juga bisa bikin.",
+      hidden: false,
+      author: { ...sampleMaker, username: "julid", displayName: "Julid" },
+    },
+    hidden: false,
+  },
+  {
+    targetType: "comment",
+    targetId: "00000000-0000-4000-8000-0000000000f4",
+    count: 1,
+    reasons: [{ reason: "spam", count: 1 }],
+    notes: [],
+    firstAt: "2026-10-16T06:00:00Z",
+    project: null,
+    comment: null,
+    hidden: false,
+  },
+];
+
+const sampleTools: AdminTool[] = [
+  ["Claude Code", "claude-code", "ai_agent", 3],
+  ["Cursor", "cursor", "ai_agent", 1],
+  ["Lovable", "lovable", "ai_builder", 1],
+  ["Bolt", "bolt", "ai_builder", 2],
+  ["v0", "v0", "ai_builder", 1],
+  ["Replit", "replit", "ai_builder", 0],
+  ["Supabase", "supabase", "backend", 4],
+].map(([name, slug, kind, count], index) => ({
+  id: index + 1,
+  slug: slug as string,
+  name: name as string,
+  url: `https://${slug}.example.com`,
+  logoUrl: null,
+  kind: kind as AdminTool["kind"],
+  descriptionId: "",
+  descriptionEn: "",
+  isActive: slug !== "replit",
+  projectCount: count as number,
+}));
+
+const sampleSuggestions: SuggestionGroup[] = [
+  {
+    name: "QR Kilat",
+    urls: ["https://qrkilat.example.com"],
+    projects: [
+      { slug: "absen-lab-kampus", title: "Absen Lab Kampus", status: "pending" },
+      { slug: "parkir-masjid", title: "Parkir Masjid", status: "published" },
+    ],
+    firstAt: "2026-10-15T00:00:00Z",
+  },
+];
+
+const samplePicks: WeeklyPickView[] = [
+  {
+    weekStart: "2026-10-12",
+    computedAt: "2026-10-11T17:05:00Z",
+    windowFrom: "2026-10-04T17:00:00Z",
+    windowTo: "2026-10-11T17:00:00Z",
+    minScore: 3,
+    winner: {
+      projectId: "w1",
+      title: "Kasir Warung Bu Tini",
+      slug: "kasir-warung-bu-tini",
+      score: 26,
+      eligibleVotes: 23,
+      eligibleRepliers: 6,
+    },
+    candidates: [
+      {
+        projectId: "w1",
+        title: "Kasir Warung Bu Tini",
+        slug: "kasir-warung-bu-tini",
+        score: 26,
+        eligibleVotes: 23,
+        eligibleRepliers: 6,
+      },
+      {
+        projectId: "w2",
+        title: "Jadwal Ronda",
+        slug: "jadwal-ronda",
+        score: 12.5,
+        eligibleVotes: 11,
+        eligibleRepliers: 3,
+      },
+      { projectId: "w3", title: null, slug: null, score: 4, eligibleVotes: 4, eligibleRepliers: 0 },
+    ],
+  },
+  {
+    weekStart: "2026-10-05",
+    computedAt: "2026-10-04T17:05:00Z",
+    windowFrom: "2026-09-27T17:00:00Z",
+    windowTo: "2026-10-04T17:00:00Z",
+    minScore: 3,
+    winner: null,
+    candidates: [],
+  },
+];
+
 export default function DevPagesPage({ searchParams }: PageProps<"/[locale]/dev/pages">) {
   if (process.env.VERCEL_ENV === "production") notFound();
 
@@ -360,10 +575,39 @@ async function Preview({
           </div>
         </main>
       ) : null}
+      {view === "admin" ? (
+        <main className="mx-auto flex w-full max-w-[1000px] flex-col gap-[18px] px-4 pt-10 pb-16 sm:px-6">
+          <PanelHeading
+            title="Antrean review"
+            lede="Kartu antrean (sisa waktu dihitung dari 17 Okt 2026 12:00 WIB)."
+          />
+          <ActionLogProvider>
+            {sampleQueue.map((item) => (
+              <QueueCard key={item.id} item={item} now={Date.parse("2026-10-17T05:00:00Z")} />
+            ))}
+          </ActionLogProvider>
+          <PanelHeading title="Laporan" />
+          <ActionLogProvider>
+            {sampleReports.map((group) => (
+              <ReportCard key={group.targetId} group={group} />
+            ))}
+          </ActionLogProvider>
+          <PanelHeading title="Kelola tools" />
+          <ActionLogProvider>
+            <ToolsAdmin tools={sampleTools} suggestions={sampleSuggestions} />
+          </ActionLogProvider>
+          <PanelHeading title="Pilihan minggu ini" />
+          {samplePicks.map((pick) => (
+            <PickCard key={pick.weekStart} pick={pick} />
+          ))}
+        </main>
+      ) : null}
       {view === "me" || view === "me-empty" ? (
         <main className="mx-auto w-full max-w-[1200px] px-4 pt-12 sm:px-6">
           {view === "me" ? (
             <div className="flex max-w-[760px] flex-col gap-3">
+              <ReviewNotice project={myProjects[2]} />
+              <ReviewNotice project={myProjects[0]} />
               <OfflineNotice project={myProjects[1]} />
             </div>
           ) : null}

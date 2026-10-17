@@ -9,6 +9,7 @@ import { SystemMessage } from "@/components/ui/bubble";
 import { getCurrentUser } from "@/lib/auth/current-user";
 import { getCategories, getToolCatalog, quickPickIds } from "@/lib/projects/catalog";
 import { getEditableProject } from "@/lib/projects/editable";
+import { rejectReasonText } from "@/lib/projects/reject-reason";
 
 // Owner-only and per request: there is no static shell worth prerendering for unknown slugs
 // (the header's usePathname() would block it), so navigations here may block.
@@ -53,12 +54,16 @@ async function EditContent({ params }: { params: PageProps<"/[locale]/p/[slug]/e
 
   const [tools, categories] = await Promise.all([getToolCatalog(), getCategories()]);
 
+  const rejectReason =
+    project.status === "rejected"
+      ? await rejectReasonText(project.rejectCode, project.rejectReason)
+      : null;
   const statusNotice =
     project.status === "pending"
       ? t("status.pending")
       : project.status === "rejected"
-        ? project.rejectReason
-          ? t("status.rejected", { reason: project.rejectReason })
+        ? rejectReason
+          ? t("status.rejected", { reason: rejectReason })
           : t("status.rejectedNoReason")
         : project.status === "hidden"
           ? t("status.hidden")

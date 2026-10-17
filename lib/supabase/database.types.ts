@@ -249,6 +249,7 @@ export type Database = {
           live_url: string;
           owner_id: string;
           published_at: string | null;
+          reject_code: string | null;
           reject_reason: string | null;
           repo_url: string | null;
           report_count: number;
@@ -258,6 +259,7 @@ export type Database = {
           session_count: number;
           slug: string;
           status: Database["public"]["Enums"]["project_status"];
+          submitted_at: string;
           tagline: string;
           title: string;
           updated_at: string;
@@ -281,6 +283,7 @@ export type Database = {
           live_url: string;
           owner_id: string;
           published_at?: string | null;
+          reject_code?: string | null;
           reject_reason?: string | null;
           repo_url?: string | null;
           report_count?: number;
@@ -290,6 +293,7 @@ export type Database = {
           session_count?: number;
           slug: string;
           status?: Database["public"]["Enums"]["project_status"];
+          submitted_at?: string;
           tagline: string;
           title: string;
           updated_at?: string;
@@ -313,6 +317,7 @@ export type Database = {
           live_url?: string;
           owner_id?: string;
           published_at?: string | null;
+          reject_code?: string | null;
           reject_reason?: string | null;
           repo_url?: string | null;
           report_count?: number;
@@ -322,6 +327,7 @@ export type Database = {
           session_count?: number;
           slug?: string;
           status?: Database["public"]["Enums"]["project_status"];
+          submitted_at?: string;
           tagline?: string;
           title?: string;
           updated_at?: string;
@@ -573,6 +579,37 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
+      admin_resolve_report: {
+        Args: {
+          p_action: string;
+          p_target_id: string;
+          p_target_type: Database["public"]["Enums"]["report_target"];
+        };
+        Returns: Json;
+      };
+      admin_resolve_tool_suggestions: {
+        Args: {
+          p_action: string;
+          p_name: string;
+          p_new_tool?: Json;
+          p_tool_id?: number;
+        };
+        Returns: Json;
+      };
+      admin_review_project: {
+        Args: {
+          p_approve: boolean;
+          p_project_id: string;
+          p_reject_code?: string;
+          p_reject_note?: string;
+        };
+        Returns: Json;
+      };
+      admin_set_trusted: {
+        Args: { p_profile_id: string; p_trusted: boolean };
+        Returns: boolean;
+      };
+      assert_admin: { Args: never; Returns: string };
       can_edit_project: { Args: { p_project_id: string }; Returns: boolean };
       compute_weekly_pick: {
         Args: { p_now?: string; p_week_start?: string };
@@ -662,6 +699,10 @@ export type Database = {
           p_target_type: Database["public"]["Enums"]["report_target"];
         };
         Returns: Json;
+      };
+      resubmit_rejected_project: {
+        Args: { p_project_id: string };
+        Returns: undefined;
       };
       search_projects: {
         Args: {
