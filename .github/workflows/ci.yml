@@ -21,6 +21,11 @@ jobs:
       - run: pnpm format:check
       - run: pnpm build
         env:
-          # Build never calls Supabase (session reads are dynamic); the client only needs well-formed values.
-          NEXT_PUBLIC_SUPABASE_URL: https://ci-placeholder.supabase.co
-          NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: sb_publishable_ci_placeholder
+          # The build prerenders public pages with data (tools catalog, home lists; Fase 6), so it
+          # needs a reachable Supabase project (read as the anon role; RLS applies) and the public
+          # image host. Set these as repository variables (Settings → Secrets and variables →
+          # Actions → Variables) with the same public values as on Vercel. Session reads stay
+          # dynamic and are never prerendered.
+          NEXT_PUBLIC_SUPABASE_URL: ${{ vars.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${{ vars.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY }}
+          NEXT_PUBLIC_MEDIA_BASE_URL: ${{ vars.NEXT_PUBLIC_MEDIA_BASE_URL }}
