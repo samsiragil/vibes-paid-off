@@ -2,7 +2,7 @@
 
 import { updateTag } from "next/cache";
 import { z } from "zod";
-import { makerTag, projectTag } from "@/lib/cache-tags";
+import { LISTINGS_TAG, makerTag, projectTag } from "@/lib/cache-tags";
 import { createClient } from "@/lib/supabase/server";
 import type { LinkStatus } from "./types";
 
@@ -40,5 +40,7 @@ export async function setProjectArchived(
 
   updateTag(projectTag(input.data.projectId));
   updateTag(makerTag(userId));
+  // Card labels and the home hero (archived projects are not featured).
+  updateTag(LISTINGS_TAG);
   return { ok: true, linkStatus: data };
 }

@@ -1,6 +1,6 @@
 import { revalidateTag } from "next/cache";
 import { z } from "zod";
-import { makerTag, projectTag } from "@/lib/cache-tags";
+import { LISTINGS_TAG, makerTag, projectTag } from "@/lib/cache-tags";
 import { MAX_MEDIA_PER_PROJECT, MAX_UPLOAD_BYTES } from "@/lib/media/limits";
 import { encodeWebp, InvalidImageError } from "@/lib/media/process";
 import { currentUserClient, mediaError, projectMediaQuota } from "@/lib/media/server";
@@ -56,6 +56,7 @@ export async function POST(request: Request) {
     // Project page and profile cards show the images; expire now so the owner sees them.
     revalidateTag(projectTag(projectId), { expire: 0 });
     revalidateTag(makerTag(user.userId), { expire: 0 });
+    revalidateTag(LISTINGS_TAG, { expire: 0 });
     return Response.json({
       id: inserted.id,
       key: storedKey,

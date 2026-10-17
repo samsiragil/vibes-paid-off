@@ -1,6 +1,7 @@
 import Image from "next/image";
 import type { ReactNode } from "react";
 import { Avatar } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 import { PromptBubble, ResultBubble, TimeGap } from "@/components/ui/bubble";
 import { cn } from "@/lib/cn";
 
@@ -22,6 +23,7 @@ export function ProjectCardView({
   muted = false,
   showMaker = true,
   status,
+  lang,
   className,
 }: {
   makerName: string;
@@ -39,6 +41,8 @@ export function ProjectCardView({
   showMaker?: boolean;
   /** Top-right label, e.g. the link status on profile cards. */
   status?: ReactNode;
+  /** Content language badge ("ID" / "EN") next to the category. */
+  lang?: string;
   className?: string;
 }) {
   return (
@@ -54,6 +58,11 @@ export function ProjectCardView({
           <span className="min-w-0 truncate">{makerName}</span>
           {category ? (
             <span className="ml-auto shrink-0 font-mono text-[11px]">{category}</span>
+          ) : null}
+          {lang ? (
+            <Badge variant="lang" className={category ? undefined : "ml-auto"}>
+              {lang}
+            </Badge>
           ) : null}
         </div>
       ) : (

@@ -2,7 +2,7 @@
 
 import { updateTag } from "next/cache";
 import { z } from "zod";
-import { makerTag, projectTag } from "@/lib/cache-tags";
+import { LISTINGS_TAG, makerTag, projectTag } from "@/lib/cache-tags";
 import { deleteObjects } from "@/lib/r2/client";
 import { createClient } from "@/lib/supabase/server";
 import { MAX_MEDIA_PER_PROJECT } from "./limits";
@@ -13,9 +13,10 @@ export type MediaActionResult =
 const mediaIdSchema = z.uuid();
 type UserClient = Awaited<ReturnType<typeof createClient>>;
 
-/** Media changes show on the project page and on the cover of profile cards. */
+/** Media changes show on the project page and on the cover of every card. */
 async function invalidateProjectMedia(supabase: UserClient, projectId: string) {
   updateTag(projectTag(projectId));
+  updateTag(LISTINGS_TAG);
   const { data } = await supabase.auth.getClaims();
   if (data?.claims?.sub) updateTag(makerTag(data.claims.sub));
 }

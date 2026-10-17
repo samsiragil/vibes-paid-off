@@ -16,3 +16,14 @@ export const makerTag = (profileId: string) => `maker:${profileId}`;
 
 /** A username lookup, including "not found" (a username can be claimed or changed later). */
 export const usernameTag = (username: string) => `username:${username.toLowerCase()}`;
+
+/**
+ * Every public list of projects: home (pick, popular, latest), /explore and /tools pages.
+ * Invalidated when a published project, its cover, link status or its maker's name changes.
+ * Changes made inside the database (votes becoming eligible, auto-hide after reports) show up
+ * when the "minutes" cache life runs out.
+ */
+export const LISTINGS_TAG = "listings";
+
+/** The tools catalog and its per-tool project counts (catalog.ts, /tools pages). */
+export const TOOLS_TAG = "tools";
