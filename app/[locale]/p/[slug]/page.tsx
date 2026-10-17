@@ -4,6 +4,11 @@ import { Suspense } from "react";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { SiteFooter } from "@/components/layout/site-footer";
+import {
+  ProjectReplies,
+  ProjectReportLink,
+  ProjectWorthIt,
+} from "@/components/interactions/project-interactions";
 import { ProjectDetailView } from "@/components/project/project-detail";
 import { SystemMessage } from "@/components/ui/bubble";
 import { buttonStyles } from "@/components/ui/button";
@@ -49,6 +54,12 @@ async function ProjectContent({ params }: { params: PageProps<"/[locale]/p/[slug
 
   const project = await getPublishedProject(slug);
   if (project) {
+    const target = {
+      id: project.id,
+      slug: project.slug,
+      upvoteCount: project.upvoteCount,
+      ownerId: project.maker.id,
+    };
     return (
       <ProjectDetailView
         project={project}
@@ -57,6 +68,9 @@ async function ProjectContent({ params }: { params: PageProps<"/[locale]/p/[slug
             <OwnerEditLink project={project} />
           </Suspense>
         }
+        worthIt={<ProjectWorthIt project={target} />}
+        replies={<ProjectReplies project={target} />}
+        reportLink={<ProjectReportLink project={target} />}
       />
     );
   }

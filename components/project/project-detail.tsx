@@ -7,6 +7,7 @@ import { SystemMessage, TimeGap } from "@/components/ui/bubble";
 import { buttonStyles } from "@/components/ui/button";
 import { ShareButton } from "@/components/ui/copy-link";
 import { ExternalLink } from "@/components/ui/external-link";
+import { WorthItCount } from "@/components/interactions/project-interactions";
 import type { ProjectDetail } from "@/lib/projects/detail";
 import { BuildTimeline } from "./build-timeline";
 import { LinkStatusBadge } from "./link-status-badge";
@@ -21,16 +22,24 @@ function shortUrl(url: string) {
  * The project page (VPO-Proyek): header with actions, the key prompt → "X jam kemudian" →
  * screenshots conversation, "Cara membuatnya" per session, lessons, and the meta sidebar.
  * `ownerNotice` is shown to the owner while the project is not public; `ownerActions` holds
- * the owner-only buttons (streamed in separately on the cached public page).
+ * the owner-only buttons (streamed in separately on the cached public page). The public page
+ * passes the interactions (Fase 7): the Worth it toggle, replies and the report link; without
+ * them (owner previews of non-public projects) the counter is read-only.
  */
 export async function ProjectDetailView({
   project,
   ownerNotice,
   ownerActions,
+  worthIt,
+  replies,
+  reportLink,
 }: {
   project: ProjectDetail;
   ownerNotice?: ReactNode;
   ownerActions?: ReactNode;
+  worthIt?: ReactNode;
+  replies?: ReactNode;
+  reportLink?: ReactNode;
 }) {
   const t = await getTranslations("project");
   const tCard = await getTranslations("projectCard");
@@ -99,10 +108,7 @@ export async function ProjectDetailView({
         </div>
 
         <div className="flex flex-wrap items-center gap-2.5 lg:shrink-0 lg:flex-nowrap">
-          {/* Read-only until voting lands (Fase 7). */}
-          <span className="inline-flex h-[50px] items-center rounded-full border border-border-strong bg-surface px-[22px] text-[15px] font-medium">
-            {tCard("worthIt", { count: project.upvoteCount })}
-          </span>
+          {worthIt ?? <WorthItCount count={project.upvoteCount} />}
           {project.linkStatus === "live" ? (
             <ExternalLink
               href={project.liveUrl}
@@ -202,6 +208,8 @@ export async function ProjectDetailView({
               </p>
             </section>
           ) : null}
+
+          {replies}
         </article>
 
         <aside className="flex flex-col gap-4 lg:w-[340px] lg:shrink-0">
@@ -311,6 +319,8 @@ export async function ProjectDetailView({
               ))}
             </section>
           ) : null}
+
+          {reportLink}
         </aside>
       </div>
     </main>

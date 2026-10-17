@@ -4,6 +4,9 @@ import { Link } from "@/i18n/navigation";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { HomeHeroCard } from "@/components/discovery/home-hero";
 import { ProjectRow } from "@/components/discovery/project-row";
+import { RepliesSection } from "@/components/interactions/replies";
+import { ReportButton } from "@/components/interactions/report-button";
+import { WorthItButton } from "@/components/interactions/worth-it-button";
 import { ProjectDetailView } from "@/components/project/project-detail";
 import { ProjectGridCard } from "@/components/project/project-grid-card";
 import { SystemMessage } from "@/components/ui/bubble";
@@ -19,9 +22,11 @@ export const metadata = { title: "Page states", robots: { index: false } };
 
 // Non-production preview of page states that need special data or a session: an offline or
 // archived project, the owner's view of a pending one, the /me dashboard, and the home lists
-// (pick hero, popular cards, "Baru masuk" rows) with more projects than the dev database has.
+// (pick hero, popular cards, "Baru masuk" rows) with more projects than the dev database has,
+// and the signed-in interactions (Worth it toggle, replies with your own one, report dialogs).
+// Actions here run against made-up ids, so saving answers with an error by design.
 
-const views = ["offline", "archived", "pending", "me", "me-empty", "home"] as const;
+const views = ["offline", "archived", "pending", "interactions", "me", "me-empty", "home"] as const;
 type View = (typeof views)[number];
 
 const baseProject: ProjectDetail = {
@@ -214,6 +219,42 @@ const sampleCards: ProjectCardData[] = [
   ),
 ];
 
+const sampleReplies = [
+  {
+    id: "00000000-0000-4000-8000-0000000000c1",
+    body: "Bagian magic link-nya menolong banget, aku kena masalah yang sama di proyek ronda.",
+    createdAt: "2026-10-15T09:00:00Z",
+    author: {
+      id: "00000000-0000-4000-8000-0000000000b1",
+      username: "dimas",
+      displayName: "Dimas Pratama",
+      avatarUrl: null,
+    },
+  },
+  {
+    id: "00000000-0000-4000-8000-0000000000c2",
+    body: "Prompt pertamanya bagus. Mau coba pola “tanpa tutorial” buat aplikasi les.",
+    createdAt: "2026-10-16T09:00:00Z",
+    author: {
+      id: "00000000-0000-4000-8000-0000000000b2",
+      username: "wulan",
+      displayName: "Wulan Sari",
+      avatarUrl: null,
+    },
+  },
+  {
+    id: "00000000-0000-4000-8000-0000000000c3",
+    body: "Makasih! Kuncinya memang di prompt pertama.",
+    createdAt: "2026-10-16T12:00:00Z",
+    author: {
+      id: baseProject.maker.id,
+      username: baseProject.maker.username,
+      displayName: baseProject.maker.displayName,
+      avatarUrl: null,
+    },
+  },
+];
+
 export default function DevPagesPage({ searchParams }: PageProps<"/[locale]/dev/pages">) {
   if (process.env.VERCEL_ENV === "production") notFound();
 
@@ -262,6 +303,28 @@ async function Preview({
               <span className="font-medium">Cuma kamu yang bisa melihat halaman ini.</span> Proyek
               ini masih menunggu review admin (paling lama 2×24 jam).
             </SystemMessage>
+          }
+        />
+      ) : null}
+      {view === "interactions" ? (
+        <ProjectDetailView
+          project={{ ...baseProject, linkStatus: "live" }}
+          worthIt={<WorthItButton projectId={baseProject.id} voted={false} count={128} />}
+          replies={
+            <RepliesSection
+              projectId={baseProject.id}
+              ownerId={baseProject.maker.id}
+              replies={sampleReplies}
+              viewer={{ kind: "user", id: sampleReplies[1].author.id }}
+              turnstileSiteKey={null}
+            />
+          }
+          reportLink={
+            <ReportButton
+              targetType="project"
+              targetId={baseProject.id}
+              className="inline-flex min-h-11 items-center self-center text-[13px] text-muted"
+            />
           }
         />
       ) : null}

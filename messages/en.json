@@ -456,6 +456,93 @@
       "hidden": "This project is hidden because it was reported. An admin will review it."
     }
   },
+  "interactions": {
+    "worthIt": {
+      "label": "Worth it",
+      "voted": "Worth it ✓",
+      "loginHint": "Log in to say it's worth it",
+      "ownProject": "This is your own project, so you can't vote for it",
+      "errors": {
+        "unauthorized": "Your session expired. Please log in again.",
+        "own_project": "You can't vote for your own project.",
+        "unavailable": "This project isn't public right now.",
+        "invalid": "Something's off. Please reload the page.",
+        "failed": "Couldn't save that. Try again in a moment."
+      }
+    },
+    "replies": {
+      "title": "Replies",
+      "empty": "No replies yet. Be the first.",
+      "maker": "maker",
+      "label": "Write a reply",
+      "placeholder": "Write a constructive reply…",
+      "send": "Send",
+      "sending": "Sending…",
+      "loginPrompt": "Log in to join the conversation.",
+      "login": "Log in",
+      "usernamePrompt": "Pick a username before replying.",
+      "pickUsername": "Pick a username",
+      "report": "Report",
+      "delete": "Delete",
+      "deleteConfirm": "Delete this reply?",
+      "deleteYes": "Delete",
+      "deleting": "Deleting…",
+      "cancel": "Cancel",
+      "errors": {
+        "required": "Your reply is empty.",
+        "too_long": "Too long. 1,000 characters at most.",
+        "captcha_needed": "Complete the verification below first.",
+        "captcha": "Verification failed. Try again.",
+        "rate_limit": "You've replied 30 times today. Continue tomorrow.",
+        "unauthorized": "Your session expired. Please log in again.",
+        "username_required": "Pick a username before replying.",
+        "unavailable": "This project isn't public right now, so it can't take replies.",
+        "not_found": "This reply no longer exists.",
+        "invalid": "This reply isn't valid yet.",
+        "failed": "Couldn't send it. Try again in a moment."
+      }
+    },
+    "report": {
+      "trigger": {
+        "project": "Report this project",
+        "reply": "Report"
+      },
+      "reported": "Reported",
+      "title": {
+        "project": "Report this project",
+        "reply": "Report this reply"
+      },
+      "intro": "Reports are only shown to admins. When three different accounts report something, it is hidden until an admin reviews it.",
+      "reasonLabel": "Reason",
+      "reasons": {
+        "spam": "Spam or promotion",
+        "scam": "Scam or harmful link",
+        "adult_illegal": "Adult or illegal content",
+        "harassment": "Harassment or hate speech",
+        "personal_data": "Exposes personal data",
+        "other": "Something else"
+      },
+      "noteLabel": "Note (optional)",
+      "notePlaceholder": "Briefly describe the problem",
+      "cancel": "Cancel",
+      "submit": "Send report",
+      "sending": "Sending…",
+      "close": "Close",
+      "done": {
+        "sent": "Thanks, we got your report. An admin will review it.",
+        "already": "You've already reported this. Each account counts once.",
+        "hidden_project": "Thanks. This project is now hidden until an admin reviews it.",
+        "hidden_reply": "Thanks. This reply is now hidden until an admin reviews it."
+      },
+      "errors": {
+        "unauthorized": "Your session expired. Please log in again.",
+        "own_content": "You can't report your own content.",
+        "not_found": "This content is no longer public.",
+        "invalid": "Pick a reason first.",
+        "failed": "Couldn't send the report. Try again in a moment."
+      }
+    }
+  },
   "profile": {
     "metaFallbackTitle": "Profile",
     "metaDescription": "{count, plural, =0 {Maker profile of {name}} one {# vibe coding chat from {name}} other {# vibe coding chats from {name}}} on Vibes Paid Off.",
