@@ -436,12 +436,24 @@ Sudah dicek: lint, typecheck, format, build. Di browser (dev server, belum login
 
 ### Fase 9 — Job terjadwal: link checker, backup, keep-alive (1 hari)
 
-- [ ] `scripts/link-checker.ts` + GitHub Actions mingguan: HEAD/GET `live_url` (timeout, ikuti redirect), update `link_status`, `link_fail_count`, `last_checked_at` sesuai aturan [Q8].
+- [x] `scripts/link-checker.mjs` + GitHub Actions mingguan: HEAD/GET `live_url` (timeout, ikuti redirect), update `link_status`, `link_fail_count`, `last_checked_at` sesuai aturan [Q8].
 - [x] Job harian: hitung ulang `eligible_upvote_count` untuk vote dari akun yang baru melewati 72 jam (§2.7). Sudah via pg_cron di Fase 2.
-- [ ] Workflow keep-alive harian (query ringan) supaya Supabase Free tidak pause.
-- [ ] Backup mingguan: `pg_dump` ke bucket R2 privat (atau artifact GitHub privat), simpan 8 versi terakhir.
+- [x] Workflow keep-alive harian (query ringan) supaya Supabase Free tidak pause.
+- [x] Backup mingguan: dump database ke bucket R2 privat, simpan 8 versi terakhir.
 
 **DoD:** workflow jalan manual (`workflow_dispatch`) dan terjadwal, proyek dengan URL mati berubah status sesuai aturan, file backup bisa di-restore ke Supabase lokal.
+
+**Status (2026-10-17):** dikerjakan di branch `feat/phase-9-jobs` (lanjutan Fase 8). Panduan operasional (secret, jadwal, restore) di `docs/operations.md`.
+
+Link checker: migrasi `20261020090000_link_checker.sql` menambah RPC `record_link_checks(p_results)` (security definer, hanya `service_role`) yang memegang aturan Q8: satu kali berhasil → `live` dan hitungan direset, gagal kedua kali berturut-turut → `offline`; proyek `archived` atau yang tidak (lagi) tayang dilewati; id ganda dihitung sekali. `projects_before_update` kini mereset status link (`live`, hitungan 0, `last_checked_at` kosong) saat `live_url` diganti, kecuali proyek diarsipkan. Skrip `scripts/link-checker.mjs` (`pnpm links:check`, `--dry-run`, atau daftar slug) membaca proyek dengan secret key, mengecek 8 sekaligus (`HEAD` lalu `GET` bila gagal, timeout 10 detik, ikuti redirect, body tidak diunduh), lalu mengirim hasil per 500. Ringkasan job GitHub menampilkan proyek yang gagal dan yang berubah status. Workflow `link-check.yml`: Senin 09:00 WIB + manual (opsi dry run). 20 test baru di `supabase/tests/09_link_checker.sql` (hak panggil, gagal berturut-turut, pulih, batch campuran, arsip/pending dilewati, validasi input, ganti `live_url`) lulus bersama 241 test lama (total 261) dengan migrasi diterapkan di dalam transaksi yang dibatalkan.
+
+Keep-alive: `keep-alive.yml` setiap hari 07:30 WIB membaca satu baris `categories` lewat REST API dengan publishable key (variabel repo yang sudah dipakai CI), dengan retry, dan gagal bila Supabase tidak menjawab.
+
+Backup: `backup.yml` setiap Senin 02:00 WIB memakai Supabase CLI (`supabase db dump`: roles, skema, data `--use-copy` tanpa `cron.job_run_details`) lewat Session pooler, mengecek dump tidak kosong, membungkusnya jadi `vpo-db-<waktu UTC>.tar.gz`, lalu `scripts/backup-r2.mjs upload` menyimpannya di bucket R2 privat terpisah dan menghapus yang lebih lama dari 8 versi. Skrip yang sama punya `list` dan `download` untuk restore. Artifact GitHub sengaja tidak dipakai: repo publik dan dump berisi email akun. Skrip menolak bila bucket backup sama dengan bucket media.
+
+Keputusan kecil: skrip `.mjs` seperti skrip lain di `scripts/` (tanpa langkah build TypeScript); 429 dan 403 tantangan bot Cloudflare/Vercel dianggap hidup supaya situs di balik proteksi bot tidak ditandai offline; hanya proyek `published` yang dicek; pengecekan tidak mengubah `updated_at`.
+
+Sudah dicek: lint, typecheck, format. 261 test SQL lulus terhadap DB dev (migrasi di dalam transaksi). `pnpm links:check --dry-run` terhadap DB dev; logika probe dengan URL contoh (200, 404, DNS tidak ada, sertifikat kedaluwarsa, timeout, tantangan Cloudflare). Ping keep-alive terhadap DB dev menjawab. Pola cek dump dicocokkan dengan skrip `pg_dump` CLI (`supabase db dump --dry-run`). Belum: push migrasi ke DB dev (`pnpm db:push`) lalu link checker tanpa dry run; mengisi secret/variabel GitHub dan membuat bucket backup; menjalankan ketiga workflow di GitHub; restore backup ke Supabase lokal (Docker Desktop di mesin ini gagal start).
 
 ### Fase 10 — Dukung kami, SEO, analitik, polish (2 hari)
 

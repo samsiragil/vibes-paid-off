@@ -1,0 +1,33 @@
+name: Keep alive
+
+# Supabase Free pauses a project after a week without activity. One light read a day through the
+# public REST API (the same anon access as any visitor, RLS applies) keeps it awake. Uses the
+# repository variables CI already has. Fails loudly, so GitHub emails when the project is down.
+
+on:
+  schedule:
+    # Every day 00:30 UTC = 07:30 WIB.
+    - cron: "30 0 * * *"
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Read one row
+        env:
+          SUPABASE_URL: ${{ vars.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_KEY: ${{ vars.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY }}
+        run: |
+          if [ -z "$SUPABASE_URL" ] || [ -z "$SUPABASE_KEY" ]; then
+            echo "::error::Set the repository variables NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY."
+            exit 1
+          fi
+          curl --fail-with-body --silent --show-error --max-time 30 \
+            --retry 3 --retry-delay 10 --retry-all-errors \
+            --header "apikey: $SUPABASE_KEY" \
+            "$SUPABASE_URL/rest/v1/categories?select=slug&limit=1"
+          echo

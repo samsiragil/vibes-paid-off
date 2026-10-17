@@ -24,6 +24,9 @@
 .DS_Store
 *.pem
 
+# database backups downloaded with `pnpm backup:r2 download` (hold account emails)
+/backups/
+
 # debug
 npm-debug.log*
 yarn-debug.log*
