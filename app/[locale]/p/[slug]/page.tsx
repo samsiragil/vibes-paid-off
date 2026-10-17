@@ -54,12 +54,6 @@ async function ProjectContent({ params }: { params: PageProps<"/[locale]/p/[slug
 
   const project = await getPublishedProject(slug);
   if (project) {
-    const target = {
-      id: project.id,
-      slug: project.slug,
-      upvoteCount: project.upvoteCount,
-      ownerId: project.maker.id,
-    };
     return (
       <ProjectDetailView
         project={project}
@@ -68,9 +62,9 @@ async function ProjectContent({ params }: { params: PageProps<"/[locale]/p/[slug
             <OwnerEditLink project={project} />
           </Suspense>
         }
-        worthIt={<ProjectWorthIt project={target} />}
-        replies={<ProjectReplies project={target} />}
-        reportLink={<ProjectReportLink project={target} />}
+        worthIt={<ProjectWorthIt project={project} />}
+        replies={<ProjectReplies project={project} />}
+        reportLink={<ProjectReportLink project={project} />}
       />
     );
   }

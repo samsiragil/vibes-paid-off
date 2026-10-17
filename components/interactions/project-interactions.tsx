@@ -12,7 +12,13 @@ import { worthItStyles } from "./worth-it-styles";
 // Server parts of the project page interactions. The public page is cached for everyone; the
 // visitor-specific bits (their vote, the reply form, report links) stream in per request.
 
-type Target = Pick<ProjectDetail, "id" | "slug" | "upvoteCount"> & { ownerId: string };
+type Target = Pick<ProjectDetail, "id" | "slug" | "upvoteCount" | "maker">;
+
+/** The maker as a reply participant (for @ suggestions and mention links). */
+function participantOf(project: Target) {
+  const { id, username, displayName, avatarUrl } = project.maker;
+  return { id, username, displayName, avatarUrl };
+}
 
 async function projectPath(slug: string, hash = "") {
   return `/${await getLocale()}/p/${slug}${hash}`;
@@ -46,7 +52,7 @@ async function ViewerWorthIt({ project }: { project: Target }) {
     );
   }
   // No voting on your own project (Q13): the maker sees the plain counter.
-  if (user.id === project.ownerId) return <WorthItCount count={project.upvoteCount} own />;
+  if (user.id === project.maker.id) return <WorthItCount count={project.upvoteCount} own />;
 
   const vote = await getViewerVote(project.id, user.id);
   if (!vote) return <WorthItCount count={project.upvoteCount} />;
@@ -78,7 +84,7 @@ export async function ProjectReplies({ project }: { project: Target }) {
       fallback={
         <RepliesSection
           projectId={project.id}
-          ownerId={project.ownerId}
+          maker={participantOf(project)}
           replies={replies}
           viewer={{ kind: "loading" }}
           turnstileSiteKey={null}
@@ -98,7 +104,7 @@ async function ViewerReplies({ project, replies }: { project: Target; replies: R
   return (
     <RepliesSection
       projectId={project.id}
-      ownerId={project.ownerId}
+      maker={participantOf(project)}
       replies={replies}
       viewer={
         !user
@@ -130,7 +136,7 @@ export function ProjectReportLink({ project }: { project: Target }) {
 
 async function ViewerReportLink({ project }: { project: Target }) {
   const user = await getCurrentUser();
-  if (user?.id === project.ownerId) return null;
+  if (user?.id === project.maker.id) return null;
   if (!user) {
     const t = await getTranslations("interactions.report");
     const href = loginHref(await getLocale(), await projectPath(project.slug));

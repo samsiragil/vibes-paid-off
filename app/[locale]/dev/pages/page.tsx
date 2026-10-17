@@ -244,7 +244,7 @@ const sampleReplies = [
   },
   {
     id: "00000000-0000-4000-8000-0000000000c3",
-    body: "Makasih! Kuncinya memang di prompt pertama.",
+    body: "@wulan makasih! Kuncinya memang di prompt pertama. Cc @dimas",
     createdAt: "2026-10-16T12:00:00Z",
     author: {
       id: baseProject.maker.id,
@@ -313,7 +313,7 @@ async function Preview({
           replies={
             <RepliesSection
               projectId={baseProject.id}
-              ownerId={baseProject.maker.id}
+              maker={{ ...baseProject.maker, avatarUrl: null }}
               replies={sampleReplies}
               viewer={{ kind: "user", id: sampleReplies[1].author.id }}
               turnstileSiteKey={null}
