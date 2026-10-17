@@ -273,7 +273,7 @@ Urutan mengikuti 4 minggu di brief, dipecah lebih kecil. Setiap fase memuat tuju
 - [x] Jawab Q1–Q6 (lihat bagian 4).
 - [x] Jawab Q23–Q28 (semua default disetujui).
 - [ ] Beli `vibespaidoff.dev` di Cloudflare Registrar (risiko domain diambil orang).
-- [ ] Buat project Supabase (region Singapore), R2 bucket `vpo-media` + domain publik, Turnstile site key, OAuth app GitHub dan Google.
+- [ ] Buat project Supabase (region Singapore) ✔ dev sudah dibuat (2026-10-15), R2 bucket `vpo-media` + domain publik, Turnstile site key, OAuth app GitHub dan Google.
 - [ ] Repo GitHub + project Vercel terhubung.
 
 **DoD:** semua kredensial tersimpan di Vercel env dan `.env.local`; `.env.example` dibuat tanpa nilai rahasia.
@@ -296,90 +296,164 @@ Urutan mengikuti 4 minggu di brief, dipecah lebih kecil. Setiap fase memuat tuju
 
 ### Fase 2 — Database, RLS & Auth (2 hari)
 
-- [ ] Supabase CLI lokal, migrasi awal: enum, semua tabel, index (slug, owner, status+published_at, GIN `search`), trigger, RPC, RLS.
-- [ ] `seed.sql`: katalog tools lengkap per jenis (§2.8) dengan deskripsi ID/EN, kategori, 1 admin.
-- [ ] Trigger turunan sesi (`build_time_hours`, `session_count`, `search`), `eligible_upvote_count`, RPC `popular_this_week`, function `compute_weekly_pick()` + jadwal pg_cron (§2.7).
-- [ ] Test SQL untuk rumus peringkat: vote dari akun < 72 jam tidak dihitung, tie-break benar, rotasi maker 4 minggu, ambang skor 3, fallback "Baru masuk".
-- [ ] Test RLS (SQL atau Vitest + supabase-js dengan 3 role: anon, user, admin).
-- [ ] Login GitHub + Google (`@supabase/ssr`), `/auth/callback`, trigger buat `profiles` saat user baru.
-- [ ] `/onboarding`: pilih username (cek ketersediaan live) sebelum bisa submit.
-- [ ] `/login` sesuai gaya desain ([Q6]).
-- [ ] Generate TypeScript types dari skema.
+- [x] Supabase CLI lokal, migrasi awal: enum, semua tabel, index (slug, owner, status+published_at, GIN `search`), trigger, RPC, RLS.
+- [x] `seed.sql`: katalog tools lengkap per jenis (§2.8) dengan deskripsi ID/EN, kategori. Admin diset manual lewat SQL setelah login pertama (Q18).
+- [x] Trigger turunan sesi (`build_time_hours`, `session_count`, `search`), `eligible_upvote_count`, RPC `popular_this_week`, function `compute_weekly_pick()` + jadwal pg_cron (§2.7).
+- [x] Test SQL untuk rumus peringkat: vote dari akun < 72 jam tidak dihitung, tie-break benar, rotasi maker 4 minggu, ambang skor 3, fallback "Baru masuk".
+- [x] Test RLS (SQL atau Vitest + supabase-js dengan 3 role: anon, user, admin).
+- [x] Login GitHub + Google (`@supabase/ssr`), `/auth/callback`, trigger buat `profiles` saat user baru.
+- [x] `/onboarding`: pilih username (cek ketersediaan live) sebelum bisa submit.
+- [x] `/login` sesuai gaya desain ([Q6]).
+- [x] Generate TypeScript types dari skema.
+
+**Status (2026-10-15):** dikerjakan di branch `feat/phase-2-db-auth` terhadap project Supabase dev (`vibes-paid-off-dev`, Singapore). Migrasi dan seed sudah di-push (`pnpm db:push`), 82 test SQL lulus (`pnpm db:test`: 19 peringkat, 63 RLS/trigger). Test berjalan lewat `supabase db query --linked` dalam satu transaksi yang selalu dibatalkan, jadi tidak butuh Docker dan tidak meninggalkan data. Typecheck, lint, dan build lolos. Redirect OAuth GitHub dan Google sudah dicek sampai halaman login penyedia. Belum: login end-to-end dengan akun asli, lalu set `is_admin` untuk akun admin. Catatan: job harian `refresh-eligible-upvotes` (item Fase 9) sudah terjadwal di pg_cron; `/me` masih placeholder (nama, username, tombol Keluar) sampai Fase 5. Keputusan kecil: `live_url` wajib, kategori memakai default Q9 (tabel `categories`, label di `messages/*.json`), username boleh kosong sampai onboarding.
 
 **DoD:** user bisa login/logout dengan kedua provider, profil terbentuk, test RLS lulus (anon tidak bisa membaca `pending`, user tidak bisa mengubah status sendiri, dan seterusnya).
 
 ### Fase 3 — Upload media ke R2 (1 hari)
 
-- [ ] Client R2 (S3 SDK), route `presign` dan `finalize` sesuai §2.4.
-- [ ] Lifecycle rule `tmp/`.
-- [ ] Komponen `MediaUploader` (3 slot, urutkan, hapus, progress).
-- [ ] Helper URL gambar publik + `next/image` dengan `unoptimized`.
+- [x] Client R2 (S3 SDK), route `presign` dan `finalize` sesuai §2.4.
+- [x] Lifecycle rule `tmp/` (skrip `pnpm r2:setup`, sekaligus CORS untuk upload dari browser).
+- [x] Komponen `MediaUploader` (3 slot, urutkan, hapus, progress).
+- [x] Helper URL gambar publik + `next/image` dengan `unoptimized`.
 
 **DoD:** upload JPG 5 MB menghasilkan WebP ≤300 KB tanpa EXIF di R2, upload ke-4 ditolak, file tmp terhapus.
 
+**Status (2026-10-15):** dikerjakan di branch `feat/phase-3-r2-media`. Kode R2 ada di `lib/r2/` (client S3 lazy dan `server-only`, layout key `tmp/{userId}/{uuid}` → `p/{projectId}/{uuid}.webp`), pipeline gambar di `lib/media/`, route di `app/api/media/{presign,finalize}`, komponen di `components/project/media-uploader.tsx`, dan `MediaImage` di `components/ui/`. `images.unoptimized` juga diset global di `next.config.ts`. Migrasi `20261015120000_media_order.sql` (RPC `reorder_project_media` dan trigger yang memadatkan `sort_order` setelah hapus) sudah di-push ke DB dev, dengan 9 test baru di `supabase/tests/03_media.sql`. Lint, typecheck, format, dan build lolos.
+
+Sudah diuji tanpa R2: encoder dengan JPEG 9 MB 4000×3000 ber-EXIF menghasilkan WebP 174 KB 1200×1600, orientasi diterapkan, dan EXIF hilang. URL presign hanya menandatangani `content-length;content-type;host` dan tanpa checksum. Uploader di `/dev/ui` (HP dan desktop) menolak GIF, membatasi 3 gambar, serta bisa menggeser dan menghapus gambar. Route membalas 401 bila belum login.
+
+Keputusan: di `/submit` proyek belum ada, jadi `MediaUploader` tanpa `projectId` menahan gambar terkompres di browser. Fase 4 memanggil `ref.uploadPending(projectId)` setelah `createProject` berhasil. Dengan `projectId` (halaman edit), setiap perubahan langsung disimpan. Baris `project_media` di-insert server memakai secret key setelah kepemilikan dicek.
+
+Belum (menunggu env R2 diisi): upload nyata ke R2 dan lifecycle `tmp/`. Cara uji: isi `R2_*` dan `NEXT_PUBLIC_MEDIA_BASE_URL` di `.env.local` (token R2 dengan izin Admin Read & Write), jalankan `pnpm r2:setup`, lalu login dan upload ke proyek milik sendiri lewat uploader dengan `projectId`. Cek objek `p/{projectId}/*.webp` ≤300 KB tanpa EXIF, pastikan tidak ada sisa di `tmp/`, dan pastikan upload ke-4 dibalas 409. Env yang sama juga perlu diisi di Vercel.
+
 ### Fase 4 — Submit & edit proyek (2–3 hari)
 
-- [ ] `/submit` mengikuti gaya `VPO-Submit`, dengan alur yang disesuaikan ke model sesi: prompt kunci (wajib) → judul/tagline/deskripsi/link → screenshot/video → tools (combobox per jenis + chip cepat + "tools belum ada") /kategori/bahasa → **Sesi pembuatan** → pelajaran → aturan komunitas + Turnstile.
-- [ ] Blok **Sesi pembuatan**: kartu sesi berulang (label opsional, durasi jam, prompt, hasil, kendala + solusi opsional), tombol "Tambah sesi", hapus, ubah urutan; minimal 1, maksimal 10. Total jam dan jumlah sesi tampil live di pratinjau ("6 jam dan 2 sesi kemudian"). Field lama pengerjaan terpisah dihapus dari form.
-- [ ] `LiveCardPreview` sticky di kanan (stack di bawah pada HP).
-- [ ] Counter tagline 80, validasi zod, slug otomatis dari judul (unik, ditambah suffix bila bentrok).
-- [ ] Server action `createProject`: verifikasi Turnstile, rate limit, status ditentukan DB.
-- [ ] Pesan sukses (SystemMessage) dengan ajakan traktir kopi, muncul sekali.
-- [ ] `/p/[slug]/edit` memakai form yang sama, hanya untuk owner.
-- [ ] Simpan draf di `localStorage` agar isian tidak hilang ([Q12]); draf sesi ikut tersimpan.
-- [ ] Server action menyimpan proyek + sesi + tools dalam satu transaksi (RPC `upsert_project`).
+- [x] `/submit` mengikuti gaya `VPO-Submit`, dengan alur yang disesuaikan ke model sesi: prompt kunci (wajib) → judul/tagline/deskripsi/link → screenshot/video → tools (combobox per jenis + chip cepat + "tools belum ada") /kategori/bahasa → **Sesi pembuatan** → pelajaran → aturan komunitas + Turnstile.
+- [x] Blok **Sesi pembuatan**: kartu sesi berulang (label opsional, durasi jam, prompt, hasil, kendala + solusi opsional), tombol "Tambah sesi", hapus, ubah urutan; minimal 1, maksimal 10. Total jam dan jumlah sesi tampil live di pratinjau ("6 jam dan 2 sesi kemudian"). Field lama pengerjaan terpisah dihapus dari form.
+- [x] `LiveCardPreview` sticky di kanan (stack di bawah pada HP).
+- [x] Counter tagline 80, validasi zod, slug otomatis dari judul (unik, ditambah suffix bila bentrok).
+- [x] Server action `createProject`: verifikasi Turnstile, rate limit, status ditentukan DB.
+- [x] Pesan sukses (SystemMessage) dengan ajakan traktir kopi, muncul sekali.
+- [x] `/p/[slug]/edit` memakai form yang sama, hanya untuk owner.
+- [x] Simpan draf di `localStorage` agar isian tidak hilang ([Q12]); draf sesi ikut tersimpan.
+- [x] Server action menyimpan proyek + sesi + tools dalam satu transaksi (RPC `upsert_project`).
 
 **DoD:** maker baru mengirim proyek → status `pending`; maker terpercaya → langsung `published`; edit oleh owner tersimpan; owner lain ditolak.
 
+**Status (2026-10-16):** dikerjakan di branch `feat/phase-4-submit` (lanjutan Fase 3). RPC `upsert_project(p_project, p_slug_base, p_project_id)` di migrasi `20261016090000_upsert_project.sql` berjalan sebagai pemanggil (security invoker), jadi RLS, grant kolom, dan trigger yang sudah ada tetap menentukan status, rate limit, dan kepemilikan. Slug dibuat dari judul (`lib/slug.ts`), bentrok jadi `-2` … `-9` lalu suffix acak, dan tidak berubah setelah dibuat. Sesi yang id-nya dikirim ulang diperbarui di tempat, sisanya diganti. Saran tools pending mengikuti daftar terbaru. 24 test baru di `supabase/tests/04_upsert_project.sql` (DoD di atas, validasi, rate limit lewat RPC, proyek ditolak yang diedit kembali ke `pending`) lulus terhadap DB dev dalam transaksi yang dibatalkan. Migrasi sudah di-push ke DB dev; tipe RPC di `database.types.ts` ditulis tangan sesuai keluaran `db:types`.
+
+Kode: validasi bersama di `lib/validation/project.ts` (kode error → `projectForm.errors.*`), server action `saveProject` di `lib/projects/actions.ts` (Turnstile hanya untuk proyek baru, `lib/turnstile.ts`), katalog tools/kategori ber-`use cache` di `lib/projects/catalog.ts`, form di `components/project/` (`project-form`, `session-editor`, `tool-picker`, `project-card` untuk pratinjau dan dipakai lagi di Fase 5–6, `turnstile`). Form baru dirender setelah hidrasi supaya draf `localStorage` bisa langsung jadi state awal; gambar tidak ikut draf. `/p/[slug]/edit` memakai `instant = false` (header memakai `usePathname()`, jadi rute dinamis tanpa `generateStaticParams` tidak bisa punya static shell).
+
+Keputusan kecil: minimal 1 tools jenis `ai_*` dari katalog dicek di klien dan di RPC (saran tools tidak dihitung); chip cepat = 8 tools dengan `project_count` terbanyak, seri dipecah urutan cadangan (Claude Code, Cursor, Lovable, Bolt, v0, Replit, ChatGPT, Supabase); edit tidak butuh Turnstile; deskripsi opsional. Proyek ditolak yang hanya diubah sesi/tools-nya (tanpa ubah field konten) tetap `rejected`, ditangani saat alur admin Fase 8.
+
+Sudah dicek: lint, typecheck, format, build; demo form di `/dev/ui` (1440px dan 375px tanpa scroll horizontal, light/dark): validasi menandai field dan memfokuskan yang pertama, pratinjau live (jam + sesi, tools AI dulu + "+N"), combobox tools (cari, Enter, saran tools baru), tambah sesi, dan server action menjawab `unauthorized` tanpa login. `/id/submit` mengarahkan ke login bila belum masuk. Submit end-to-end dengan akun asli sudah dicoba: proyek pertama masuk `pending`, lalu disetujui lewat SQL (`/admin` baru ada di Fase 8) dan makernya otomatis jadi terpercaya. Belum: edit end-to-end, Turnstile dengan key asli, dan upload gambar setelah submit (butuh env R2). Tombol "Lihat proyek" di pesan sukses mengarah ke `/p/[slug]` yang baru dibuat di Fase 5.
+
 ### Fase 5 — Detail proyek, profil, dashboard (2–3 hari)
 
-- [ ] `/p/[slug]` sesuai `VPO-Proyek`: breadcrumb, judul + tagline, badge (status link, bahasa, kategori), Worth it (sementara read-only), "Coba live ↗", tombol Bagikan, blok prompt kunci → "X jam dan N sesi kemudian" → galeri/video, "Cara membuatnya" (timeline per sesi: label · durasi, prompt, hasil, kendala + solusi), "Pelajaran dari {maker}", sidebar meta, "Obrolan lain dari {maker}".
-- [ ] Owner bisa melihat proyeknya sendiri saat `pending`/`rejected` dengan banner status.
-- [ ] Link status Offline: tetap tampilkan screenshot/video + label jelas.
-- [ ] `/u/[username]` sesuai `VPO-Profil`: header, bio sebagai bubble, link sosial, salin link profil, traktir maker, 4 stat, grid obrolan (termasuk yang diarsipkan dengan label).
-- [ ] `/me` sesuai `VPO-Me`: tab "Proyek saya" (tabel status tayang, status link, worth it, balasan, Edit/Lihat), banner link offline, badge maker terpercaya; tab "Edit profil".
-- [ ] Metadata + OG image per proyek dan profil (`next/og`).
+- [x] `/p/[slug]` sesuai `VPO-Proyek`: breadcrumb, judul + tagline, badge (status link, bahasa, kategori), Worth it (sementara read-only), "Coba live ↗", tombol Bagikan, blok prompt kunci → "X jam dan N sesi kemudian" → galeri/video, "Cara membuatnya" (timeline per sesi: label · durasi, prompt, hasil, kendala + solusi), "Pelajaran dari {maker}", sidebar meta, "Obrolan lain dari {maker}".
+- [x] Owner bisa melihat proyeknya sendiri saat `pending`/`rejected` dengan banner status.
+- [x] Link status Offline: tetap tampilkan screenshot/video + label jelas.
+- [x] `/u/[username]` sesuai `VPO-Profil`: header, bio sebagai bubble, link sosial, salin link profil, traktir maker, 4 stat, grid obrolan (termasuk yang diarsipkan dengan label).
+- [x] `/me` sesuai `VPO-Me`: tab "Proyek saya" (tabel status tayang, status link, worth it, balasan, Edit/Lihat), banner link offline, badge maker terpercaya; tab "Edit profil".
+- [x] Metadata + OG image per proyek dan profil (`next/og`).
 
 **DoD:** ketiga halaman tampil benar dengan data seed di desktop dan 375px, dalam light dan dark.
 
+**Status (2026-10-17):** dikerjakan di branch `feat/phase-4-submit` (lanjutan Fase 4). Tanpa migrasi baru: semua data dibaca dari tabel yang ada (statistik profil dihitung di server dari proyek tayang, jadi view `profile_stats` tidak dibuat).
+
+Kode: loader di `lib/projects/detail.ts` (detail + sesi + media + tools + obrolan lain), `lib/projects/cards.ts` (data kartu grid, dipakai lagi di Fase 6), `lib/profiles/public.ts` dan `lib/profiles/me.ts`. Data publik memakai `use cache` (`cacheLife("minutes")`) dengan tag di `lib/cache-tags.ts` (`project:`, `project-slug:`, `maker:`, `username:`); `saveProject`, aksi media, route `finalize`, dan `updateProfile` meng-invalidate tag terkait, jadi owner langsung melihat perubahannya. Perubahan yang terjadi di dalam DB (auto-hide 3 laporan) tampil paling lambat sesuai umur cache; aksi admin Fase 8 perlu memanggil tag yang sama. `/p/[slug]` mencoba versi publik dulu, lalu bila tidak ada membaca sesi dan menampilkan proyek `pending`/`rejected`/`hidden` hanya untuk owner dengan banner "Cuma kamu yang bisa melihat halaman ini"; owner proyek tayang mendapat tombol "Edit proyek" yang di-stream terpisah. Komponen baru: `ProjectDetailView`, `BuildTimeline`, `MediaGallery` (gambar besar + thumbnail, video sebagai link keluar karena tidak ada embed konten maker), `LinkStatusBadge`, `ProjectGridCard`, `ShareButton`/`CopyLinkField`, `ExternalLink` (`nofollow ugc`). `/me` punya tab "Proyek saya" (tabel status, baris bertumpuk di HP, banner link offline, catatan maker terpercaya) dan "Edit profil" (validasi zod bersama di `lib/validation/profile.ts`, server action `lib/profiles/actions.ts`; tab tersimpan di `?tab=`). OG image `next/og` di `opengraph-image.tsx` proyek dan profil memakai Fraunces/Geist/Geist Mono yang disalin ke `assets/og/` (WOFF dari Fontsource, OFL). Tambahan: `metadataBase` dari `NEXT_PUBLIC_SITE_URL` (`lib/site.ts`, fallback domain produksi Vercel), zona waktu next-intl `Asia/Jakarta`.
+
+Arsip oleh maker (default Q8): tombol "Arsipkan" / "Aktifkan lagi" per baris di tab "Proyek saya" (konfirmasi dulu saat mengarsipkan; panel di bawah tombol di desktop, bottom sheet di HP). Karena `link_status` tidak bisa ditulis klien, perubahannya lewat RPC `set_project_archived(p_project_id, p_archived)` (security definer, hanya owner, bukan `removed`) di migrasi `20261017090000_archive_project.sql`; mengaktifkan lagi mengembalikan `live` dan me-reset `link_fail_count` supaya link checker Fase 9 menilai ulang. Server action `lib/projects/archive.ts` meng-invalidate tag proyek dan maker. Migrasi sudah di-push ke DB dev; `pnpm db:test` lulus semua (128 test, termasuk 13 baru di `supabase/tests/05_archive_project.sql`).
+
+Keputusan kecil: tanggal ditampilkan absolut ("dicek 15 Okt 2026", "maker sejak Oktober 2026") supaya tidak bergantung pada waktu render; deskripsi proyek tampil di bawah galeri ("Tentang proyek ini") karena desain tidak memuatnya; Worth it masih teks read-only, balasan dan laporan menunggu Fase 7; link kategori breadcrumb ke `/explore?category=` dan tools ke `/tools/[slug]` (dibangun Fase 6); username di URL tidak peka huruf besar.
+
+Sudah dicek: lint, typecheck, format, build. Di browser: `/id/p/tasklog` dan `/id/u/samsiragil` dengan data DB dev (1440px dan 375px tanpa scroll horizontal, light/dark), 404 untuk slug/username yang tidak ada, OG image proyek dan profil (ID/EN). Varian yang butuh data khusus atau sesi dicek lewat halaman non-produksi `/[locale]/dev/pages` (proyek offline, diarsipkan, tampilan owner saat pending, `/me` berisi dan kosong): validasi form profil menandai field dan memfokuskan yang pertama, server action menjawab `unauthorized` tanpa login. Belum: `/me` dan simpan profil dengan akun asli (pane belum login), gambar galeri banyak + video dengan data asli.
+
 ### Fase 6 — Penemuan: beranda, jelajah, tools (2–3 hari)
 
-- [ ] `/` sesuai `VPO-Beranda`: hero dari `weekly_picks` minggu berjalan (fallback "Baru masuk"), "Obrolan terpopuler minggu ini" (RPC rolling 7 hari, maks 1 per maker), chip tools, "Baru masuk", ajakan submit, footer lengkap.
-- [ ] `/explore` sesuai `VPO-Jelajah`: search, filter tools (dikelompokkan per jenis, "Lihat semua (N)" + cari, §2.8)/kategori/bahasa (state di URL query supaya bisa dibagikan), sort Paling worth it/Terbaru, cursor pagination "Muat obrolan lainnya", empty state SystemMessage. Di HP, filter pindah ke bottom sheet.
-- [ ] `/tools/[slug]` sesuai `VPO-Tools`: switcher tools, deskripsi, jumlah obrolan, link situs tools, grid, empty state.
-- [ ] Caching: ISR/`revalidateTag` saat proyek dipublikasikan atau di-vote.
+- [x] `/` sesuai `VPO-Beranda`: hero dari `weekly_picks` minggu berjalan (fallback "Baru masuk"), "Obrolan terpopuler minggu ini" (RPC rolling 7 hari, maks 1 per maker), chip tools, "Baru masuk", ajakan submit, footer lengkap.
+- [x] `/explore` sesuai `VPO-Jelajah`: search, filter tools (dikelompokkan per jenis, "Lihat semua (N)" + cari, §2.8)/kategori/bahasa (state di URL query supaya bisa dibagikan), sort Paling worth it/Terbaru, cursor pagination "Muat obrolan lainnya", empty state SystemMessage. Di HP, filter pindah ke bottom sheet.
+- [x] `/tools/[slug]` sesuai `VPO-Tools`: switcher tools, deskripsi, jumlah obrolan, link situs tools, grid, empty state.
+- [x] Caching: ISR/`revalidateTag` saat proyek dipublikasikan atau di-vote (vote: Fase 7 tinggal memanggil tag yang sama).
 
 **DoD:** filter dan search memberi hasil benar (diuji dengan 30 proyek seed), URL filter bisa dibagikan, halaman beranda TTFB cepat dari cache.
 
+**Status (2026-10-17):** dikerjakan di branch `feat/phase-6-discovery` (lanjutan Fase 5). Migrasi `20261017120000_search_projects.sql` menambah RPC `search_projects(p_query, p_tools, p_categories, p_lang, p_sort, p_after, p_limit)` (security invoker, hanya `published`) dan helper `prefix_tsquery`. Pencarian memakai tsvector `search` yang sudah ada (judul, tagline, prompt kunci, deskripsi, prompt sesi) dengan pencocokan awalan per kata ("kas" menemukan "kasir"); semua kata harus cocok dan operator tsquery dari input dibuang. Urutan "Paling worth it" = `eligible_upvote_count`, lalu `published_at` lebih baru (§2.7 C); "Terbaru" = `published_at`. Pagination keyset lewat cursor `{e, p, i}`, `total_count` dihitung sebelum cursor. 27 test baru di `supabase/tests/06_search_projects.sql` memakai 30 proyek fixture (kategori dan tools khusus test supaya data asli DB dev tidak ikut): filter tools/kategori/bahasa, kombinasinya, search, urutan dan tie-break, halaman demi halaman tanpa duplikat atau terlewat, validasi. Migrasi sudah di-push ke DB dev; `pnpm db:test` lulus semua (155 test). Tipe digenerate ulang dengan `pnpm db:types`.
+
+Kode: loader di `lib/projects/discovery.ts` (`getHomeData`, `searchProjects`, `getToolPage`, semuanya `use cache`), state filter di URL lewat `lib/projects/explore-params.ts` (`?q=&tools=a,b&category=&lang=&sort=new`, nilai tidak dikenal dibuang), server action "Muat obrolan lainnya" di `lib/projects/load-more.ts`. Komponen di `components/discovery/`: `HomeHeroCard`, `ProjectRow` (baris "Baru masuk"), dan `explore-client.tsx` (form cari yang tetap jalan sebagai GET biasa sebelum hidrasi, panel filter, bottom sheet HP memakai `<dialog>` native, `ResultsGrid` dengan load more). `ProjectGridCard` dan `LinkStatusText` kini tidak async (`useTranslations`) supaya bisa dirender di client untuk halaman berikutnya; kartu di jelajah menampilkan badge bahasa sebagai ganti kategori, sesuai desain. Halaman: `/` (hero dari RPC `get_home_hero`, populer dari `popular_this_week(6)`, chip 8 tools teratas, 5 "Baru masuk" tanpa proyek hero, ajakan submit), `/explore`, `/tools/[slug]` (switcher = tools teratas sejenis + "Semua tools", 8 tools populer di-prerender), dan `/tools` (indeks semua tools per jenis, termasuk yang 0 proyek).
+
+Caching: tag baru `LISTINGS_TAG` ("listings") untuk semua daftar proyek dan `TOOLS_TAG` ("tools") untuk katalog. `saveProject` meng-invalidate keduanya bila proyek berstatus `published`; arsip, aksi media, route `finalize`, dan simpan profil meng-invalidate `listings`. Beranda ter-prerender lengkap dengan data (revalidate 1 menit, expire 1 jam), jadi disajikan dari static shell. Fase 7 (vote, balasan) dan Fase 8 (aksi admin) cukup memanggil `updateTag(LISTINGS_TAG)`.
+
+Keputusan kecil: filter tools bersifat AND (proyek harus memakai semua tools yang dicentang, sesuai teks kosong "kombinasi ini"), kategori bersifat OR; jumlah di samping tools memakai `project_count` global; slug tools/kategori yang tidak dikenal di URL dibuang; tanggal "Baru masuk" absolut ("17 Okt") sesuai keputusan Fase 5; jumlah "obrolan tayang" di `/tools/[slug]` dihitung dari hasil pencarian, bukan dari cache katalog.
+
+Sudah dicek: lint, typecheck, format, build. Di browser dengan data DB dev: `/id`, `/en`, `/id/explore` (centang tools mengubah URL, search "task log", kombinasi kosong + slug palsu di URL, sort Terbaru), `/id/tools/claude-code`, `/id/tools/bolt` (kosong), `/en/tools`, di 1440px dan 375px tanpa scroll horizontal, light/dark, bottom sheet filter di HP. Hero "Pilihan minggu ini", kartu populer, dan baris "Baru masuk" dengan banyak proyek dicek lewat `/[locale]/dev/pages?view=home` karena DB dev baru punya satu proyek tayang. Belum: "Muat obrolan lainnya" dengan data asli (butuh >24 proyek tayang; logika cursor sudah dites di SQL) dan hero "Pilihan minggu ini" dari `weekly_picks` asli.
+
 ### Fase 7 — Interaksi: Worth it, balasan, lapor (2 hari)
 
-- [ ] `WorthItButton` dengan optimistic update; logged-out diarahkan ke login lalu kembali ke halaman semula. Vote proyek sendiri sesuai [Q13].
-- [ ] Balasan satu tingkat: daftar, form (Turnstile + rate limit), hapus balasan sendiri.
-- [ ] `ReportButton` untuk proyek dan balasan: dialog pilih alasan + catatan opsional.
-- [ ] Auto-hide 3 laporan (trigger dari Fase 2) diverifikasi end-to-end.
+- [x] `WorthItButton` dengan optimistic update; logged-out diarahkan ke login lalu kembali ke halaman semula. Vote proyek sendiri sesuai [Q13].
+- [x] Balasan satu tingkat: daftar, form (Turnstile + rate limit), hapus balasan sendiri.
+- [x] `ReportButton` untuk proyek dan balasan: dialog pilih alasan + catatan opsional.
+- [x] Auto-hide 3 laporan (trigger dari Fase 2) diverifikasi end-to-end.
 
 **DoD:** satu akun satu vote, counter konsisten, laporan ganda dari akun yang sama ditolak, laporan ke-3 menyembunyikan proyek.
 
+**Status (2026-10-17):** dikerjakan di branch `feat/phase-7-interactions` (lanjutan Fase 6). Migrasi `20261018090000_interactions.sql`: laporan hanya bisa ke konten yang memang terlihat oleh pelapor (proyek `published`, balasan `visible` di proyek `published`) dan tidak ke konten sendiri (`report_own_content`), jadi aturan "3 akun berbeda" tidak bisa dipicu lewat id proyek pending/hidden; catatan laporan di-trim (kosong jadi null). Balasan butuh username (`username_required`) dan isinya di-trim. RPC `report_content(p_target_type, p_target_id, p_reason, p_note)` (security definer, hanya `authenticated`) mengisi laporan lewat trigger yang sama dan mengembalikan `project_id`, `owner_id`, `target_hidden`, karena pelapor tidak bisa membaca proyek yang baru tersembunyi lewat RLS. 41 test baru di `supabase/tests/07_interactions.sql`: vote dobel, tarik vote, vote proyek sendiri/tersembunyi, balasan (trim, kosong, proyek pending, tanpa username, hapus milik orang lain, rate limit 30/hari), laporan (anon, konten sendiri, proyek pending, dobel, catatan) dan auto-hide end-to-end untuk proyek dan balasan (laporan ke-3 menyembunyikan, `comment_count` turun, target tersembunyi tidak bisa dilaporkan lagi). Migrasi sudah di-push ke DB dev; `pnpm db:test` lulus semua (196 test). Tipe digenerate ulang.
+
+Kode: server action di `lib/interactions/actions.ts` (`setWorthIt(projectId, voted)` idempoten sehingga klik ganda atau retry tidak menambah vote dan mengembalikan counter dari DB; `postReply` dengan Turnstile; `deleteReply`; `reportContent`), loader balasan ber-`use cache` di `lib/interactions/replies.ts` (tag baru `repliesTag`, maks 200 balasan, urut terlama), validasi bersama di `lib/validation/interactions.ts`. Komponen di `components/interactions/`: `WorthItButton` (`useOptimistic`, `aria-pressed`, kembali ke state server dan menampilkan alasan bila gagal), `RepliesSection` (bubble balasan, label "maker", form pill yang tumbuh mengikuti isi, Ctrl/Cmd+Enter mengirim, widget Turnstile baru dimuat saat kotak balasan difokus, hapus dengan konfirmasi inline), `ReportButton` (`<dialog>` native, bottom sheet di HP, 6 alasan + catatan ≤500), dan `project-interactions.tsx` yang men-stream bagian per pengunjung: halaman proyek tetap dari cache, sedangkan status vote, form balasan, dan link lapor menyusul per request. Pengunjung belum login mendapat link ke `/login?next=` (balasan kembali ke `#balasan`), user tanpa username diarahkan ke onboarding, maker melihat counter read-only dan tidak melihat "Laporkan proyek ini". `ProjectDetailView` menerima slot `worthIt`, `replies`, `reportLink`; tampilan owner untuk proyek non-publik tetap read-only.
+
+Caching: vote meng-invalidate `project:`, `maker:` (total worth it di profil), dan `listings`; balasan baru/hapus meng-invalidate `replies:` dan `listings` (pembalas ikut skor populer, §2.7). Laporan yang menyembunyikan target memakai `revalidateTag(..., { expire: 0 })`, bukan `updateTag`, supaya pelapor tetap melihat konfirmasi di dialog alih-alih halamannya langsung diganti 404; pengunjung lain langsung mendapat versi baru di request berikutnya.
+
+Tag @username (tanpa balasan bersarang, supaya tetap terasa seperti obrolan dan ringan di HP): daftar balasan tetap datar dan kronologis. Mengetik `@` di kotak balasan membuka saran orang dari obrolan itu saja (maker + para pembalas, tanpa diri sendiri), disaring per awalan username atau kata di nama; pilih dengan panah + Enter/Tab atau klik, Escape menutup (pola combobox dengan `aria-activedescendant`). Tombol "Balas" di tiap balasan orang lain menambahkan `@username ` ke form (sekali saja) lalu memfokuskannya; pengunjung belum login atau tanpa username diarahkan ke login/onboarding. Saat ditampilkan, `@username` menjadi link profil hanya bila username itu peserta obrolan, jadi typo atau nama orang luar tetap teks biasa. Helper murni di `lib/interactions/mentions.ts`; tanpa perubahan DB. Mention belum memberi notifikasi; saat notifikasi dibuat (Q10 / `/me`), mention bisa disimpan di tabel kecil `comment_mentions`.
+
+Keputusan kecil: maker boleh membalas dan melaporkan balasan di proyeknya sendiri; tanggal balasan absolut ("16 Okt 2026") sesuai keputusan Fase 5; laporan belum punya rate limit selain satu laporan per akun per target.
+
+Sudah dicek: lint, typecheck, format, build. Di browser (build produksi, belum login): `/id/p/tasklog` dan `/en/p/tasklog` menampilkan "Balasan 0", ajakan masuk, serta link Worth it dan "Laporkan proyek ini" ke login dengan `next` yang benar. Tampilan login dicek lewat `/[locale]/dev/pages?view=interactions` (800px dark dan 375px light, tanpa scroll horizontal): Worth it langsung berubah lalu kembali dengan pesan "Sesi login habis" karena aksi menjawab `unauthorized`, dialog lapor (pilih alasan, kirim, pesan error), form balasan, dan konfirmasi hapus. Catatan: dev server lama di port 3000 sempat tidak menukar bagian yang di-stream di semua halaman (termasuk tombol "Masuk" di header `/explore`), jadi pengecekan streaming dilakukan di `next start`. Belum: vote, balasan, dan laporan end-to-end dengan akun asli (pane belum login) dan Turnstile dengan key asli.
+
 ### Fase 8 — Admin (1–2 hari)
 
-- [ ] `/admin` (hanya `is_admin`, dicek di server) sesuai `VPO-Admin`, dengan 3 tab:
+- [x] `/admin` (hanya `is_admin`, dicek di server) sesuai `VPO-Admin`, dengan 3 tab:
   - Antrean review: pending urut paling lama, sisa waktu 48 jam, Setujui/Tolak (+ alasan, [Q11]).
   - Laporan: proyek/balasan yang dilaporkan, Pulihkan / Hapus / Cabut status terpercaya / Biarkan / Sembunyikan.
   - Kelola tools: tambah/edit (nama, slug, url, logo, jenis, deskripsi ID/EN), plus antrean `tool_suggestions` dengan aksi Gabungkan ke tools yang ada / Jadikan tools baru / Tolak.
-- [ ] Panel baca-saja "Pilihan minggu ini": riwayat `weekly_picks` dan `breakdown`-nya. Admin tidak bisa mengubah pemenang.
-- [ ] Email notifikasi setuju/tolak ([Q10]).
-- [ ] Log aksi admin minimal (`reviewed_by`, `resolved_by`).
+- [x] Panel baca-saja "Pilihan minggu ini": riwayat `weekly_picks` dan `breakdown`-nya. Admin tidak bisa mengubah pemenang.
+- [x] Email notifikasi setuju/tolak ([Q10]). Kode siap (Resend), aktif setelah `RESEND_API_KEY` + `EMAIL_FROM` diisi; sebelum itu hasil review tampil di `/me`.
+- [x] Log aksi admin minimal (`reviewed_by`, `resolved_by`).
 
 **DoD:** alur pending → approve → maker jadi terpercaya → proyek ke-2 langsung tayang berjalan end-to-end, email terkirim.
 
+**Status (2026-10-17):** dikerjakan di branch `feat/phase-8-admin` (lanjutan Fase 7). Migrasi `20261019090000_admin.sql`: semua aksi moderasi lewat RPC security definer yang memanggil `assert_admin()` dulu (`not_allowed` / 42501 untuk non-admin), jadi grant kolom yang mengunci status, trust, dan kolom review tetap seperti semula. `admin_review_project(p_project_id, p_approve, p_reject_code, p_reject_note)` hanya untuk proyek `pending`; setuju memakai trigger lama yang menjadikan maker terpercaya, tolak wajib memilih kode alasan (kolom baru `reject_code`: `incomplete`, `broken_link`, `not_vibe_coded`, `duplicate`, `rules`, `other`) dan catatan opsional di `reject_reason` (wajib untuk `other`). Kolom baru `submitted_at` menjadi jam antrean 48 jam dan diulang saat proyek kembali ke `pending`. Celah Fase 4 ditutup: `upsert_project` memanggil `resubmit_rejected_project()` setelah edit, jadi proyek ditolak yang hanya diubah sesi/tools-nya juga kembali ke antrean. `admin_resolve_report(p_target_type, p_target_id, p_action)` menutup semua laporan terbuka satu target dengan satu putusan: `keep` (tampil lagi, `report_count` direset), `hide`, `remove` (proyek jadi `removed`, balasan dihapus); laporan untuk balasan yang sudah dihapus penulisnya tetap bisa ditutup. `admin_set_trusted()` mencabut atau mengembalikan status terpercaya. `admin_resolve_tool_suggestions(p_name, p_action, p_tool_id, p_new_tool)` menangani semua saran pending dengan nama sama (huruf besar/spasi diabaikan): gabung ke tools aktif, buat tools baru, atau tolak; gabung/buat langsung menautkan tools ke semua proyek yang menyarankannya. 45 test baru di `supabase/tests/08_admin.sql` (siapa yang boleh memanggil, DoD setuju → terpercaya → proyek berikutnya langsung tayang, tolak + kirim ulang lewat edit sesi saja dan lewat edit konten, putusan laporan proyek/balasan, cabut trust, gabung/buat/tolak saran tools) lulus bersama 196 test lama (total 241) dengan migrasi diterapkan di dalam transaksi yang dibatalkan. Migrasi sudah di-push ke DB dev; `pnpm db:test` lulus semua (241 test). Tipe digenerate ulang dengan `pnpm db:types`.
+
+Kode: loader di `lib/admin/data.ts` (antrean, laporan dikelompokkan per target dengan target tersembunyi di atas, katalog tools + saran dikelompokkan per nama, riwayat `weekly_picks` 12 minggu, jumlah untuk menu), server action di `lib/admin/actions.ts` (cek admin di app dan lagi di DB, invalidasi tag yang sama dengan loader publik, `refresh()` halaman admin), validasi bersama di `lib/validation/admin.ts`, `isCurrentUserAdmin()` di `lib/auth/current-user.ts` (memanggil RPC `is_admin`, karena `profiles.is_admin` tidak bisa dibaca klien). Halaman `app/[locale]/admin/`: tab di `?tab=` sebagai link biasa (setiap tab hanya memuat datanya sendiri), menu samping 220px di desktop dan baris menu yang bisa digeser di HP, non-admin mendapat 404 dan pengunjung belum login diarahkan ke login. Kartu antrean (cover, maker, "dikirim 5 jam yang lalu", "SISA 43 JAM"/"LEWAT 29 JAM", prompt kunci, tools, kategori, lama bikin, link live) dengan Setujui/Tolak; Tolak membuka form alasan + catatan. Kartu laporan dengan alasan per jenis, catatan pelapor, dan putusan sesuai keadaan target (Pulihkan / Biarkan tersembunyi / Hapus untuk yang tersembunyi, Biarkan / Sembunyikan / Hapus untuk yang tampil; Hapus minta konfirmasi), plus "Cabut status terpercaya" untuk maker/penulis terpercaya. Kelola tools: cari + filter jenis, tabel, dialog tambah/edit (slug otomatis dari nama, nonaktifkan tools), dan antrean saran (Gabungkan / Jadikan tools baru / Tolak). Item yang sudah diputuskan hilang dari daftar setelah refresh, jadi hasilnya dikonfirmasi di log kecil di atas daftar (`action-log.tsx`). Admin juga bisa membuka `/p/[slug]` proyek yang belum tayang dengan banner "Pratinjau admin". `/me` mendapat tombol "Panel admin" untuk admin.
+
+Notifikasi (Q10): email lewat Resend HTTP API (`lib/email/`), dikirim di `after()` supaya tidak menahan admin, dalam bahasa konten proyek; alamat maker dibaca dari `auth.users` dengan secret key. Tanpa env, tidak ada email dan log admin menulis "maker melihat alasannya di dashboard". `/me` kini menampilkan alasan penolakan (label kode dalam bahasa pengunjung + catatan admin) dengan link ke halaman edit, dan kabar persetujuan selama seminggu. Alasan tolak juga tampil dengan format yang sama di banner owner `/p/[slug]` dan halaman edit.
+
+Cache: setuju/tolak dan putusan laporan proyek meng-invalidate `project:`, `project-slug:`, `maker:`, `listings`, dan `tools` (jumlah proyek per tools hanya menghitung yang tayang); putusan balasan meng-invalidate `replies:` dan `listings`; trust meng-invalidate `maker:`; perubahan tools dan saran meng-invalidate `tools`, `listings`, dan `project:` untuk proyek yang tertaut.
+
+Keputusan kecil: "Biarkan" pada proyek yang tampil juga mereset hitungan laporan, jadi butuh 3 laporan baru untuk auto-hide lagi; "Cabut status terpercaya" terpisah dari putusan laporan dan tidak menutup laporannya; slug tools boleh diubah admin (halaman `/tools/[slug]` lama jadi 404); proyek yang dikirim ulang ditandai "dikirim ulang" di antrean.
+
+Sudah dicek: lint, typecheck, format, build. Di browser (dev server, belum login): `/id/admin` mengarahkan ke `/id/login?next=/id/admin`; kartu admin dengan data contoh di `/[locale]/dev/pages?view=admin` (desktop dan 375px tanpa scroll horizontal): form tolak (fokus ke alasan pertama, catatan wajib untuk "Alasan lain", aksi menjawab "Sesi login habis" tanpa login), dialog tambah tools (slug otomatis "Kiro Café" → `kiro-cafe`, URL non-https ditandai dan difokuskan), konfirmasi Hapus pada laporan; `/me` dengan kabar ditolak/disetujui dalam ID dan EN. Belum: alur end-to-end dengan akun admin asli (set `is_admin` lewat SQL), dan email dengan key Resend asli (butuh domain, Fase 11).
+
 ### Fase 9 — Job terjadwal: link checker, backup, keep-alive (1 hari)
 
-- [ ] `scripts/link-checker.ts` + GitHub Actions mingguan: HEAD/GET `live_url` (timeout, ikuti redirect), update `link_status`, `link_fail_count`, `last_checked_at` sesuai aturan [Q8].
-- [ ] Job harian: hitung ulang `eligible_upvote_count` untuk vote dari akun yang baru melewati 72 jam (§2.7).
-- [ ] Workflow keep-alive harian (query ringan) supaya Supabase Free tidak pause.
-- [ ] Backup mingguan: `pg_dump` ke bucket R2 privat (atau artifact GitHub privat), simpan 8 versi terakhir.
+- [x] `scripts/link-checker.mjs` + GitHub Actions mingguan: HEAD/GET `live_url` (timeout, ikuti redirect), update `link_status`, `link_fail_count`, `last_checked_at` sesuai aturan [Q8].
+- [x] Job harian: hitung ulang `eligible_upvote_count` untuk vote dari akun yang baru melewati 72 jam (§2.7). Sudah via pg_cron di Fase 2.
+- [x] Workflow keep-alive harian (query ringan) supaya Supabase Free tidak pause.
+- [x] Backup mingguan: dump database ke bucket R2 privat, simpan 8 versi terakhir.
 
 **DoD:** workflow jalan manual (`workflow_dispatch`) dan terjadwal, proyek dengan URL mati berubah status sesuai aturan, file backup bisa di-restore ke Supabase lokal.
+
+**Status (2026-10-17):** dikerjakan di branch `feat/phase-9-jobs` (lanjutan Fase 8). Panduan operasional (secret, jadwal, restore) di `docs/operations.md`.
+
+Link checker: migrasi `20261020090000_link_checker.sql` menambah RPC `record_link_checks(p_results)` (security definer, hanya `service_role`) yang memegang aturan Q8: satu kali berhasil → `live` dan hitungan direset, gagal kedua kali berturut-turut → `offline`; proyek `archived` atau yang tidak (lagi) tayang dilewati; id ganda dihitung sekali. `projects_before_update` kini mereset status link (`live`, hitungan 0, `last_checked_at` kosong) saat `live_url` diganti, kecuali proyek diarsipkan. Skrip `scripts/link-checker.mjs` (`pnpm links:check`, `--dry-run`, atau daftar slug) membaca proyek dengan secret key, mengecek 8 sekaligus (`HEAD` lalu `GET` bila gagal, timeout 10 detik, ikuti redirect, body tidak diunduh), lalu mengirim hasil per 500. Ringkasan job GitHub menampilkan proyek yang gagal dan yang berubah status. Workflow `link-check.yml`: Senin 09:00 WIB + manual (opsi dry run). 20 test baru di `supabase/tests/09_link_checker.sql` (hak panggil, gagal berturut-turut, pulih, batch campuran, arsip/pending dilewati, validasi input, ganti `live_url`) lulus bersama 241 test lama (total 261) dengan migrasi diterapkan di dalam transaksi yang dibatalkan.
+
+Keep-alive: `keep-alive.yml` setiap hari 07:30 WIB membaca satu baris `categories` lewat REST API dengan publishable key (variabel repo yang sudah dipakai CI), dengan retry, dan gagal bila Supabase tidak menjawab.
+
+Backup: `backup.yml` setiap Senin 02:00 WIB memakai Supabase CLI (`supabase db dump`: roles, skema, data `--use-copy` tanpa `cron.job_run_details`) lewat Session pooler, mengecek dump tidak kosong, membungkusnya jadi `vpo-db-<waktu UTC>.tar.gz`, lalu `scripts/backup-r2.mjs upload` menyimpannya di bucket R2 privat terpisah dan menghapus yang lebih lama dari 8 versi. Skrip yang sama punya `list` dan `download` untuk restore. Artifact GitHub sengaja tidak dipakai: repo publik dan dump berisi email akun. Skrip menolak bila bucket backup sama dengan bucket media.
+
+Keputusan kecil: skrip `.mjs` seperti skrip lain di `scripts/` (tanpa langkah build TypeScript); 429 dan 403 tantangan bot Cloudflare/Vercel dianggap hidup supaya situs di balik proteksi bot tidak ditandai offline; hanya proyek `published` yang dicek; pengecekan tidak mengubah `updated_at`.
+
+Sudah dicek: lint, typecheck, format. Migrasi sudah di-push ke DB dev; `pnpm db:test` lulus semua (261 test). `pnpm links:check` (dry run dan sungguhan) terhadap DB dev: `tasklog` tercatat `live`, `last_checked_at` terisi; logika probe dengan URL contoh (200, 404, DNS tidak ada, sertifikat kedaluwarsa, timeout, tantangan Cloudflare). Ping keep-alive terhadap DB dev menjawab. Pola cek dump dicocokkan dengan skrip `pg_dump` CLI (`supabase db dump --dry-run`). Belum: mengisi secret/variabel GitHub dan membuat bucket backup; menjalankan ketiga workflow di GitHub; restore backup ke Supabase lokal (Docker Desktop di mesin ini gagal start).
 
 ### Fase 10 — Dukung kami, SEO, analitik, polish (2 hari)
 

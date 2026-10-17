@@ -7,6 +7,7 @@ import { getTranslations } from "next-intl/server";
 import { routing } from "@/i18n/routing";
 import { SiteHeader } from "@/components/layout/site-header";
 import { ThemeProvider } from "@/components/providers/theme-provider";
+import { siteUrl } from "@/lib/site";
 import "../globals.css";
 
 const fraunces = Fraunces({
@@ -33,6 +34,7 @@ export function generateStaticParams() {
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("meta");
   return {
+    metadataBase: new URL(siteUrl),
     title: { default: t("title"), template: `%s · ${t("title")}` },
     description: t("description"),
   };
@@ -51,8 +53,7 @@ export default async function LocaleLayout({ children }: LayoutProps<"/[locale]"
       <body className="flex min-h-full flex-col">
         <ThemeProvider>
           <NextIntlClientProvider>
-            {/* Auth arrives in Fase 2; until then everyone is logged out. */}
-            <SiteHeader user={null} />
+            <SiteHeader />
             <div className="flex grow flex-col">{children}</div>
           </NextIntlClientProvider>
         </ThemeProvider>

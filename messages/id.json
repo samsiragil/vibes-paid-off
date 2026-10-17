@@ -49,11 +49,803 @@
     "lede": "Setiap proyek di sini dimulai dari satu pesan, dan vibes-nya terbayar. Lihat percakapannya, hasilnya, dan apa yang terjadi di antaranya.",
     "ctaSubmit": "Pamerin proyekmu",
     "ctaExplore": "Jelajahi proyek",
-    "soon": "Katalognya lagi disiapkan. Proyek pertama segera tayang di sini."
+    "soon": "Katalognya lagi disiapkan. Proyek pertama segera tayang di sini.",
+    "heroLink": "Buka obrolan {title}",
+    "pickBadge": "Pilihan minggu ini",
+    "latestBadge": "Baru masuk",
+    "builtWith": "Jadinya pakai {tools}.",
+    "replies": "{count, plural, =0 {Belum ada balasan} other {# balasan}}",
+    "popularLead": "Obrolan",
+    "popularTail": "terpopuler minggu ini",
+    "popularEmpty": "Minggu ini belum ada obrolan yang ramai. Kasih Worth it ke proyek yang kamu suka, nanti muncul di sini.",
+    "seeAll": "Lihat semua",
+    "toolsLabel": "Mau lihat yang dibikin pakai…",
+    "latestLead": "Baru",
+    "latestTail": "masuk",
+    "latestMeta": "{tools} · {time}",
+    "ctaLead": "Vibes-mu terbayar?",
+    "ctaTail": "Ceritain di sini.",
+    "ctaPlaceholder": "Tulis prompt kunci proyekmu…",
+    "ctaButton": "Pamerin proyekmu ↑"
   },
   "notFound": {
     "title": "Halaman tidak ditemukan",
     "body": "Halaman ini belum ada, atau sudah pindah.",
     "back": "Balik ke beranda"
+  },
+  "auth": {
+    "metaTitle": "Masuk",
+    "eyebrow": "Masuk ke Vibes Paid Off",
+    "titleLead": "Masuk dulu,",
+    "titleTail": "lalu pamerin karyamu.",
+    "intro": "Pakai akun GitHub atau Google. Kami hanya menerima nama, email, dan foto profilmu, tanpa akses ke repo atau data lain.",
+    "github": "Lanjut dengan GitHub",
+    "google": "Lanjut dengan Google",
+    "note": "Dengan masuk, kamu setuju mengikuti aturan komunitas Vibes Paid Off.",
+    "errors": {
+      "oauth": "Gagal menghubungi penyedia login. Coba lagi, ya.",
+      "callback": "Login belum selesai. Coba lagi, ya.",
+      "provider": "Penyedia login tidak dikenal."
+    }
+  },
+  "onboarding": {
+    "metaTitle": "Pilih username",
+    "eyebrow": "Satu langkah lagi",
+    "titleLead": "Mau dipanggil",
+    "titleTail": "apa?",
+    "intro": "Username jadi alamat profilmu dan muncul di setiap obrolan yang kamu pamerkan.",
+    "username": "Username",
+    "usernameHint": "3–20 karakter: huruf kecil, angka, atau garis bawah.",
+    "checking": "Mengecek ketersediaan…",
+    "available": "@{username} tersedia.",
+    "unavailable": "@{username} tidak tersedia. Coba yang lain.",
+    "invalid": "Pakai 3–20 huruf kecil, angka, atau garis bawah.",
+    "displayName": "Nama tampilan",
+    "displayNameHint": "Boleh nama asli atau nama panggung. Maksimal 60 karakter.",
+    "submit": "Simpan dan lanjut",
+    "saving": "Menyimpan…",
+    "error": "Gagal menyimpan. Coba lagi, ya."
+  },
+  "me": {
+    "metaTitle": "Dashboard saya",
+    "hello": "Halo,",
+    "viewProfile": "Lihat profil publik",
+    "signOut": "Keluar",
+    "tabs": {
+      "label": "Bagian dashboard",
+      "projects": "Proyek saya · {count}",
+      "profile": "Edit profil"
+    },
+    "table": {
+      "project": "Obrolan",
+      "status": "Status",
+      "link": "Link",
+      "worthIt": "Worth it",
+      "replies": "Balasan"
+    },
+    "status": {
+      "published": "Tayang",
+      "pending": "Menunggu review",
+      "rejected": "Ditolak",
+      "hidden": "Disembunyikan",
+      "removed": "Dihapus"
+    },
+    "rejectReason": "Alasan ditolak: {reason}",
+    "edit": "Edit",
+    "view": "Lihat",
+    "offlineNotice": "Link <strong>{title}</strong> sedang offline (terakhir dicek {date}). Tenang, screenshot dan videonya tetap tampil. Kalau sudah hidup lagi, kami tandai Live otomatis.",
+    "offlineNoticeNoDate": "Link <strong>{title}</strong> sedang offline. Tenang, screenshot dan videonya tetap tampil. Kalau sudah hidup lagi, kami tandai Live otomatis.",
+    "trusted": "Maker terpercaya",
+    "trustedNote": "Proyek barumu langsung tayang tanpa antre review.",
+    "notTrustedNote": "Proyek pertamamu direview admin dulu (paling lama 2×24 jam). Setelah disetujui, proyek berikutnya langsung tayang.",
+    "empty": "Kamu belum memamerkan obrolan apa pun. Mulai dari proyek yang paling kamu banggakan, sekecil apa pun.",
+    "emptyCta": "Pamerin proyekmu",
+    "profileForm": {
+      "displayName": "Nama tampilan",
+      "username": "Username",
+      "usernameHint": "Mengganti username juga mengganti alamat profilmu.",
+      "bio": "Bio singkat",
+      "bioHint": "Maksimal {max} karakter. Tampil sebagai bubble di profilmu.",
+      "bioPlaceholder": "Ceritakan singkat apa yang suka kamu bikin bersama AI.",
+      "location": "Lokasi",
+      "locationPlaceholder": "Misalnya Yogyakarta",
+      "tipUrl": "Link traktir saya",
+      "tipUrlHint": "Saweria, Trakteer, Ko-fi, atau sejenisnya. Muncul sebagai tombol di profil dan proyekmu.",
+      "links": {
+        "github": "GitHub",
+        "linkedin": "LinkedIn",
+        "x": "X",
+        "website": "Website"
+      },
+      "linkPlaceholders": {
+        "github": "https://github.com/…",
+        "linkedin": "https://linkedin.com/in/…",
+        "x": "https://x.com/…",
+        "website": "https://…"
+      },
+      "avatarNote": "Foto profil diambil dari akun GitHub atau Google yang kamu pakai untuk masuk.",
+      "cancel": "Batal",
+      "save": "Simpan profil",
+      "saving": "Menyimpan…",
+      "saved": "Profil tersimpan.",
+      "errors": {
+        "required": "Wajib diisi.",
+        "too_long": "Maksimal {max} karakter.",
+        "invalid_url": "Pakai alamat lengkap yang diawali https://",
+        "invalid_username": "Pakai 3–20 huruf kecil, angka, atau garis bawah (bukan nama yang dicadangkan).",
+        "taken": "Username ini sudah dipakai. Coba yang lain.",
+        "invalid": "Isian tidak valid.",
+        "unauthorized": "Sesi login habis. Masuk lagi, lalu coba lagi.",
+        "failed": "Gagal menyimpan. Coba lagi, ya."
+      }
+    },
+    "archive": {
+      "archive": "Arsipkan",
+      "unarchive": "Aktifkan lagi",
+      "saving": "Menyimpan…",
+      "confirmLabel": "Arsipkan {title}?",
+      "confirm": "Arsipkan proyek ini? Tombol Coba live disembunyikan, tapi halaman, screenshot, dan ceritanya tetap ada. Bisa diaktifkan lagi kapan saja.",
+      "confirmYes": "Ya, arsipkan",
+      "cancel": "Batal",
+      "errors": {
+        "unauthorized": "Sesi login habis. Masuk lagi, lalu coba lagi.",
+        "forbidden": "Kamu tidak bisa mengubah proyek ini.",
+        "invalid": "Permintaan tidak valid. Muat ulang halaman.",
+        "failed": "Gagal menyimpan. Coba lagi, ya."
+      }
+    },
+    "adminLink": "Panel admin",
+    "review": {
+      "approved": "Kabar baik: <strong>{title}</strong> sudah disetujui admin dan tayang. Mulai sekarang kamu maker terpercaya, jadi proyek berikutnya langsung tayang.",
+      "rejected": "<strong>{title}</strong> belum bisa tayang. Alasannya: {reason}. <edit>Perbaiki proyeknya</edit>, lalu simpan untuk mengirim ulang ke review.",
+      "rejectedNoReason": "<strong>{title}</strong> belum bisa tayang. <edit>Perbaiki proyeknya</edit>, lalu simpan untuk mengirim ulang ke review."
+    }
+  },
+  "categories": {
+    "umkm": "UMKM",
+    "education": "Edukasi",
+    "community": "Komunitas",
+    "game": "Game",
+    "dev-tools": "Tools developer",
+    "productivity": "Alat produktivitas",
+    "lifestyle": "Gaya hidup",
+    "personal": "Personal",
+    "ai-wrapper": "AI wrapper",
+    "other": "Lainnya"
+  },
+  "toolKinds": {
+    "ai_agent": "Agen & editor AI",
+    "ai_builder": "App builder AI",
+    "ai_assistant": "Asisten AI",
+    "framework": "Framework & bahasa",
+    "backend": "Database & backend",
+    "hosting": "Hosting & deploy",
+    "service": "Layanan & integrasi"
+  },
+  "media": {
+    "add": "Tambah gambar",
+    "hint": "JPG, PNG, atau WebP, maksimal 3 gambar. Gambar pertama jadi sampul. Bisa juga seret file ke sini.",
+    "cover": "Sampul",
+    "imageAlt": "Gambar {position}",
+    "moveLeft": "Geser gambar {position} ke kiri",
+    "moveRight": "Geser gambar {position} ke kanan",
+    "remove": "Hapus gambar {position}",
+    "retry": "Coba lagi",
+    "status": {
+      "compressing": "Mengompres…",
+      "waiting": "Belum diunggah",
+      "queued": "Menunggu giliran…",
+      "uploading": "Mengunggah {percent}%",
+      "processing": "Memproses…",
+      "removing": "Menghapus…"
+    },
+    "errors": {
+      "unauthorized": "Sesi login habis. Masuk lagi, lalu coba lagi.",
+      "forbidden": "Kamu tidak bisa mengubah gambar proyek ini.",
+      "invalid": "Permintaan tidak valid. Muat ulang halaman, lalu coba lagi.",
+      "limit": "Maksimal 3 gambar per proyek.",
+      "too_large": "File terlalu besar. Maksimal 20 MB per gambar.",
+      "unsupported_type": "Format belum didukung. Pakai JPG, PNG, atau WebP.",
+      "not_found": "Upload belum sampai ke server. Coba lagi.",
+      "invalid_image": "Gambar tidak bisa dibaca. Coba file lain.",
+      "unavailable": "Upload gambar sedang tidak tersedia. Coba lagi nanti.",
+      "failed": "Gagal menyimpan gambar. Coba lagi, ya."
+    }
+  },
+  "projectCard": {
+    "timeAfter": "{hours, number} jam kemudian",
+    "timeAfterSessions": "{hours, number} jam dan {sessions} sesi kemudian",
+    "worthIt": "Worth it · {count}",
+    "moreTools": "+{count}",
+    "hours": "{hours, number} jam"
+  },
+  "projectForm": {
+    "metaSubmit": "Pamerin proyekmu",
+    "metaEdit": "Edit proyek",
+    "submitTitleLead": "Pamerin",
+    "submitTitleTail": "proyekmu",
+    "submitLede": "Jawab beberapa pertanyaan, kayak lagi ngobrol. Proyek pertamamu di-review admin paling lama 2×24 jam, setelah itu proyek berikutnya langsung tayang.",
+    "submitLedeTrusted": "Jawab beberapa pertanyaan, kayak lagi ngobrol. Kamu maker terpercaya, jadi proyekmu langsung tayang.",
+    "editTitleLead": "Edit",
+    "editTitleTail": "obrolan",
+    "editLede": "Ubah apa saja, lalu simpan. Gambar langsung tersimpan begitu diunggah, dihapus, atau digeser.",
+    "status": {
+      "pending": "Proyek ini masih menunggu review admin (paling lama 2×24 jam).",
+      "rejected": "Proyek ini ditolak admin: “{reason}”. Perbaiki, lalu simpan untuk mengirim ulang ke review.",
+      "rejectedNoReason": "Proyek ini ditolak admin. Perbaiki, lalu simpan untuk mengirim ulang ke review.",
+      "hidden": "Proyek ini sedang disembunyikan karena dilaporkan. Admin akan meninjaunya."
+    },
+    "draftRestored": "Draf terakhirmu ({time}) sudah dipulihkan. Gambar perlu dipilih ulang, ya.",
+    "draftDiscard": "Mulai dari awal",
+    "optional": "(opsional)",
+    "steps": {
+      "prompt": "Mulai dari yang paling penting: <strong>apa prompt kuncinya?</strong> Kalimat ini bakal jadi pembuka kartu proyekmu.",
+      "result": "Mantap. Terus <strong>jadinya apa?</strong>",
+      "media": "<strong>Kirim screenshot-nya dong.</strong> Maksimal 3, nanti otomatis dikompres. Video demo juga boleh.",
+      "tools": "<strong>Pakai tools apa?</strong> Pilih semua yang kamu pakai, dari agen AI sampai hosting.",
+      "sessions": "<strong>Ceritain sesi pembuatannya.</strong> Satu sesi = sekali duduk ngoding. Total jamnya jadi “X jam kemudian” di kartu.",
+      "lessons": "Terakhir, <strong>apa pelajaran yang kamu dapat?</strong> Boleh dilewati, tapi bagian ini yang paling dicari orang.",
+      "rules": "Sebelum kirim, ingat <link>aturan komunitas</link> ya:"
+    },
+    "rules": {
+      "own": "Proyek harus buatanmu sendiri atau kamu terlibat langsung.",
+      "illegal": "Dilarang konten dewasa, judi, penipuan, phishing, atau yang melanggar hukum.",
+      "privacy": "Jangan tampilkan data pribadi orang lain atau API key di screenshot dan prompt.",
+      "respect": "Kritik boleh, merendahkan tidak."
+    },
+    "keyPrompt": "Prompt kunci",
+    "keyPromptPlaceholder": "Bikin kasir buat warung kelontong, tombolnya gede, bisa dipakai ibu-ibu tanpa tutorial.",
+    "title": "Judul",
+    "titlePlaceholder": "Kasir Warung Bu Tini",
+    "tagline": "Tagline",
+    "taglinePlaceholder": "Catat jualan harian dari HP, langsung keluar rekap mingguan.",
+    "description": "Deskripsi",
+    "descriptionPlaceholder": "Ceritakan singkat: buat siapa, masalah apa yang diselesaikan.",
+    "liveUrl": "Link live",
+    "liveUrlPlaceholder": "https://kasirwarung.vercel.app",
+    "repoUrl": "Link repo",
+    "repoUrlPlaceholder": "https://github.com/username/kasir",
+    "videoUrl": "Video demo",
+    "videoUrlHint": "(YouTube atau Loom, opsional)",
+    "videoUrlPlaceholder": "https://www.loom.com/share/…",
+    "category": "Kategori",
+    "categoryPlaceholder": "Pilih kategori",
+    "contentLang": "Bahasa konten",
+    "lessons": "Pelajaran",
+    "lessonsPlaceholder": "Tulis prompt dari sudut pandang pemakainya.",
+    "tools": {
+      "quickPicks": "Tools populer",
+      "search": "Cari tools lain",
+      "searchPlaceholder": "Cari: Windsurf, Supabase, Vercel…",
+      "results": "Hasil pencarian tools",
+      "noResults": "Tidak ada “{query}” di katalog.",
+      "suggest": "Tools belum ada? Tambahkan “{query}”",
+      "suggestTitle": "Tambah tools yang belum ada di katalog",
+      "suggestName": "Nama tools",
+      "suggestUrl": "Situs tools",
+      "suggestAdd": "Tambah",
+      "suggestCancel": "Batal",
+      "suggestNote": "Tampil sebagai teks dulu di proyekmu, lalu admin memasukkannya ke katalog.",
+      "selected": "Tools pilihanmu",
+      "remove": "Hapus {name}",
+      "suggested": "baru",
+      "hint": "Minimal satu tools AI (agen, app builder, atau asisten AI)."
+    },
+    "sessions": {
+      "heading": "Sesi {number}",
+      "label": "Label",
+      "labelPlaceholder": "Sabtu malam",
+      "duration": "Durasi (jam)",
+      "durationHint": "0,5–24 jam, kelipatan setengah jam.",
+      "prompt": "Prompt utama",
+      "promptPlaceholder": "Apa yang kamu minta ke AI di sesi ini?",
+      "result": "Hasilnya",
+      "resultPlaceholder": "Apa yang jadi di akhir sesi?",
+      "hasChallenge": "Ada kendala di sesi ini",
+      "challenge": "Kendala",
+      "challengePlaceholder": "Login Google bentrok di Android lama.",
+      "solution": "Solusinya",
+      "solutionPlaceholder": "Ganti ke magic link email.",
+      "add": "Tambah sesi",
+      "count": "{count}/{max} sesi",
+      "total": "Total {hours, number} jam dalam {sessions} sesi",
+      "moveUp": "Naikkan sesi {number}",
+      "moveDown": "Turunkan sesi {number}",
+      "remove": "Hapus sesi {number}"
+    },
+    "preview": {
+      "label": "Pratinjau kartu",
+      "note": "Begini kartumu tampil di beranda, jelajah, dan profilmu.",
+      "prompt": "Prompt kuncimu muncul di sini",
+      "title": "Judul proyek",
+      "tools": "Tools",
+      "time": "X jam kemudian"
+    },
+    "turnstile": "Verifikasi keamanan",
+    "submit": "Kirim untuk review",
+    "submitTrusted": "Tayangkan",
+    "save": "Simpan perubahan",
+    "sending": "Mengirim…",
+    "saving": "Menyimpan…",
+    "uploading": "Mengunggah gambar…",
+    "errors": {
+      "required": "Wajib diisi.",
+      "too_long": "Kepanjangan, coba dipersingkat.",
+      "invalid_url": "Pakai link lengkap yang diawali https://",
+      "invalid_video_url": "Hanya link YouTube atau Loom.",
+      "invalid_duration": "Isi 0,5–24 jam, kelipatan setengah jam.",
+      "solution_needs_challenge": "Isi kendalanya dulu, baru solusinya.",
+      "ai_tool_required": "Pilih minimal satu tools AI.",
+      "too_many": "Kebanyakan. Kurangi sedikit, ya.",
+      "invalid": "Isian ini belum valid."
+    },
+    "formErrors": {
+      "invalid": "Ada isian yang perlu dibenerin dulu.",
+      "unauthorized": "Sesi login habis. Masuk lagi, isianmu tetap tersimpan sebagai draf.",
+      "captcha": "Verifikasi keamanan belum selesai atau gagal. Coba lagi, ya.",
+      "rate_limit": "Kamu sudah mengirim 3 proyek dalam 24 jam terakhir. Coba lagi besok, ya.",
+      "forbidden": "Kamu tidak bisa mengubah proyek ini.",
+      "failed": "Gagal menyimpan. Coba lagi, ya."
+    },
+    "signIn": "Masuk lagi",
+    "success": {
+      "pending": "Proyekmu sudah masuk! Kami review paling lama 2×24 jam. Kalau situs ini membantu, <link>traktir kopi ya</link>.",
+      "published": "Proyekmu sudah tayang! Kalau situs ini membantu, <link>traktir kopi ya</link>.",
+      "mediaFailed": "Proyeknya tersimpan, tapi ada gambar yang gagal diunggah. Unggah ulang dari halaman edit, ya.",
+      "view": "Lihat proyek",
+      "edit": "Edit proyek",
+      "another": "Pamerin proyek lain"
+    },
+    "saved": "Perubahan tersimpan.",
+    "savedPending": "Perubahan tersimpan. Proyekmu masuk antrean review lagi."
+  },
+  "linkStatus": {
+    "live": "Live",
+    "offline": "Offline",
+    "archived": "Diarsipkan"
+  },
+  "share": {
+    "share": "Bagikan",
+    "copy": "Salin link",
+    "copied": "Tersalin",
+    "copiedAnnouncement": "Link tersalin"
+  },
+  "project": {
+    "metaFallbackTitle": "Obrolan",
+    "breadcrumb": "Lokasi halaman",
+    "explore": "Jelajah",
+    "contentLang": "Konten ditulis dalam {lang, select, id {bahasa Indonesia} en {bahasa Inggris} other {{lang}}}",
+    "tryLive": "Coba live",
+    "tryLiveOffline": "Coba buka link",
+    "newTab": "(buka di tab baru)",
+    "edit": "Edit proyek",
+    "offlineNotice": "Link proyek ini sedang offline. Screenshot dan videonya tetap bisa kamu lihat di sini.",
+    "archivedNotice": "Makernya sudah mengarsipkan proyek ini, jadi link live-nya tidak dibuka lagi. Ceritanya tetap di sini.",
+    "keyPrompt": "Prompt kunci",
+    "about": "Tentang proyek ini",
+    "howLead": "Cara",
+    "howTail": "membuatnya",
+    "lessonsFrom": "Pelajaran dari {name}",
+    "trusted": "maker terpercaya",
+    "viewProfile": "Lihat profil",
+    "tip": "Traktir {name} kopi",
+    "others": "Obrolan lain dari {name}",
+    "meta": {
+      "tools": "Tools",
+      "buildTime": "Lama bikin",
+      "buildTimeValue": "{hours, number} jam, {sessions} sesi",
+      "category": "Kategori",
+      "repo": "Repo",
+      "linkStatus": "Status link",
+      "linkChecked": "{status} · dicek {date}"
+    },
+    "gallery": {
+      "imageAlt": "Screenshot {position} dari {title}",
+      "show": "Tampilkan screenshot {position}",
+      "empty": "Belum ada screenshot untuk proyek ini.",
+      "watchDemo": "Tonton demo",
+      "newTab": "(buka di tab baru)"
+    },
+    "timeline": {
+      "session": "Sesi {number}",
+      "hours": "{hours, number} jam",
+      "prompt": "Prompt",
+      "result": "Hasil",
+      "challenge": "Kendala",
+      "solution": "Solusi"
+    },
+    "ownerStatus": {
+      "onlyYou": "Cuma kamu yang bisa melihat halaman ini.",
+      "pending": "Proyek ini masih menunggu review admin (paling lama 2×24 jam).",
+      "rejected": "Proyek ini ditolak admin: “{reason}”. Perbaiki lewat Edit proyek untuk mengirim ulang ke review.",
+      "rejectedNoReason": "Proyek ini ditolak admin. Perbaiki lewat Edit proyek untuk mengirim ulang ke review.",
+      "hidden": "Proyek ini sedang disembunyikan karena dilaporkan. Admin akan meninjaunya."
+    },
+    "adminPreview": {
+      "title": "Pratinjau admin.",
+      "status": "Status: {status}. Pengunjung lain tidak bisa melihat halaman ini.",
+      "reason": "Alasan ditolak: {reason}.",
+      "back": "Kembali ke panel admin"
+    }
+  },
+  "interactions": {
+    "worthIt": {
+      "label": "Worth it",
+      "voted": "Worth it ✓",
+      "loginHint": "Masuk dulu untuk kasih Worth it",
+      "ownProject": "Ini proyekmu sendiri, jadi tidak bisa kamu Worth it-in",
+      "errors": {
+        "unauthorized": "Sesi login habis. Masuk lagi, ya.",
+        "own_project": "Proyek sendiri tidak bisa di-Worth it-in.",
+        "unavailable": "Proyek ini sedang tidak tayang.",
+        "invalid": "Ada yang aneh. Muat ulang halaman, ya.",
+        "failed": "Gagal menyimpan. Coba lagi sebentar."
+      }
+    },
+    "replies": {
+      "title": "Balasan",
+      "empty": "Belum ada balasan. Jadi yang pertama, ya.",
+      "maker": "maker",
+      "label": "Tulis balasan",
+      "placeholder": "Tulis balasan yang membangun…",
+      "mentionHint": "Ketik @ untuk menandai orang di obrolan ini.",
+      "suggestions": "Saran orang untuk di-tag",
+      "send": "Kirim",
+      "sending": "Mengirim…",
+      "loginPrompt": "Masuk dulu untuk ikut membalas.",
+      "login": "Masuk",
+      "usernamePrompt": "Pilih username dulu sebelum membalas.",
+      "pickUsername": "Pilih username",
+      "report": "Laporkan",
+      "reply": "Balas",
+      "delete": "Hapus",
+      "deleteConfirm": "Hapus balasan ini?",
+      "deleteYes": "Hapus",
+      "deleting": "Menghapus…",
+      "cancel": "Batal",
+      "errors": {
+        "required": "Balasannya masih kosong.",
+        "too_long": "Kepanjangan. Maksimal 1.000 karakter.",
+        "captcha_needed": "Selesaikan verifikasi di bawah dulu.",
+        "captcha": "Verifikasi gagal. Coba lagi.",
+        "rate_limit": "Kamu sudah membalas 30 kali hari ini. Lanjut besok, ya.",
+        "unauthorized": "Sesi login habis. Masuk lagi, ya.",
+        "username_required": "Pilih username dulu sebelum membalas.",
+        "unavailable": "Proyek ini sedang tidak tayang, jadi tidak bisa dibalas.",
+        "not_found": "Balasan ini sudah tidak ada.",
+        "invalid": "Balasan ini belum valid.",
+        "failed": "Gagal mengirim. Coba lagi sebentar."
+      }
+    },
+    "report": {
+      "trigger": {
+        "project": "Laporkan proyek ini",
+        "reply": "Laporkan"
+      },
+      "reported": "Sudah dilaporkan",
+      "title": {
+        "project": "Laporkan proyek ini",
+        "reply": "Laporkan balasan ini"
+      },
+      "intro": "Laporan tidak ditampilkan ke siapa pun selain admin. Kalau tiga akun berbeda melapor, kontennya disembunyikan dulu sampai admin meninjau.",
+      "reasonLabel": "Alasannya",
+      "reasons": {
+        "spam": "Spam atau promosi",
+        "scam": "Penipuan atau link berbahaya",
+        "adult_illegal": "Konten dewasa atau ilegal",
+        "harassment": "Pelecehan atau ujaran kebencian",
+        "personal_data": "Membocorkan data pribadi",
+        "other": "Lainnya"
+      },
+      "noteLabel": "Catatan (opsional)",
+      "notePlaceholder": "Ceritakan singkat apa masalahnya",
+      "cancel": "Batal",
+      "submit": "Kirim laporan",
+      "sending": "Mengirim…",
+      "close": "Tutup",
+      "done": {
+        "sent": "Makasih, laporanmu sudah kami terima. Admin akan meninjaunya.",
+        "already": "Kamu sudah pernah melaporkan ini. Satu akun dihitung satu laporan.",
+        "hidden_project": "Makasih. Proyek ini sekarang disembunyikan sampai admin meninjaunya.",
+        "hidden_reply": "Makasih. Balasan ini sekarang disembunyikan sampai admin meninjaunya."
+      },
+      "errors": {
+        "unauthorized": "Sesi login habis. Masuk lagi, ya.",
+        "own_content": "Kamu tidak bisa melaporkan kontenmu sendiri.",
+        "not_found": "Konten ini sudah tidak tayang.",
+        "invalid": "Pilih salah satu alasan dulu.",
+        "failed": "Gagal mengirim laporan. Coba lagi sebentar."
+      }
+    }
+  },
+  "profile": {
+    "metaFallbackTitle": "Profil",
+    "metaDescription": "{count, plural, =0 {Profil maker {name}} other {# obrolan vibe coding dari {name}}} di Vibes Paid Off.",
+    "makerSince": "maker sejak {date}",
+    "trusted": "Maker terpercaya",
+    "shareLabel": "Bagikan profil ini",
+    "tip": "Traktir {name} kopi",
+    "links": {
+      "github": "GitHub",
+      "linkedin": "LinkedIn",
+      "x": "X",
+      "website": "Website"
+    },
+    "stats": {
+      "projects": "Obrolan tayang",
+      "hours": "Total waktu bikin",
+      "hoursUnit": "jam",
+      "upvotes": "Orang bilang worth it",
+      "topTool": "Tools andalan"
+    },
+    "projectsLead": "Obrolan {name} yang",
+    "projectsTail": "jadi beneran",
+    "empty": "{name} belum memamerkan obrolan. Kalau nanti sudah ada, muncul di sini.",
+    "og": {
+      "projects": "{count} obrolan",
+      "hours": "{hours, number} jam bikin"
+    }
+  },
+  "explore": {
+    "metaTitle": "Jelajah obrolan",
+    "metaDescription": "Cari proyek vibe coding dari prompt, judul, atau tagline. Saring per tools, kategori, dan bahasa.",
+    "titleLead": "Jelajah",
+    "titleTail": "obrolan",
+    "searchLabel": "Cari proyek",
+    "searchPlaceholder": "Cari dari prompt, judul, atau tagline… misalnya “kasir”",
+    "searchButton": "Cari",
+    "filtersLabel": "Saring obrolan",
+    "tools": "Tools",
+    "toolSearch": "Cari tools",
+    "toolSearchEmpty": "Tidak ada tools yang cocok.",
+    "seeAll": "Lihat semua ({count})",
+    "seeLess": "Lebih sedikit",
+    "categories": "Kategori",
+    "lang": "Bahasa konten",
+    "langAll": "Semua",
+    "langId": "ID",
+    "langEn": "EN",
+    "sortLabel": "Urutkan",
+    "sortWorthIt": "Paling worth it",
+    "sortNew": "Terbaru",
+    "count": "{count, plural, =0 {Belum ada obrolan} other {# obrolan}} yang vibes-nya terbayar",
+    "countSearch": "{count, plural, =0 {Tidak ada obrolan} other {# obrolan}} untuk “{q}”",
+    "empty": "Belum ada yang pakai kombinasi ini.",
+    "emptyCta": "Jadilah yang pertama?",
+    "clear": "Hapus semua filter",
+    "loadMore": "Muat obrolan lainnya",
+    "loading": "Memuat…",
+    "loadError": "Gagal memuat. Coba lagi.",
+    "openFilters": "Filter",
+    "openFiltersCount": "Filter ({count})",
+    "closeFilters": "Tutup",
+    "showResults": "Lihat hasil",
+    "updating": "Memperbarui hasil…"
+  },
+  "tools": {
+    "metaTitle": "Proyek per tools",
+    "metaDescription": "Lihat proyek vibe coding yang dibikin pakai tools favoritmu, dari agen AI sampai hosting.",
+    "titleLead": "Proyek per",
+    "titleTail": "tools",
+    "lede": "Pilih tools untuk melihat obrolan maker yang dibangun dengannya. Angka di samping nama adalah jumlah obrolan yang tayang.",
+    "switcherLabel": "Pilih tools",
+    "allTools": "Semua tools",
+    "toolMeta": "{name}: obrolan yang dibikin pakai {name}",
+    "pageTitleLead": "Dibikin pakai",
+    "countLabel": "Obrolan tayang",
+    "site": "Situs {name} ↗",
+    "intro": "Ini obrolan maker yang hasilnya dibangun dengan {name}. Urut dari yang paling worth it.",
+    "emptyLead": "Belum ada obrolan dengan",
+    "emptyCta": "Jadilah yang pertama",
+    "projectCount": "{count, plural, other {# obrolan}}"
+  },
+  "moderation": {
+    "rejectCodes": {
+      "incomplete": "Info belum lengkap atau screenshot tidak jelas",
+      "broken_link": "Link live tidak bisa dibuka atau dicoba",
+      "not_vibe_coded": "Bukan proyek vibe coding",
+      "duplicate": "Proyek ini sudah pernah dikirim",
+      "rules": "Melanggar aturan komunitas",
+      "other": "Alasan lain"
+    }
+  },
+  "emails": {
+    "review": {
+      "approved": {
+        "subject": "{title} sudah tayang di Vibes Paid Off",
+        "body": "Halo {name},\n\nProyekmu \"{title}\" sudah disetujui dan sekarang tayang:\n{url}\n\nMulai sekarang kamu maker terpercaya, jadi proyek berikutnya langsung tayang tanpa antre review. Bagikan link-nya ke teman-temanmu, ya!"
+      },
+      "rejected": {
+        "subject": "{title} belum bisa tayang",
+        "body": "Halo {name},\n\nTerima kasih sudah mengirim \"{title}\". Sayangnya proyek ini belum bisa tayang.\n\nAlasannya: {reason}\n\nKamu bisa memperbaikinya lalu menyimpan ulang untuk mengirimnya kembali ke review:\n{url}"
+      },
+      "signature": "Salam,\nVibes Paid Off\n\nStatus semua proyekmu ada di {url}"
+    }
+  },
+  "admin": {
+    "metaTitle": "Admin",
+    "nav": {
+      "label": "Menu admin",
+      "queue": "Antrean review",
+      "reports": "Laporan",
+      "tools": "Kelola tools",
+      "picks": "Pilihan minggu ini",
+      "countLabel": {
+        "queue": "proyek menunggu",
+        "reports": "laporan terbuka",
+        "tools": "saran tools menunggu"
+      }
+    },
+    "queue": {
+      "title": "Antrean <em>review</em>",
+      "lede": "Proyek pertama dari maker baru. Target selesai paling lama {hours} jam sejak dikirim.",
+      "empty": "Antrean kosong. Semua proyek sudah direview.",
+      "noImage": "Tanpa screenshot",
+      "newMaker": "maker baru",
+      "resubmitted": "dikirim ulang",
+      "submitted": "dikirim {when}",
+      "hoursLeft": "Sisa {hours} jam",
+      "overdue": "Lewat {hours} jam",
+      "buildTime": "{hours, number} jam, {sessions} sesi",
+      "approve": "Setujui",
+      "reject": "Tolak",
+      "rejectLabel": "Tolak {title}",
+      "reasonLabel": "Alasan",
+      "noteLabel": "Catatan untuk maker (opsional)",
+      "noteLabelRequired": "Catatan untuk maker",
+      "notePlaceholder": "Apa yang perlu diperbaiki supaya bisa tayang?",
+      "cancel": "Batal",
+      "rejectSubmit": "Tolak proyek",
+      "saving": "Menyimpan…",
+      "done": {
+        "approved": "“{title}” disetujui dan tayang · maker jadi terpercaya.",
+        "rejectedEmail": "“{title}” ditolak · email terkirim ke maker.",
+        "rejectedMe": "“{title}” ditolak · maker melihat alasannya di dashboard (email belum diaktifkan)."
+      },
+      "errors": {
+        "unauthorized": "Sesi login habis. Masuk lagi, lalu coba lagi.",
+        "forbidden": "Akunmu bukan admin.",
+        "not_pending": "Proyek ini sudah direview. Muat ulang halaman.",
+        "note_required": "Tulis catatan untuk alasan lain.",
+        "invalid": "Pilih alasan dulu.",
+        "failed": "Gagal menyimpan. Coba lagi, ya."
+      }
+    },
+    "reports": {
+      "title": "Laporan",
+      "lede": "Proyek atau balasan yang dilaporkan 3 akun berbeda otomatis disembunyikan sampai kamu periksa.",
+      "empty": "Tidak ada laporan terbuka. Komunitasnya lagi adem.",
+      "autoHidden": "Disembunyikan otomatis",
+      "hidden": "Disembunyikan",
+      "metaProject": "Proyek · {count} laporan",
+      "metaReply": "Balasan · {count} laporan",
+      "onProject": "di “{title}”",
+      "replyLabel": "Balasan di {project}",
+      "deletedReply": "Balasan yang sudah dihapus",
+      "deletedProject": "Proyek sudah dihapus",
+      "targetGone": "Kontennya sudah dihapus pemiliknya.",
+      "reasons": "Alasan: {reasons}",
+      "byMaker": "maker",
+      "byAuthor": "oleh",
+      "trusted": "terpercaya",
+      "actions": {
+        "keep": "Biarkan",
+        "restore": "Pulihkan",
+        "hide": "Sembunyikan",
+        "keepHidden": "Biarkan tersembunyi",
+        "remove": "Hapus",
+        "close": "Tutup laporan",
+        "confirmRemoveLabel": "Hapus {label}?",
+        "confirmRemove": "Hapus permanen dari situs?",
+        "confirmRemoveYes": "Ya, hapus",
+        "cancel": "Batal",
+        "revokeTrust": "Cabut status terpercaya",
+        "grantTrust": "Kembalikan status terpercaya"
+      },
+      "done": {
+        "keep": "Laporan untuk “{label}” ditutup · kontennya tetap tampil.",
+        "restored": "“{label}” dipulihkan dan tampil lagi.",
+        "hide": "“{label}” disembunyikan.",
+        "remove": "“{label}” dihapus.",
+        "trustRevoked": "Status terpercaya {name} dicabut · proyek berikutnya direview dulu.",
+        "trustGranted": "{name} kembali jadi maker terpercaya."
+      },
+      "errors": {
+        "unauthorized": "Sesi login habis. Masuk lagi, lalu coba lagi.",
+        "forbidden": "Akunmu bukan admin.",
+        "already_resolved": "Laporan ini sudah ditangani. Muat ulang halaman.",
+        "invalid": "Permintaan tidak valid. Muat ulang halaman.",
+        "failed": "Gagal menyimpan. Coba lagi, ya."
+      }
+    },
+    "tools": {
+      "title": "Kelola <em>tools</em>",
+      "lede": "Katalog tools untuk form submit, filter jelajah, dan halaman tools. Tools nonaktif hilang dari pilihan, tapi proyek lama tetap menyimpannya.",
+      "search": "Cari tools",
+      "searchPlaceholder": "Nama atau slug",
+      "kindFilter": "Jenis",
+      "allKinds": "Semua jenis",
+      "add": "Tambah tools",
+      "table": {
+        "name": "Nama",
+        "slug": "Slug",
+        "kind": "Jenis",
+        "projects": "Proyek"
+      },
+      "shown": "{count} dari {total} tools",
+      "noMatch": "Tidak ada tools yang cocok.",
+      "inactive": "nonaktif",
+      "edit": "Edit",
+      "suggestions": {
+        "title": "Saran dari maker · {count}",
+        "lede": "Tools yang tidak ditemukan maker di katalog. Gabungkan ke tools yang ada atau jadikan tools baru, dan semua proyek yang menyarankan nama ini langsung terhubung.",
+        "usedIn": "{count, plural, other {Dipakai di # proyek:}}",
+        "mergeLabel": "Gabungkan ke tools yang ada",
+        "pickTool": "Pilih tools…",
+        "merge": "Gabungkan",
+        "create": "Jadikan tools baru",
+        "reject": "Tolak"
+      },
+      "done": {
+        "merged": "“{name}” digabung ke {tool} · {count, plural, other {# proyek}} terhubung.",
+        "rejected": "Saran “{name}” ditolak.",
+        "created": "Tools “{name}” dibuat · {count, plural, other {# proyek}} terhubung.",
+        "added": "Tools “{name}” ditambahkan.",
+        "saved": "Perubahan “{name}” tersimpan."
+      },
+      "errors": {
+        "unauthorized": "Sesi login habis. Masuk lagi, lalu coba lagi.",
+        "forbidden": "Akunmu bukan admin.",
+        "invalid": "Periksa isian yang ditandai.",
+        "slug_taken": "Slug ini sudah dipakai tools lain.",
+        "not_found": "Tools ini tidak ditemukan. Muat ulang halaman.",
+        "already_resolved": "Saran ini sudah ditangani. Muat ulang halaman.",
+        "tool_not_found": "Tools tujuan tidak ditemukan atau nonaktif.",
+        "failed": "Gagal menyimpan. Coba lagi, ya."
+      },
+      "form": {
+        "titleNew": "Tambah tools",
+        "titleEdit": "Edit {name}",
+        "titleFromSuggestion": "Jadikan “{name}” tools baru",
+        "suggestionNote": "Setelah disimpan, {count, plural, other {# proyek}} yang menyarankan nama ini langsung memakai tools baru.",
+        "name": "Nama",
+        "slug": "Slug",
+        "slugHint": "Alamat halaman /tools/slug. Huruf kecil, angka, dan tanda hubung.",
+        "kind": "Jenis",
+        "url": "Situs resmi",
+        "logoUrl": "URL logo",
+        "descriptionId": "Deskripsi (Indonesia)",
+        "descriptionEn": "Deskripsi (Inggris)",
+        "isActive": "Aktif",
+        "isActiveHint": "Tools nonaktif tidak muncul di form submit, filter, dan halaman tools.",
+        "cancel": "Batal",
+        "save": "Simpan",
+        "saving": "Menyimpan…",
+        "errors": {
+          "required": "Wajib diisi.",
+          "too_long": "Maksimal {max} karakter.",
+          "invalid_slug": "Pakai huruf kecil, angka, dan tanda hubung (misalnya claude-code).",
+          "invalid_url": "Pakai alamat lengkap yang diawali https://",
+          "slug_taken": "Slug ini sudah dipakai tools lain."
+        }
+      }
+    },
+    "picks": {
+      "title": "Pilihan <em>minggu ini</em>",
+      "lede": "Dihitung otomatis setiap Senin 00:05 WIB dengan rumus yang sama untuk semua proyek, lalu dibekukan seminggu. Panel ini hanya untuk dibaca: admin tidak bisa mengubah pemenangnya.",
+      "empty": "Belum ada pilihan minggu ini yang dihitung.",
+      "week": "Minggu mulai {date}",
+      "noWinner": "Tidak ada yang mencapai skor {min}. Beranda menampilkan proyek terbaru.",
+      "deletedProject": "Proyek sudah dihapus",
+      "why": "Skor {score}: {votes} vote layak dan {repliers} pembalas layak.",
+      "window": "Dihitung dari aktivitas {from} sampai {to} · tersimpan {computed}.",
+      "candidatesCaption": "Kandidat teratas minggu ini dan skornya",
+      "table": {
+        "project": "Proyek",
+        "votes": "Vote layak",
+        "repliers": "Pembalas layak",
+        "score": "Skor"
+      }
+    }
   }
 }

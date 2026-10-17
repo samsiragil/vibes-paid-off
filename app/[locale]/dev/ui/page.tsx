@@ -6,6 +6,9 @@ import { PromptBubble, ResultBubble, SystemMessage, TimeGap } from "@/components
 import { Button } from "@/components/ui/button";
 import { Field, Input, Select, Textarea } from "@/components/ui/field";
 import { pillStyles } from "@/components/ui/pill";
+import { MediaUploader } from "@/components/project/media-uploader";
+import { ProjectForm } from "@/components/project/project-form";
+import type { CatalogTool } from "@/lib/projects/types";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SegmentedDemo } from "./segmented-demo";
@@ -29,6 +32,26 @@ const colorTokens = [
   "placeholder",
   "dashed",
 ];
+
+// A slice of the seed catalog, so the form renders without a database.
+const sampleTools: CatalogTool[] = (
+  [
+    ["claude-code", "Claude Code", "ai_agent"],
+    ["cursor", "Cursor", "ai_agent"],
+    ["lovable", "Lovable", "ai_builder"],
+    ["bolt", "Bolt", "ai_builder"],
+    ["v0", "v0", "ai_builder"],
+    ["replit", "Replit", "ai_builder"],
+    ["chatgpt", "ChatGPT", "ai_assistant"],
+    ["supabase", "Supabase", "backend"],
+    ["windsurf", "Windsurf", "ai_agent"],
+    ["claude", "Claude", "ai_assistant"],
+    ["nextjs", "Next.js", "framework"],
+    ["tailwind-css", "Tailwind CSS", "framework"],
+    ["vercel", "Vercel", "hosting"],
+    ["stripe", "Stripe", "service"],
+  ] as const
+).map(([slug, name, kind], index) => ({ id: index + 1, slug, name, kind, projectCount: 0 }));
 
 function Section({ title, children }: { title: string; children: ReactNode }) {
   return (
@@ -188,6 +211,23 @@ export default function UiKitPage() {
             <Textarea id="demo-prompt" />
           </Field>
         </div>
+      </Section>
+
+      <Section title="Media uploader (tanpa projectId: gambar ditahan di browser sampai submit)">
+        <div className="max-w-xl">
+          <MediaUploader />
+        </div>
+      </Section>
+
+      <Section title="Form proyek (katalog contoh, tanpa draf; kirim butuh login)">
+        <ProjectForm
+          mode={{ kind: "create", isTrusted: false }}
+          maker={{ name: "Ragil Samsi", avatarUrl: null }}
+          tools={sampleTools}
+          quickPickIds={sampleTools.slice(0, 8).map((tool) => tool.id)}
+          categories={["umkm", "education", "community", "game", "dev-tools", "other"]}
+          persistDraft={false}
+        />
       </Section>
 
       <Section title="Header saat login">

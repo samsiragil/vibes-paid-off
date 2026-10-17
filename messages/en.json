@@ -49,11 +49,803 @@
     "lede": "Every project here started with a single message, and the vibes paid off. See the conversation, the result, and everything in between.",
     "ctaSubmit": "Show off your project",
     "ctaExplore": "Explore projects",
-    "soon": "The catalog is being prepared. The first projects will show up here soon."
+    "soon": "The catalog is being prepared. The first projects will show up here soon.",
+    "heroLink": "Open the chat {title}",
+    "pickBadge": "This week's pick",
+    "latestBadge": "Just in",
+    "builtWith": "Built with {tools}.",
+    "replies": "{count, plural, =0 {No replies yet} one {# reply} other {# replies}}",
+    "popularLead": "Most popular chats",
+    "popularTail": "this week",
+    "popularEmpty": "No chat is buzzing this week yet. Give a Worth it to projects you like and they'll show up here.",
+    "seeAll": "See all",
+    "toolsLabel": "Want to see what people built with…",
+    "latestLead": "Just",
+    "latestTail": "in",
+    "latestMeta": "{tools} · {time}",
+    "ctaLead": "Did your vibes pay off?",
+    "ctaTail": "Tell us here.",
+    "ctaPlaceholder": "Write your project's key prompt…",
+    "ctaButton": "Show off your project ↑"
   },
   "notFound": {
     "title": "Page not found",
     "body": "This page doesn't exist yet, or it has moved.",
     "back": "Back to home"
+  },
+  "auth": {
+    "metaTitle": "Sign in",
+    "eyebrow": "Sign in to Vibes Paid Off",
+    "titleLead": "Sign in first,",
+    "titleTail": "then show off your work.",
+    "intro": "Use your GitHub or Google account. We only receive your name, email and profile photo, with no access to your repos or other data.",
+    "github": "Continue with GitHub",
+    "google": "Continue with Google",
+    "note": "By signing in, you agree to follow the Vibes Paid Off community rules.",
+    "errors": {
+      "oauth": "Could not reach the sign-in provider. Please try again.",
+      "callback": "Sign-in did not finish. Please try again.",
+      "provider": "Unknown sign-in provider."
+    }
+  },
+  "onboarding": {
+    "metaTitle": "Pick a username",
+    "eyebrow": "One more step",
+    "titleLead": "What should we",
+    "titleTail": "call you?",
+    "intro": "Your username becomes your profile address and appears on every chat you show off.",
+    "username": "Username",
+    "usernameHint": "3–20 characters: lowercase letters, numbers or underscores.",
+    "checking": "Checking availability…",
+    "available": "@{username} is available.",
+    "unavailable": "@{username} is not available. Try another one.",
+    "invalid": "Use 3–20 lowercase letters, numbers or underscores.",
+    "displayName": "Display name",
+    "displayNameHint": "Your real name or a handle. Up to 60 characters.",
+    "submit": "Save and continue",
+    "saving": "Saving…",
+    "error": "Could not save. Please try again."
+  },
+  "me": {
+    "metaTitle": "My dashboard",
+    "hello": "Hi,",
+    "viewProfile": "View public profile",
+    "signOut": "Sign out",
+    "tabs": {
+      "label": "Dashboard sections",
+      "projects": "My projects · {count}",
+      "profile": "Edit profile"
+    },
+    "table": {
+      "project": "Chat",
+      "status": "Status",
+      "link": "Link",
+      "worthIt": "Worth it",
+      "replies": "Replies"
+    },
+    "status": {
+      "published": "Live on site",
+      "pending": "Awaiting review",
+      "rejected": "Rejected",
+      "hidden": "Hidden",
+      "removed": "Removed"
+    },
+    "rejectReason": "Rejection reason: {reason}",
+    "edit": "Edit",
+    "view": "View",
+    "offlineNotice": "The link for <strong>{title}</strong> is offline (last checked {date}). Don't worry, its screenshots and video still show. Once it's back up, we'll mark it Live automatically.",
+    "offlineNoticeNoDate": "The link for <strong>{title}</strong> is offline. Don't worry, its screenshots and video still show. Once it's back up, we'll mark it Live automatically.",
+    "trusted": "Trusted maker",
+    "trustedNote": "Your new projects go live right away, no review queue.",
+    "notTrustedNote": "An admin reviews your first project (within 2×24 hours). Once it's approved, your next projects go live right away.",
+    "empty": "You haven't shown off any chats yet. Start with the project you're proudest of, however small.",
+    "emptyCta": "Show off your project",
+    "profileForm": {
+      "displayName": "Display name",
+      "username": "Username",
+      "usernameHint": "Changing your username also changes your profile address.",
+      "bio": "Short bio",
+      "bioHint": "Up to {max} characters. Shown as a bubble on your profile.",
+      "bioPlaceholder": "Tell people briefly what you like building with AI.",
+      "location": "Location",
+      "locationPlaceholder": "For example Yogyakarta",
+      "tipUrl": "Tip me link",
+      "tipUrlHint": "Ko-fi, Buy Me a Coffee, Saweria or similar. Shows as a button on your profile and projects.",
+      "links": {
+        "github": "GitHub",
+        "linkedin": "LinkedIn",
+        "x": "X",
+        "website": "Website"
+      },
+      "linkPlaceholders": {
+        "github": "https://github.com/…",
+        "linkedin": "https://linkedin.com/in/…",
+        "x": "https://x.com/…",
+        "website": "https://…"
+      },
+      "avatarNote": "Your profile photo comes from the GitHub or Google account you sign in with.",
+      "cancel": "Cancel",
+      "save": "Save profile",
+      "saving": "Saving…",
+      "saved": "Profile saved.",
+      "errors": {
+        "required": "Required.",
+        "too_long": "Up to {max} characters.",
+        "invalid_url": "Use a full address starting with https://",
+        "invalid_username": "Use 3–20 lowercase letters, numbers or underscores (not a reserved name).",
+        "taken": "That username is taken. Try another one.",
+        "invalid": "This value isn't valid.",
+        "unauthorized": "Your session expired. Sign in again, then retry.",
+        "failed": "Couldn't save. Please try again."
+      }
+    },
+    "archive": {
+      "archive": "Archive",
+      "unarchive": "Reactivate",
+      "saving": "Saving…",
+      "confirmLabel": "Archive {title}?",
+      "confirm": "Archive this project? The Try it live button is hidden, but the page, screenshots and story stay. You can reactivate it any time.",
+      "confirmYes": "Yes, archive",
+      "cancel": "Cancel",
+      "errors": {
+        "unauthorized": "Your session expired. Sign in again, then retry.",
+        "forbidden": "You can't change this project.",
+        "invalid": "Invalid request. Reload the page.",
+        "failed": "Couldn't save. Please try again."
+      }
+    },
+    "adminLink": "Admin panel",
+    "review": {
+      "approved": "Good news: an admin approved <strong>{title}</strong> and it is live. You are a trusted maker now, so your next projects go live right away.",
+      "rejected": "<strong>{title}</strong> can't go live yet. Reason: {reason}. <edit>Fix the project</edit>, then save it to send it back for review.",
+      "rejectedNoReason": "<strong>{title}</strong> can't go live yet. <edit>Fix the project</edit>, then save it to send it back for review."
+    }
+  },
+  "categories": {
+    "umkm": "Small business",
+    "education": "Education",
+    "community": "Community",
+    "game": "Games",
+    "dev-tools": "Developer tools",
+    "productivity": "Productivity",
+    "lifestyle": "Lifestyle",
+    "personal": "Personal",
+    "ai-wrapper": "AI wrapper",
+    "other": "Other"
+  },
+  "toolKinds": {
+    "ai_agent": "AI agents & editors",
+    "ai_builder": "AI app builders",
+    "ai_assistant": "AI assistants",
+    "framework": "Frameworks & languages",
+    "backend": "Databases & backend",
+    "hosting": "Hosting & deploy",
+    "service": "Services & integrations"
+  },
+  "media": {
+    "add": "Add image",
+    "hint": "JPG, PNG, or WebP, up to 3 images. The first one is the cover. You can also drop files here.",
+    "cover": "Cover",
+    "imageAlt": "Image {position}",
+    "moveLeft": "Move image {position} left",
+    "moveRight": "Move image {position} right",
+    "remove": "Remove image {position}",
+    "retry": "Try again",
+    "status": {
+      "compressing": "Compressing…",
+      "waiting": "Not uploaded yet",
+      "queued": "Waiting…",
+      "uploading": "Uploading {percent}%",
+      "processing": "Processing…",
+      "removing": "Removing…"
+    },
+    "errors": {
+      "unauthorized": "Your session expired. Sign in again, then retry.",
+      "forbidden": "You cannot change the images of this project.",
+      "invalid": "Invalid request. Reload the page and try again.",
+      "limit": "Up to 3 images per project.",
+      "too_large": "File too large. Up to 20 MB per image.",
+      "unsupported_type": "Format not supported. Use JPG, PNG, or WebP.",
+      "not_found": "The upload did not reach the server. Try again.",
+      "invalid_image": "This image cannot be read. Try another file.",
+      "unavailable": "Image upload is unavailable right now. Try again later.",
+      "failed": "Could not save the image. Please try again."
+    }
+  },
+  "projectCard": {
+    "timeAfter": "{hours, number} {hours, plural, one {hour} other {hours}} later",
+    "timeAfterSessions": "{hours, number} {hours, plural, one {hour} other {hours}} and {sessions, plural, one {# session} other {# sessions}} later",
+    "worthIt": "Worth it · {count}",
+    "moreTools": "+{count}",
+    "hours": "{hours, number} {hours, plural, one {hour} other {hours}}"
+  },
+  "projectForm": {
+    "metaSubmit": "Show off your project",
+    "metaEdit": "Edit project",
+    "submitTitleLead": "Show off",
+    "submitTitleTail": "your project",
+    "submitLede": "Answer a few questions, like a chat. An admin reviews your first project within 48 hours; after that, your projects go live right away.",
+    "submitLedeTrusted": "Answer a few questions, like a chat. You are a trusted maker, so your project goes live right away.",
+    "editTitleLead": "Edit",
+    "editTitleTail": "conversation",
+    "editLede": "Change anything, then save. Images are saved as soon as they are uploaded, removed, or moved.",
+    "status": {
+      "pending": "This project is waiting for admin review (within 48 hours).",
+      "rejected": "An admin rejected this project: “{reason}”. Fix it, then save to send it back for review.",
+      "rejectedNoReason": "An admin rejected this project. Fix it, then save to send it back for review.",
+      "hidden": "This project is hidden because it was reported. An admin will look at it."
+    },
+    "draftRestored": "Your last draft ({time}) is back. Images need to be picked again.",
+    "draftDiscard": "Start over",
+    "optional": "(optional)",
+    "steps": {
+      "prompt": "Start with what matters most: <strong>what was the key prompt?</strong> It opens your project card.",
+      "result": "Nice. <strong>So what did you get?</strong>",
+      "media": "<strong>Send some screenshots.</strong> Up to 3, compressed automatically. A demo video works too.",
+      "tools": "<strong>Which tools did you use?</strong> Pick everything, from AI agents to hosting.",
+      "sessions": "<strong>Tell us about the build sessions.</strong> One session = one sitting. The total becomes “X hours later” on the card.",
+      "lessons": "Last one: <strong>what did you learn?</strong> You can skip it, but this is what people look for most.",
+      "rules": "Before sending, remember the <link>community rules</link>:"
+    },
+    "rules": {
+      "own": "The project is yours, or you were directly involved in making it.",
+      "illegal": "No adult content, gambling, scams, phishing, or anything illegal.",
+      "privacy": "Do not show other people's personal data or API keys in screenshots and prompts.",
+      "respect": "Criticism is fine, belittling is not."
+    },
+    "keyPrompt": "Key prompt",
+    "keyPromptPlaceholder": "Build a cashier app for a corner shop, big buttons, usable without a tutorial.",
+    "title": "Title",
+    "titlePlaceholder": "Bu Tini's Shop Cashier",
+    "tagline": "Tagline",
+    "taglinePlaceholder": "Log daily sales from your phone, get a weekly summary.",
+    "description": "Description",
+    "descriptionPlaceholder": "In short: who is it for, and what problem does it solve?",
+    "liveUrl": "Live link",
+    "liveUrlPlaceholder": "https://myshopcashier.vercel.app",
+    "repoUrl": "Repo link",
+    "repoUrlPlaceholder": "https://github.com/username/cashier",
+    "videoUrl": "Demo video",
+    "videoUrlHint": "(YouTube or Loom, optional)",
+    "videoUrlPlaceholder": "https://www.loom.com/share/…",
+    "category": "Category",
+    "categoryPlaceholder": "Pick a category",
+    "contentLang": "Content language",
+    "lessons": "Lessons",
+    "lessonsPlaceholder": "Write prompts from the user's point of view.",
+    "tools": {
+      "quickPicks": "Popular tools",
+      "search": "Search other tools",
+      "searchPlaceholder": "Search: Windsurf, Supabase, Vercel…",
+      "results": "Tool search results",
+      "noResults": "No “{query}” in the catalog.",
+      "suggest": "Not listed? Add “{query}”",
+      "suggestTitle": "Add a tool that is not in the catalog",
+      "suggestName": "Tool name",
+      "suggestUrl": "Tool website",
+      "suggestAdd": "Add",
+      "suggestCancel": "Cancel",
+      "suggestNote": "It shows as plain text on your project until an admin adds it to the catalog.",
+      "selected": "Your tools",
+      "remove": "Remove {name}",
+      "suggested": "new",
+      "hint": "At least one AI tool (agent, app builder, or AI assistant)."
+    },
+    "sessions": {
+      "heading": "Session {number}",
+      "label": "Label",
+      "labelPlaceholder": "Saturday night",
+      "duration": "Duration (hours)",
+      "durationHint": "0.5–24 hours, in half-hour steps.",
+      "prompt": "Main prompt",
+      "promptPlaceholder": "What did you ask the AI in this session?",
+      "result": "Result",
+      "resultPlaceholder": "What was done by the end of the session?",
+      "hasChallenge": "I hit a problem in this session",
+      "challenge": "Problem",
+      "challengePlaceholder": "Google sign-in broke on older Android phones.",
+      "solution": "Solution",
+      "solutionPlaceholder": "Switched to email magic links.",
+      "add": "Add session",
+      "count": "{count}/{max} sessions",
+      "total": "Total {hours, number} {hours, plural, one {hour} other {hours}} over {sessions, plural, one {# session} other {# sessions}}",
+      "moveUp": "Move session {number} up",
+      "moveDown": "Move session {number} down",
+      "remove": "Remove session {number}"
+    },
+    "preview": {
+      "label": "Card preview",
+      "note": "This is how your card shows up on the home page, in explore, and on your profile.",
+      "prompt": "Your key prompt shows up here",
+      "title": "Project title",
+      "tools": "Tools",
+      "time": "X hours later"
+    },
+    "turnstile": "Security check",
+    "submit": "Send for review",
+    "submitTrusted": "Publish",
+    "save": "Save changes",
+    "sending": "Sending…",
+    "saving": "Saving…",
+    "uploading": "Uploading images…",
+    "errors": {
+      "required": "Required.",
+      "too_long": "Too long, please shorten it.",
+      "invalid_url": "Use a full link starting with https://",
+      "invalid_video_url": "YouTube or Loom links only.",
+      "invalid_duration": "Enter 0.5–24 hours, in half-hour steps.",
+      "solution_needs_challenge": "Fill in the problem first, then the solution.",
+      "ai_tool_required": "Pick at least one AI tool.",
+      "too_many": "Too many. Please remove a few.",
+      "invalid": "This is not valid yet."
+    },
+    "formErrors": {
+      "invalid": "Some answers need fixing first.",
+      "unauthorized": "Your session expired. Sign in again; your answers are kept as a draft.",
+      "captcha": "The security check is not done or failed. Please try again.",
+      "rate_limit": "You sent 3 projects in the last 24 hours. Please try again tomorrow.",
+      "forbidden": "You cannot change this project.",
+      "failed": "Could not save. Please try again."
+    },
+    "signIn": "Sign in again",
+    "success": {
+      "pending": "Your project is in! We review it within 48 hours. If this site helps you, <link>buy us a coffee</link>.",
+      "published": "Your project is live! If this site helps you, <link>buy us a coffee</link>.",
+      "mediaFailed": "The project is saved, but some images failed to upload. Upload them again from the edit page.",
+      "view": "View project",
+      "edit": "Edit project",
+      "another": "Show off another project"
+    },
+    "saved": "Changes saved.",
+    "savedPending": "Changes saved. Your project is back in the review queue."
+  },
+  "linkStatus": {
+    "live": "Live",
+    "offline": "Offline",
+    "archived": "Archived"
+  },
+  "share": {
+    "share": "Share",
+    "copy": "Copy link",
+    "copied": "Copied",
+    "copiedAnnouncement": "Link copied"
+  },
+  "project": {
+    "metaFallbackTitle": "Chat",
+    "breadcrumb": "Breadcrumb",
+    "explore": "Explore",
+    "contentLang": "Written in {lang, select, id {Indonesian} en {English} other {{lang}}}",
+    "tryLive": "Try it live",
+    "tryLiveOffline": "Try the link",
+    "newTab": "(opens in a new tab)",
+    "edit": "Edit project",
+    "offlineNotice": "This project's link is offline. You can still see its screenshots and video here.",
+    "archivedNotice": "The maker archived this project, so its live link no longer opens. The story stays here.",
+    "keyPrompt": "Key prompt",
+    "about": "About this project",
+    "howLead": "How it was",
+    "howTail": "made",
+    "lessonsFrom": "Lessons from {name}",
+    "trusted": "trusted maker",
+    "viewProfile": "View profile",
+    "tip": "Buy {name} a coffee",
+    "others": "More chats from {name}",
+    "meta": {
+      "tools": "Tools",
+      "buildTime": "Build time",
+      "buildTimeValue": "{hours, number} {hours, plural, one {hour} other {hours}}, {sessions, plural, one {# session} other {# sessions}}",
+      "category": "Category",
+      "repo": "Repo",
+      "linkStatus": "Link status",
+      "linkChecked": "{status} · checked {date}"
+    },
+    "gallery": {
+      "imageAlt": "Screenshot {position} of {title}",
+      "show": "Show screenshot {position}",
+      "empty": "No screenshots for this project yet.",
+      "watchDemo": "Watch the demo",
+      "newTab": "(opens in a new tab)"
+    },
+    "timeline": {
+      "session": "Session {number}",
+      "hours": "{hours, number} {hours, plural, one {hour} other {hours}}",
+      "prompt": "Prompt",
+      "result": "Result",
+      "challenge": "Obstacle",
+      "solution": "Fix"
+    },
+    "ownerStatus": {
+      "onlyYou": "Only you can see this page.",
+      "pending": "This project is waiting for an admin review (within 2×24 hours).",
+      "rejected": "An admin rejected this project: “{reason}”. Fix it via Edit project to send it back for review.",
+      "rejectedNoReason": "An admin rejected this project. Fix it via Edit project to send it back for review.",
+      "hidden": "This project is hidden because it was reported. An admin will review it."
+    },
+    "adminPreview": {
+      "title": "Admin preview.",
+      "status": "Status: {status}. Other visitors can't see this page.",
+      "reason": "Rejection reason: {reason}.",
+      "back": "Back to the admin panel"
+    }
+  },
+  "interactions": {
+    "worthIt": {
+      "label": "Worth it",
+      "voted": "Worth it ✓",
+      "loginHint": "Log in to say it's worth it",
+      "ownProject": "This is your own project, so you can't vote for it",
+      "errors": {
+        "unauthorized": "Your session expired. Please log in again.",
+        "own_project": "You can't vote for your own project.",
+        "unavailable": "This project isn't public right now.",
+        "invalid": "Something's off. Please reload the page.",
+        "failed": "Couldn't save that. Try again in a moment."
+      }
+    },
+    "replies": {
+      "title": "Replies",
+      "empty": "No replies yet. Be the first.",
+      "maker": "maker",
+      "label": "Write a reply",
+      "placeholder": "Write a constructive reply…",
+      "mentionHint": "Type @ to tag someone in this conversation.",
+      "suggestions": "People to tag",
+      "send": "Send",
+      "sending": "Sending…",
+      "loginPrompt": "Log in to join the conversation.",
+      "login": "Log in",
+      "usernamePrompt": "Pick a username before replying.",
+      "pickUsername": "Pick a username",
+      "report": "Report",
+      "reply": "Reply",
+      "delete": "Delete",
+      "deleteConfirm": "Delete this reply?",
+      "deleteYes": "Delete",
+      "deleting": "Deleting…",
+      "cancel": "Cancel",
+      "errors": {
+        "required": "Your reply is empty.",
+        "too_long": "Too long. 1,000 characters at most.",
+        "captcha_needed": "Complete the verification below first.",
+        "captcha": "Verification failed. Try again.",
+        "rate_limit": "You've replied 30 times today. Continue tomorrow.",
+        "unauthorized": "Your session expired. Please log in again.",
+        "username_required": "Pick a username before replying.",
+        "unavailable": "This project isn't public right now, so it can't take replies.",
+        "not_found": "This reply no longer exists.",
+        "invalid": "This reply isn't valid yet.",
+        "failed": "Couldn't send it. Try again in a moment."
+      }
+    },
+    "report": {
+      "trigger": {
+        "project": "Report this project",
+        "reply": "Report"
+      },
+      "reported": "Reported",
+      "title": {
+        "project": "Report this project",
+        "reply": "Report this reply"
+      },
+      "intro": "Reports are only shown to admins. When three different accounts report something, it is hidden until an admin reviews it.",
+      "reasonLabel": "Reason",
+      "reasons": {
+        "spam": "Spam or promotion",
+        "scam": "Scam or harmful link",
+        "adult_illegal": "Adult or illegal content",
+        "harassment": "Harassment or hate speech",
+        "personal_data": "Exposes personal data",
+        "other": "Something else"
+      },
+      "noteLabel": "Note (optional)",
+      "notePlaceholder": "Briefly describe the problem",
+      "cancel": "Cancel",
+      "submit": "Send report",
+      "sending": "Sending…",
+      "close": "Close",
+      "done": {
+        "sent": "Thanks, we got your report. An admin will review it.",
+        "already": "You've already reported this. Each account counts once.",
+        "hidden_project": "Thanks. This project is now hidden until an admin reviews it.",
+        "hidden_reply": "Thanks. This reply is now hidden until an admin reviews it."
+      },
+      "errors": {
+        "unauthorized": "Your session expired. Please log in again.",
+        "own_content": "You can't report your own content.",
+        "not_found": "This content is no longer public.",
+        "invalid": "Pick a reason first.",
+        "failed": "Couldn't send the report. Try again in a moment."
+      }
+    }
+  },
+  "profile": {
+    "metaFallbackTitle": "Profile",
+    "metaDescription": "{count, plural, =0 {Maker profile of {name}} one {# vibe coding chat from {name}} other {# vibe coding chats from {name}}} on Vibes Paid Off.",
+    "makerSince": "maker since {date}",
+    "trusted": "Trusted maker",
+    "shareLabel": "Share this profile",
+    "tip": "Buy {name} a coffee",
+    "links": {
+      "github": "GitHub",
+      "linkedin": "LinkedIn",
+      "x": "X",
+      "website": "Website"
+    },
+    "stats": {
+      "projects": "Chats live",
+      "hours": "Total build time",
+      "hoursUnit": "hours",
+      "upvotes": "People said worth it",
+      "topTool": "Go-to tool"
+    },
+    "projectsLead": "{name}'s chats that",
+    "projectsTail": "became real",
+    "empty": "{name} hasn't shown off any chats yet. They'll show up here once they do.",
+    "og": {
+      "projects": "{count, plural, one {# chat} other {# chats}}",
+      "hours": "{hours, number} {hours, plural, one {hour} other {hours}} building"
+    }
+  },
+  "explore": {
+    "metaTitle": "Explore chats",
+    "metaDescription": "Search vibe coding projects by prompt, title, or tagline. Filter by tools, category, and language.",
+    "titleLead": "Explore",
+    "titleTail": "the chats",
+    "searchLabel": "Search projects",
+    "searchPlaceholder": "Search prompts, titles, or taglines… e.g. “cashier”",
+    "searchButton": "Search",
+    "filtersLabel": "Filter chats",
+    "tools": "Tools",
+    "toolSearch": "Search tools",
+    "toolSearchEmpty": "No matching tools.",
+    "seeAll": "See all ({count})",
+    "seeLess": "Show less",
+    "categories": "Category",
+    "lang": "Content language",
+    "langAll": "All",
+    "langId": "ID",
+    "langEn": "EN",
+    "sortLabel": "Sort by",
+    "sortWorthIt": "Most worth it",
+    "sortNew": "Newest",
+    "count": "{count, plural, =0 {No chats} one {# chat} other {# chats}} whose vibes paid off",
+    "countSearch": "{count, plural, =0 {No chats} one {# chat} other {# chats}} for “{q}”",
+    "empty": "Nobody has used this combination yet.",
+    "emptyCta": "Want to be the first?",
+    "clear": "Clear all filters",
+    "loadMore": "Load more chats",
+    "loading": "Loading…",
+    "loadError": "Could not load. Try again.",
+    "openFilters": "Filters",
+    "openFiltersCount": "Filters ({count})",
+    "closeFilters": "Close",
+    "showResults": "Show results",
+    "updating": "Updating results…"
+  },
+  "tools": {
+    "metaTitle": "Projects by tools",
+    "metaDescription": "See vibe coding projects built with your favorite tools, from AI agents to hosting.",
+    "titleLead": "Projects by",
+    "titleTail": "tools",
+    "lede": "Pick a tool to see the makers' chats built with it. The number next to each name is how many chats are live.",
+    "switcherLabel": "Pick a tool",
+    "allTools": "All tools",
+    "toolMeta": "{name}: chats built with {name}",
+    "pageTitleLead": "Built with",
+    "countLabel": "Live chats",
+    "site": "{name} website ↗",
+    "intro": "These are makers' chats whose results were built with {name}. Most worth it first.",
+    "emptyLead": "No chats with",
+    "emptyCta": "Be the first",
+    "projectCount": "{count, plural, one {# chat} other {# chats}}"
+  },
+  "moderation": {
+    "rejectCodes": {
+      "incomplete": "Missing details or unclear screenshots",
+      "broken_link": "The live link can't be opened or tried",
+      "not_vibe_coded": "Not a vibe coding project",
+      "duplicate": "This project was already submitted",
+      "rules": "Breaks the community rules",
+      "other": "Another reason"
+    }
+  },
+  "emails": {
+    "review": {
+      "approved": {
+        "subject": "{title} is live on Vibes Paid Off",
+        "body": "Hi {name},\n\nYour project \"{title}\" was approved and is live now:\n{url}\n\nYou are a trusted maker from now on, so your next projects go live without waiting for review. Share the link with your friends!"
+      },
+      "rejected": {
+        "subject": "{title} can't go live yet",
+        "body": "Hi {name},\n\nThanks for sending \"{title}\". Unfortunately this project can't go live yet.\n\nReason: {reason}\n\nYou can fix it and save it again to send it back for review:\n{url}"
+      },
+      "signature": "Cheers,\nVibes Paid Off\n\nThe status of all your projects is at {url}"
+    }
+  },
+  "admin": {
+    "metaTitle": "Admin",
+    "nav": {
+      "label": "Admin menu",
+      "queue": "Review queue",
+      "reports": "Reports",
+      "tools": "Manage tools",
+      "picks": "Pick of the week",
+      "countLabel": {
+        "queue": "projects waiting",
+        "reports": "open reports",
+        "tools": "tool suggestions waiting"
+      }
+    },
+    "queue": {
+      "title": "Review <em>queue</em>",
+      "lede": "First projects from new makers. Aim to finish within {hours} hours of submission.",
+      "empty": "The queue is empty. Every project has been reviewed.",
+      "noImage": "No screenshot",
+      "newMaker": "new maker",
+      "resubmitted": "resubmitted",
+      "submitted": "sent {when}",
+      "hoursLeft": "{hours} h left",
+      "overdue": "{hours} h overdue",
+      "buildTime": "{hours, number} {hours, plural, one {hour} other {hours}}, {sessions, plural, one {# session} other {# sessions}}",
+      "approve": "Approve",
+      "reject": "Reject",
+      "rejectLabel": "Reject {title}",
+      "reasonLabel": "Reason",
+      "noteLabel": "Note for the maker (optional)",
+      "noteLabelRequired": "Note for the maker",
+      "notePlaceholder": "What needs fixing before it can go live?",
+      "cancel": "Cancel",
+      "rejectSubmit": "Reject project",
+      "saving": "Saving…",
+      "done": {
+        "approved": "“{title}” approved and live · the maker is trusted now.",
+        "rejectedEmail": "“{title}” rejected · email sent to the maker.",
+        "rejectedMe": "“{title}” rejected · the maker sees the reason on their dashboard (email is not set up yet)."
+      },
+      "errors": {
+        "unauthorized": "Your session expired. Sign in again, then retry.",
+        "forbidden": "Your account is not an admin.",
+        "not_pending": "This project was already reviewed. Reload the page.",
+        "note_required": "Write a note for “Another reason”.",
+        "invalid": "Pick a reason first.",
+        "failed": "Couldn't save. Please try again."
+      }
+    },
+    "reports": {
+      "title": "Reports",
+      "lede": "Projects or replies reported by 3 different accounts are hidden automatically until you check them.",
+      "empty": "No open reports. The community is chill right now.",
+      "autoHidden": "Hidden automatically",
+      "hidden": "Hidden",
+      "metaProject": "Project · {count, plural, one {# report} other {# reports}}",
+      "metaReply": "Reply · {count, plural, one {# report} other {# reports}}",
+      "onProject": "on “{title}”",
+      "replyLabel": "Reply on {project}",
+      "deletedReply": "A deleted reply",
+      "deletedProject": "Project deleted",
+      "targetGone": "Its author already deleted it.",
+      "reasons": "Reasons: {reasons}",
+      "byMaker": "maker",
+      "byAuthor": "by",
+      "trusted": "trusted",
+      "actions": {
+        "keep": "Keep",
+        "restore": "Restore",
+        "hide": "Hide",
+        "keepHidden": "Keep hidden",
+        "remove": "Delete",
+        "close": "Close reports",
+        "confirmRemoveLabel": "Delete {label}?",
+        "confirmRemove": "Delete it from the site for good?",
+        "confirmRemoveYes": "Yes, delete",
+        "cancel": "Cancel",
+        "revokeTrust": "Revoke trusted status",
+        "grantTrust": "Restore trusted status"
+      },
+      "done": {
+        "keep": "Reports on “{label}” closed · it stays visible.",
+        "restored": "“{label}” restored and visible again.",
+        "hide": "“{label}” hidden.",
+        "remove": "“{label}” deleted.",
+        "trustRevoked": "{name} is no longer trusted · their next project gets reviewed first.",
+        "trustGranted": "{name} is a trusted maker again."
+      },
+      "errors": {
+        "unauthorized": "Your session expired. Sign in again, then retry.",
+        "forbidden": "Your account is not an admin.",
+        "already_resolved": "These reports were already handled. Reload the page.",
+        "invalid": "Invalid request. Reload the page.",
+        "failed": "Couldn't save. Please try again."
+      }
+    },
+    "tools": {
+      "title": "Manage <em>tools</em>",
+      "lede": "The tools catalog behind the submit form, explore filters and tool pages. Inactive tools leave the pickers, but older projects keep them.",
+      "search": "Search tools",
+      "searchPlaceholder": "Name or slug",
+      "kindFilter": "Kind",
+      "allKinds": "All kinds",
+      "add": "Add tool",
+      "table": {
+        "name": "Name",
+        "slug": "Slug",
+        "kind": "Kind",
+        "projects": "Projects"
+      },
+      "shown": "{count} of {total} tools",
+      "noMatch": "No tools match.",
+      "inactive": "inactive",
+      "edit": "Edit",
+      "suggestions": {
+        "title": "Suggested by makers · {count}",
+        "lede": "Tools makers couldn't find in the catalog. Merge them into an existing tool or make a new one, and every project that suggested this name is linked right away.",
+        "usedIn": "{count, plural, one {Used in # project:} other {Used in # projects:}}",
+        "mergeLabel": "Merge into an existing tool",
+        "pickTool": "Pick a tool…",
+        "merge": "Merge",
+        "create": "Make it a new tool",
+        "reject": "Reject"
+      },
+      "done": {
+        "merged": "“{name}” merged into {tool} · {count, plural, one {# project} other {# projects}} linked.",
+        "rejected": "Suggestion “{name}” rejected.",
+        "created": "Tool “{name}” created · {count, plural, one {# project} other {# projects}} linked.",
+        "added": "Tool “{name}” added.",
+        "saved": "Changes to “{name}” saved."
+      },
+      "errors": {
+        "unauthorized": "Your session expired. Sign in again, then retry.",
+        "forbidden": "Your account is not an admin.",
+        "invalid": "Check the highlighted fields.",
+        "slug_taken": "Another tool already uses this slug.",
+        "not_found": "This tool no longer exists. Reload the page.",
+        "already_resolved": "This suggestion was already handled. Reload the page.",
+        "tool_not_found": "The target tool doesn't exist or is inactive.",
+        "failed": "Couldn't save. Please try again."
+      },
+      "form": {
+        "titleNew": "Add tool",
+        "titleEdit": "Edit {name}",
+        "titleFromSuggestion": "Make “{name}” a new tool",
+        "suggestionNote": "Once saved, the {count, plural, one {project} other {# projects}} that suggested this name will use the new tool.",
+        "name": "Name",
+        "slug": "Slug",
+        "slugHint": "The /tools/slug address. Lowercase letters, digits and hyphens.",
+        "kind": "Kind",
+        "url": "Official site",
+        "logoUrl": "Logo URL",
+        "descriptionId": "Description (Indonesian)",
+        "descriptionEn": "Description (English)",
+        "isActive": "Active",
+        "isActiveHint": "Inactive tools don't show in the submit form, filters or tool pages.",
+        "cancel": "Cancel",
+        "save": "Save",
+        "saving": "Saving…",
+        "errors": {
+          "required": "Required.",
+          "too_long": "At most {max} characters.",
+          "invalid_slug": "Use lowercase letters, digits and hyphens (for example claude-code).",
+          "invalid_url": "Use a full address starting with https://",
+          "slug_taken": "Another tool already uses this slug."
+        }
+      }
+    },
+    "picks": {
+      "title": "Pick of <em>the week</em>",
+      "lede": "Computed automatically every Monday 00:05 WIB with the same formula for every project, then frozen for the week. This panel is read-only: admins can't change the winner.",
+      "empty": "No pick of the week has been computed yet.",
+      "week": "Week of {date}",
+      "noWinner": "Nothing reached a score of {min}. The home page shows the newest project instead.",
+      "deletedProject": "Project deleted",
+      "why": "Score {score}: {votes} eligible votes and {repliers} eligible repliers.",
+      "window": "Scored on activity from {from} to {to} · stored {computed}.",
+      "candidatesCaption": "This week's top candidates and their scores",
+      "table": {
+        "project": "Project",
+        "votes": "Eligible votes",
+        "repliers": "Eligible repliers",
+        "score": "Score"
+      }
+    }
   }
 }

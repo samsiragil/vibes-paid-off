@@ -10,6 +10,8 @@ export default getRequestConfig(async ({ locale: override }) => {
 
   return {
     locale,
+    // Dates on the site (maker since, link last checked) are shown in Indonesian time.
+    timeZone: "Asia/Jakarta",
     messages: (await import(`../messages/${locale}.json`)).default,
   };
 });
