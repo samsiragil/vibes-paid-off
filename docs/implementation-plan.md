@@ -351,14 +351,24 @@ Sudah dicek: lint, typecheck, format, build; demo form di `/dev/ui` (1440px dan 
 
 ### Fase 5 — Detail proyek, profil, dashboard (2–3 hari)
 
-- [ ] `/p/[slug]` sesuai `VPO-Proyek`: breadcrumb, judul + tagline, badge (status link, bahasa, kategori), Worth it (sementara read-only), "Coba live ↗", tombol Bagikan, blok prompt kunci → "X jam dan N sesi kemudian" → galeri/video, "Cara membuatnya" (timeline per sesi: label · durasi, prompt, hasil, kendala + solusi), "Pelajaran dari {maker}", sidebar meta, "Obrolan lain dari {maker}".
-- [ ] Owner bisa melihat proyeknya sendiri saat `pending`/`rejected` dengan banner status.
-- [ ] Link status Offline: tetap tampilkan screenshot/video + label jelas.
-- [ ] `/u/[username]` sesuai `VPO-Profil`: header, bio sebagai bubble, link sosial, salin link profil, traktir maker, 4 stat, grid obrolan (termasuk yang diarsipkan dengan label).
-- [ ] `/me` sesuai `VPO-Me`: tab "Proyek saya" (tabel status tayang, status link, worth it, balasan, Edit/Lihat), banner link offline, badge maker terpercaya; tab "Edit profil".
-- [ ] Metadata + OG image per proyek dan profil (`next/og`).
+- [x] `/p/[slug]` sesuai `VPO-Proyek`: breadcrumb, judul + tagline, badge (status link, bahasa, kategori), Worth it (sementara read-only), "Coba live ↗", tombol Bagikan, blok prompt kunci → "X jam dan N sesi kemudian" → galeri/video, "Cara membuatnya" (timeline per sesi: label · durasi, prompt, hasil, kendala + solusi), "Pelajaran dari {maker}", sidebar meta, "Obrolan lain dari {maker}".
+- [x] Owner bisa melihat proyeknya sendiri saat `pending`/`rejected` dengan banner status.
+- [x] Link status Offline: tetap tampilkan screenshot/video + label jelas.
+- [x] `/u/[username]` sesuai `VPO-Profil`: header, bio sebagai bubble, link sosial, salin link profil, traktir maker, 4 stat, grid obrolan (termasuk yang diarsipkan dengan label).
+- [x] `/me` sesuai `VPO-Me`: tab "Proyek saya" (tabel status tayang, status link, worth it, balasan, Edit/Lihat), banner link offline, badge maker terpercaya; tab "Edit profil".
+- [x] Metadata + OG image per proyek dan profil (`next/og`).
 
 **DoD:** ketiga halaman tampil benar dengan data seed di desktop dan 375px, dalam light dan dark.
+
+**Status (2026-10-17):** dikerjakan di branch `feat/phase-4-submit` (lanjutan Fase 4). Tanpa migrasi baru: semua data dibaca dari tabel yang ada (statistik profil dihitung di server dari proyek tayang, jadi view `profile_stats` tidak dibuat).
+
+Kode: loader di `lib/projects/detail.ts` (detail + sesi + media + tools + obrolan lain), `lib/projects/cards.ts` (data kartu grid, dipakai lagi di Fase 6), `lib/profiles/public.ts` dan `lib/profiles/me.ts`. Data publik memakai `use cache` (`cacheLife("minutes")`) dengan tag di `lib/cache-tags.ts` (`project:`, `project-slug:`, `maker:`, `username:`); `saveProject`, aksi media, route `finalize`, dan `updateProfile` meng-invalidate tag terkait, jadi owner langsung melihat perubahannya. Perubahan yang terjadi di dalam DB (auto-hide 3 laporan) tampil paling lambat sesuai umur cache; aksi admin Fase 8 perlu memanggil tag yang sama. `/p/[slug]` mencoba versi publik dulu, lalu bila tidak ada membaca sesi dan menampilkan proyek `pending`/`rejected`/`hidden` hanya untuk owner dengan banner "Cuma kamu yang bisa melihat halaman ini"; owner proyek tayang mendapat tombol "Edit proyek" yang di-stream terpisah. Komponen baru: `ProjectDetailView`, `BuildTimeline`, `MediaGallery` (gambar besar + thumbnail, video sebagai link keluar karena tidak ada embed konten maker), `LinkStatusBadge`, `ProjectGridCard`, `ShareButton`/`CopyLinkField`, `ExternalLink` (`nofollow ugc`). `/me` punya tab "Proyek saya" (tabel status, baris bertumpuk di HP, banner link offline, catatan maker terpercaya) dan "Edit profil" (validasi zod bersama di `lib/validation/profile.ts`, server action `lib/profiles/actions.ts`; tab tersimpan di `?tab=`). OG image `next/og` di `opengraph-image.tsx` proyek dan profil memakai Fraunces/Geist/Geist Mono yang disalin ke `assets/og/` (WOFF dari Fontsource, OFL). Tambahan: `metadataBase` dari `NEXT_PUBLIC_SITE_URL` (`lib/site.ts`, fallback domain produksi Vercel), zona waktu next-intl `Asia/Jakarta`.
+
+Arsip oleh maker (default Q8): tombol "Arsipkan" / "Aktifkan lagi" per baris di tab "Proyek saya" (konfirmasi dulu saat mengarsipkan; panel di bawah tombol di desktop, bottom sheet di HP). Karena `link_status` tidak bisa ditulis klien, perubahannya lewat RPC `set_project_archived(p_project_id, p_archived)` (security definer, hanya owner, bukan `removed`) di migrasi `20261017090000_archive_project.sql`; mengaktifkan lagi mengembalikan `live` dan me-reset `link_fail_count` supaya link checker Fase 9 menilai ulang. Server action `lib/projects/archive.ts` meng-invalidate tag proyek dan maker. Migrasi sudah di-push ke DB dev; `pnpm db:test` lulus semua (128 test, termasuk 13 baru di `supabase/tests/05_archive_project.sql`).
+
+Keputusan kecil: tanggal ditampilkan absolut ("dicek 15 Okt 2026", "maker sejak Oktober 2026") supaya tidak bergantung pada waktu render; deskripsi proyek tampil di bawah galeri ("Tentang proyek ini") karena desain tidak memuatnya; Worth it masih teks read-only, balasan dan laporan menunggu Fase 7; link kategori breadcrumb ke `/explore?category=` dan tools ke `/tools/[slug]` (dibangun Fase 6); username di URL tidak peka huruf besar.
+
+Sudah dicek: lint, typecheck, format, build. Di browser: `/id/p/tasklog` dan `/id/u/samsiragil` dengan data DB dev (1440px dan 375px tanpa scroll horizontal, light/dark), 404 untuk slug/username yang tidak ada, OG image proyek dan profil (ID/EN). Varian yang butuh data khusus atau sesi dicek lewat halaman non-produksi `/[locale]/dev/pages` (proyek offline, diarsipkan, tampilan owner saat pending, `/me` berisi dan kosong): validasi form profil menandai field dan memfokuskan yang pertama, server action menjawab `unauthorized` tanpa login. Belum: `/me` dan simpan profil dengan akun asli (pane belum login), gambar galeri banyak + video dengan data asli.
 
 ### Fase 6 — Penemuan: beranda, jelajah, tools (2–3 hari)
 

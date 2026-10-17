@@ -653,6 +653,10 @@ export type Database = {
         Args: { p_media_ids: string[]; p_project_id: string };
         Returns: undefined;
       };
+      set_project_archived: {
+        Args: { p_archived: boolean; p_project_id: string };
+        Returns: Database["public"]["Enums"]["link_status"];
+      };
       upsert_project: {
         Args: { p_project: Json; p_project_id?: string; p_slug_base?: string };
         Returns: Json;

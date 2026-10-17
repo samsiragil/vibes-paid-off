@@ -5,6 +5,7 @@ import type { Database } from "@/lib/supabase/database.types";
 export type ToolKind = Database["public"]["Enums"]["tool_kind"];
 export type ProjectStatus = Database["public"]["Enums"]["project_status"];
 export type ContentLang = Database["public"]["Enums"]["content_lang"];
+export type LinkStatus = Database["public"]["Enums"]["link_status"];
 
 export const TOOL_KINDS: ToolKind[] = [
   "ai_agent",

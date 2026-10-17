@@ -91,9 +91,92 @@
   },
   "me": {
     "metaTitle": "My dashboard",
-    "greeting": "Hi, {name}!",
-    "soon": "The full dashboard (my projects and profile editing) is coming soon. For now you can sign in and out.",
-    "signOut": "Sign out"
+    "hello": "Hi,",
+    "viewProfile": "View public profile",
+    "signOut": "Sign out",
+    "tabs": {
+      "label": "Dashboard sections",
+      "projects": "My projects · {count}",
+      "profile": "Edit profile"
+    },
+    "table": {
+      "project": "Chat",
+      "status": "Status",
+      "link": "Link",
+      "worthIt": "Worth it",
+      "replies": "Replies"
+    },
+    "status": {
+      "published": "Live on site",
+      "pending": "Awaiting review",
+      "rejected": "Rejected",
+      "hidden": "Hidden",
+      "removed": "Removed"
+    },
+    "rejectReason": "Rejection reason: {reason}",
+    "edit": "Edit",
+    "view": "View",
+    "offlineNotice": "The link for <strong>{title}</strong> is offline (last checked {date}). Don't worry, its screenshots and video still show. Once it's back up, we'll mark it Live automatically.",
+    "offlineNoticeNoDate": "The link for <strong>{title}</strong> is offline. Don't worry, its screenshots and video still show. Once it's back up, we'll mark it Live automatically.",
+    "trusted": "Trusted maker",
+    "trustedNote": "Your new projects go live right away, no review queue.",
+    "notTrustedNote": "An admin reviews your first project (within 2×24 hours). Once it's approved, your next projects go live right away.",
+    "empty": "You haven't shown off any chats yet. Start with the project you're proudest of, however small.",
+    "emptyCta": "Show off your project",
+    "profileForm": {
+      "displayName": "Display name",
+      "username": "Username",
+      "usernameHint": "Changing your username also changes your profile address.",
+      "bio": "Short bio",
+      "bioHint": "Up to {max} characters. Shown as a bubble on your profile.",
+      "bioPlaceholder": "Tell people briefly what you like building with AI.",
+      "location": "Location",
+      "locationPlaceholder": "For example Yogyakarta",
+      "tipUrl": "Tip me link",
+      "tipUrlHint": "Ko-fi, Buy Me a Coffee, Saweria or similar. Shows as a button on your profile and projects.",
+      "links": {
+        "github": "GitHub",
+        "linkedin": "LinkedIn",
+        "x": "X",
+        "website": "Website"
+      },
+      "linkPlaceholders": {
+        "github": "https://github.com/…",
+        "linkedin": "https://linkedin.com/in/…",
+        "x": "https://x.com/…",
+        "website": "https://…"
+      },
+      "avatarNote": "Your profile photo comes from the GitHub or Google account you sign in with.",
+      "cancel": "Cancel",
+      "save": "Save profile",
+      "saving": "Saving…",
+      "saved": "Profile saved.",
+      "errors": {
+        "required": "Required.",
+        "too_long": "Up to {max} characters.",
+        "invalid_url": "Use a full address starting with https://",
+        "invalid_username": "Use 3–20 lowercase letters, numbers or underscores (not a reserved name).",
+        "taken": "That username is taken. Try another one.",
+        "invalid": "This value isn't valid.",
+        "unauthorized": "Your session expired. Sign in again, then retry.",
+        "failed": "Couldn't save. Please try again."
+      }
+    },
+    "archive": {
+      "archive": "Archive",
+      "unarchive": "Reactivate",
+      "saving": "Saving…",
+      "confirmLabel": "Archive {title}?",
+      "confirm": "Archive this project? The Try it live button is hidden, but the page, screenshots and story stay. You can reactivate it any time.",
+      "confirmYes": "Yes, archive",
+      "cancel": "Cancel",
+      "errors": {
+        "unauthorized": "Your session expired. Sign in again, then retry.",
+        "forbidden": "You can't change this project.",
+        "invalid": "Invalid request. Reload the page.",
+        "failed": "Couldn't save. Please try again."
+      }
+    }
   },
   "categories": {
     "umkm": "Small business",
@@ -291,5 +374,96 @@
     },
     "saved": "Changes saved.",
     "savedPending": "Changes saved. Your project is back in the review queue."
+  },
+  "linkStatus": {
+    "live": "Live",
+    "offline": "Offline",
+    "archived": "Archived"
+  },
+  "share": {
+    "share": "Share",
+    "copy": "Copy link",
+    "copied": "Copied",
+    "copiedAnnouncement": "Link copied"
+  },
+  "project": {
+    "metaFallbackTitle": "Chat",
+    "breadcrumb": "Breadcrumb",
+    "explore": "Explore",
+    "contentLang": "Written in {lang, select, id {Indonesian} en {English} other {{lang}}}",
+    "tryLive": "Try it live",
+    "tryLiveOffline": "Try the link",
+    "newTab": "(opens in a new tab)",
+    "edit": "Edit project",
+    "offlineNotice": "This project's link is offline. You can still see its screenshots and video here.",
+    "archivedNotice": "The maker archived this project, so its live link no longer opens. The story stays here.",
+    "keyPrompt": "Key prompt",
+    "about": "About this project",
+    "howLead": "How it was",
+    "howTail": "made",
+    "lessonsFrom": "Lessons from {name}",
+    "trusted": "trusted maker",
+    "viewProfile": "View profile",
+    "tip": "Buy {name} a coffee",
+    "others": "More chats from {name}",
+    "meta": {
+      "tools": "Tools",
+      "buildTime": "Build time",
+      "buildTimeValue": "{hours, number} {hours, plural, one {hour} other {hours}}, {sessions, plural, one {# session} other {# sessions}}",
+      "category": "Category",
+      "repo": "Repo",
+      "linkStatus": "Link status",
+      "linkChecked": "{status} · checked {date}"
+    },
+    "gallery": {
+      "imageAlt": "Screenshot {position} of {title}",
+      "show": "Show screenshot {position}",
+      "empty": "No screenshots for this project yet.",
+      "watchDemo": "Watch the demo",
+      "newTab": "(opens in a new tab)"
+    },
+    "timeline": {
+      "session": "Session {number}",
+      "hours": "{hours, number} {hours, plural, one {hour} other {hours}}",
+      "prompt": "Prompt",
+      "result": "Result",
+      "challenge": "Obstacle",
+      "solution": "Fix"
+    },
+    "ownerStatus": {
+      "onlyYou": "Only you can see this page.",
+      "pending": "This project is waiting for an admin review (within 2×24 hours).",
+      "rejected": "An admin rejected this project: “{reason}”. Fix it via Edit project to send it back for review.",
+      "rejectedNoReason": "An admin rejected this project. Fix it via Edit project to send it back for review.",
+      "hidden": "This project is hidden because it was reported. An admin will review it."
+    }
+  },
+  "profile": {
+    "metaFallbackTitle": "Profile",
+    "metaDescription": "{count, plural, =0 {Maker profile of {name}} one {# vibe coding chat from {name}} other {# vibe coding chats from {name}}} on Vibes Paid Off.",
+    "makerSince": "maker since {date}",
+    "trusted": "Trusted maker",
+    "shareLabel": "Share this profile",
+    "tip": "Buy {name} a coffee",
+    "links": {
+      "github": "GitHub",
+      "linkedin": "LinkedIn",
+      "x": "X",
+      "website": "Website"
+    },
+    "stats": {
+      "projects": "Chats live",
+      "hours": "Total build time",
+      "hoursUnit": "hours",
+      "upvotes": "People said worth it",
+      "topTool": "Go-to tool"
+    },
+    "projectsLead": "{name}'s chats that",
+    "projectsTail": "became real",
+    "empty": "{name} hasn't shown off any chats yet. They'll show up here once they do.",
+    "og": {
+      "projects": "{count, plural, one {# chat} other {# chats}}",
+      "hours": "{hours, number} {hours, plural, one {hour} other {hours}} building"
+    }
   }
 }
