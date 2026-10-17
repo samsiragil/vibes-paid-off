@@ -15,7 +15,8 @@
     "login": "Sign in",
     "dashboard": "My dashboard",
     "openMenu": "Open menu",
-    "closeMenu": "Close menu"
+    "closeMenu": "Close menu",
+    "skipToContent": "Skip to content"
   },
   "locale": {
     "label": "Language",
@@ -40,7 +41,8 @@
     "about": "About",
     "freeNote": "Free, powered by donations.",
     "buyCoffee": "Buy us a coffee",
-    "copyright": "© {year} Vibes Paid Off"
+    "copyright": "© {year} Vibes Paid Off",
+    "howWePick": "How we pick"
   },
   "home": {
     "eyebrow": "Indonesia's vibe coding catalog",
@@ -847,5 +849,132 @@
         "score": "Score"
       }
     }
+  },
+  "support": {
+    "metaTitle": "Support us",
+    "metaDescription": "Why Vibes Paid Off is free, where donations go, and how projects are ranked without manual curation.",
+    "titleLead": "Why is it",
+    "titleTail": "free?",
+    "faq": {
+      "freeQ": "How is this free? Are there ads?",
+      "freeA": "No ads, no paid features. Vibes Paid Off exists so Indonesian makers have a place to show their work along with how they built it. The site runs on free tiers, so the only required cost is the domain.",
+      "moneyQ": "So what are donations for?",
+      "moneyA": "First, the domain. If the site grows and the database starts filling up, donations pay for a bigger server. Every cost is listed openly on this page."
+    },
+    "local": {
+      "eyebrow": "From Indonesia",
+      "titleLead": "Treat us to",
+      "titleTail": "kopi",
+      "body": "Pay with QRIS, e-wallets, or a local bank transfer.",
+      "cta": "Via {platform}"
+    },
+    "global": {
+      "eyebrow": "From abroad",
+      "titleLead": "Buy us a",
+      "titleTail": "coffee",
+      "body": "Card or PayPal, in your own currency.",
+      "cta": "Via {platform}"
+    },
+    "soon": "Link coming soon",
+    "makerTip": "Are you a maker? Add your own tip link to your profile so people who like your work can treat you directly. <link>Set it up in your dashboard</link>",
+    "costs": {
+      "label": "Current costs, in the open",
+      "free": "$0",
+      "domain": "Domain vibespaidoff.dev",
+      "domainVendor": "Cloudflare Registrar",
+      "domainCost": "±US$12–13/yr",
+      "hosting": "Web hosting",
+      "hostingVendor": "Vercel Hobby",
+      "database": "Database and login",
+      "databaseVendor": "Supabase Free",
+      "storage": "Image storage",
+      "storageVendor": "Cloudflare R2, 10 GB free",
+      "edge": "DNS, captcha, analytics",
+      "edgeVendor": "Cloudflare",
+      "total": "Total per month",
+      "totalValue": "≈ $0",
+      "totalNote": "+ domain"
+    },
+    "later": {
+      "label": "Later, if it takes off",
+      "body": "Upgrade the database to Supabase Pro, about US$25 a month, once it nears the free limit."
+    },
+    "target": {
+      "label": "First goal",
+      "lead": "Cover the domain for",
+      "tail": "the first year."
+    },
+    "picking": {
+      "titleLead": "How we",
+      "titleTail": "pick",
+      "question": "Who chooses “This week's pick”?",
+      "answer": "Nobody. Admins have no button to feature a project. Every ranking on this site comes from the same formula, and the formula is written out right here.",
+      "formulaLabel": "The formula",
+      "formula": "score = eligible votes + 0.5 × eligible repliers",
+      "votesTitle": "Eligible votes",
+      "votesBody": "A vote counts when the account is at least 3 days (72 hours) old and the project is live. Makers can't vote for their own projects. Votes from newer accounts still show in the Worth it count; they join the ranking once the account is old enough.",
+      "repliersTitle": "Eligible repliers",
+      "repliersBody": "Each person who replies (not the maker, account at least 3 days old) counts once per project, however many replies they write. They weigh half a vote, because a lively chat is a sign the project is interesting too.",
+      "popularTitle": "Most popular chats this week",
+      "popularBody": "Scores from the last 7 days, always up to date. Ties go to more eligible votes, then to the project published first. Each maker appears at most once, so nobody takes every spot.",
+      "pickTitle": "This week's pick",
+      "pickBody": "Computed automatically every Monday at 00:05 WIB from the previous Monday–Sunday, then frozen for the week. To qualify: a score of at least {min}, at least one screenshot, a link that isn't archived, never picked before, and a maker who wasn't picked in the last 4 weeks. If nobody qualifies, the home page shows the newest project instead. If the winner gets hidden after reports, the runner-up moves up automatically.",
+      "worthItTitle": "Most worth it",
+      "worthItBody": "The order on Explore and tool pages uses all-time eligible votes. Ties go to the more recently published project.",
+      "exampleLabel": "Example: the latest pick",
+      "exampleSampleLabel": "Worked example",
+      "exampleIntro": "The pick for the week of {week}, scored on {range}:",
+      "exampleRow": "{votes} votes + 0.5 × {repliers} repliers = {score}",
+      "exampleHidden": "A project that is no longer public",
+      "exampleWinner": "Picked",
+      "exampleNone": "The pick for the week of {week} (scored on {range}) had no candidate reaching a score of {min}, so the home page shows the newest project.",
+      "exampleSample": "Say a project has 4 eligible votes and 3 eligible repliers: its score is 4 + 0.5 × 3 = 5.5. That clears the threshold of {min}, so it can be picked if it scores highest that week."
+    }
+  },
+  "communityRules": {
+    "metaTitle": "Community rules",
+    "metaDescription": "What's allowed on Vibes Paid Off, what isn't, and how moderation works.",
+    "titleLead": "Community",
+    "titleTail": "rules",
+    "intro": "Vibes Paid Off is a place to show off your work and share how you built it. The rules are few, and they apply to everyone, admins included.",
+    "updated": "Last updated {date}",
+    "share": {
+      "title": "What to share",
+      "own": "Projects you made yourself, or were directly involved in making.",
+      "ai": "Built with help from AI. It doesn't have to be 100% AI, but tell us which parts it helped with.",
+      "honest": "The prompts and sessions you write must be honest. Tidy them up, don't make them up.",
+      "live": "The live link has to open. If you've shut the project down, archive it from your dashboard."
+    },
+    "forbidden": {
+      "title": "Not allowed",
+      "illegal": "Adult content, gambling, scams, phishing, malware, or anything illegal.",
+      "spam": "Spam, repeated promotion, or affiliate links unrelated to the project.",
+      "privacy": "Other people's personal data, API keys, or tokens in screenshots, prompts, and replies. Redact before uploading.",
+      "harassment": "Harassment, hate speech, or belittling others.",
+      "impersonation": "Pretending to be someone else, or passing off other people's work as yours."
+    },
+    "replies": {
+      "title": "When replying",
+      "respect": "Criticism is fine, belittling is not. Talk about the work, not the person.",
+      "useful": "If you give advice, make it something people can try right away.",
+      "promo": "Don't use replies to promote your own project."
+    },
+    "moderation": {
+      "title": "How moderation works",
+      "review": "Every maker's first project is checked by an admin, usually within 48 hours. Once approved, you become a trusted maker and your next projects go live right away.",
+      "rejected": "If it's rejected, the reason shows up in your dashboard. You can fix the project and send it again.",
+      "reports": "Anyone logged in can report a project or a reply. Once 3 different accounts report it, it's hidden automatically until an admin reviews it.",
+      "actions": "Admins can restore, hide, or remove content, and revoke trusted maker status after repeated violations.",
+      "ranking": "Admins can't pick or boost projects. Rankings come from the same formula for everyone. <link>See how we pick</link>"
+    },
+    "closing": "These rules may be updated as the community grows."
+  },
+  "error": {
+    "title": "Something went",
+    "titleTail": "wrong",
+    "body": "Sorry, this page failed to load. Trying again usually fixes it. If it keeps failing, wait a few minutes.",
+    "retry": "Try again",
+    "home": "Back to home",
+    "code": "Error code: {digest}"
   }
 }

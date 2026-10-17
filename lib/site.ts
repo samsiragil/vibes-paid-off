@@ -13,3 +13,6 @@ export const siteUrl = (
 export function displayUrl(path: string) {
   return `${siteUrl.replace(/^https?:\/\//, "")}${path}`;
 }
+
+/** Anchor of "Cara kami memilih" (§2.7) on /support, linked from the footer and /rules. */
+export const PICKING_ANCHOR = "cara-kami-memilih";

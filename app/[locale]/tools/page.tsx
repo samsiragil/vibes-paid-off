@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { MonoLabel } from "@/components/ui/badge";
@@ -7,10 +7,15 @@ import { pillStyles } from "@/components/ui/pill";
 import { cn } from "@/lib/cn";
 import { getToolCatalog } from "@/lib/projects/catalog";
 import { TOOL_KINDS } from "@/lib/projects/types";
+import { localeAlternates } from "@/lib/seo";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("tools");
-  return { title: t("metaTitle"), description: t("metaDescription") };
+  return {
+    title: t("metaTitle"),
+    description: t("metaDescription"),
+    alternates: localeAlternates(await getLocale(), "/tools"),
+  };
 }
 
 // "Per tools": the whole catalog grouped by kind (§2.8). Every tool has a page, including the

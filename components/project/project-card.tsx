@@ -24,6 +24,7 @@ export function ProjectCardView({
   showMaker = true,
   status,
   lang,
+  eager = false,
   className,
 }: {
   makerName: string;
@@ -43,6 +44,8 @@ export function ProjectCardView({
   status?: ReactNode;
   /** Content language badge ("ID" / "EN") next to the category. */
   lang?: string;
+  /** Load the screenshot right away: the first card of a grid is often the page's LCP image. */
+  eager?: boolean;
   className?: string;
 }) {
   return (
@@ -76,7 +79,16 @@ export function ProjectCardView({
       <ResultBubble>
         <div className="relative h-[130px] overflow-hidden rounded-[10px] bg-placeholder">
           {imageUrl ? (
-            <Image src={imageUrl} alt="" fill unoptimized sizes="320px" className="object-cover" />
+            <Image
+              src={imageUrl}
+              alt=""
+              fill
+              unoptimized
+              sizes="320px"
+              loading={eager ? "eager" : "lazy"}
+              fetchPriority={eager ? "high" : undefined}
+              className="object-cover"
+            />
           ) : null}
         </div>
         <h3 className={cn("px-1 text-sm font-semibold break-words", muted && "text-muted")}>
