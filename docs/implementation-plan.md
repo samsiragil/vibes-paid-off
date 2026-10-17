@@ -453,7 +453,7 @@ Backup: `backup.yml` setiap Senin 02:00 WIB memakai Supabase CLI (`supabase db d
 
 Keputusan kecil: skrip `.mjs` seperti skrip lain di `scripts/` (tanpa langkah build TypeScript); 429 dan 403 tantangan bot Cloudflare/Vercel dianggap hidup supaya situs di balik proteksi bot tidak ditandai offline; hanya proyek `published` yang dicek; pengecekan tidak mengubah `updated_at`.
 
-Sudah dicek: lint, typecheck, format. 261 test SQL lulus terhadap DB dev (migrasi di dalam transaksi). `pnpm links:check --dry-run` terhadap DB dev; logika probe dengan URL contoh (200, 404, DNS tidak ada, sertifikat kedaluwarsa, timeout, tantangan Cloudflare). Ping keep-alive terhadap DB dev menjawab. Pola cek dump dicocokkan dengan skrip `pg_dump` CLI (`supabase db dump --dry-run`). Belum: push migrasi ke DB dev (`pnpm db:push`) lalu link checker tanpa dry run; mengisi secret/variabel GitHub dan membuat bucket backup; menjalankan ketiga workflow di GitHub; restore backup ke Supabase lokal (Docker Desktop di mesin ini gagal start).
+Sudah dicek: lint, typecheck, format. Migrasi sudah di-push ke DB dev; `pnpm db:test` lulus semua (261 test). `pnpm links:check` (dry run dan sungguhan) terhadap DB dev: `tasklog` tercatat `live`, `last_checked_at` terisi; logika probe dengan URL contoh (200, 404, DNS tidak ada, sertifikat kedaluwarsa, timeout, tantangan Cloudflare). Ping keep-alive terhadap DB dev menjawab. Pola cek dump dicocokkan dengan skrip `pg_dump` CLI (`supabase db dump --dry-run`). Belum: mengisi secret/variabel GitHub dan membuat bucket backup; menjalankan ketiga workflow di GitHub; restore backup ke Supabase lokal (Docker Desktop di mesin ini gagal start).
 
 ### Fase 10 — Dukung kami, SEO, analitik, polish (2 hari)
 
