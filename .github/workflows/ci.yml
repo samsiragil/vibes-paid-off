@@ -19,6 +19,7 @@ jobs:
       - run: pnpm lint
       - run: pnpm typecheck
       - run: pnpm format:check
+      - run: pnpm messages:check
       - run: pnpm build
         env:
           # The build prerenders public pages with data (tools catalog, home lists; Fase 6), so it

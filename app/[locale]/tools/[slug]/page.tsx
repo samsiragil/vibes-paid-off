@@ -16,6 +16,7 @@ import { cn } from "@/lib/cn";
 import { getToolCatalog, quickPickIds } from "@/lib/projects/catalog";
 import { getToolPage, searchProjects, type ToolPageData } from "@/lib/projects/discovery";
 import { emptyFilters, type ExploreFilters } from "@/lib/projects/explore-params";
+import { localeAlternates } from "@/lib/seo";
 
 /** The most used tools are prerendered; any other slug renders on first visit, then is cached. */
 export async function generateStaticParams() {
@@ -37,6 +38,7 @@ export async function generateMetadata({
   return {
     title: t("toolMeta", { name: tool.name }),
     description: (locale === "en" ? tool.description.en : tool.description.id) || undefined,
+    alternates: localeAlternates(locale, `/tools/${tool.slug}`),
   };
 }
 
@@ -108,12 +110,14 @@ async function ToolContent({ params }: { params: PageProps<"/[locale]/tools/[slu
       </section>
 
       <section className="flex flex-col gap-[22px] pt-10">
+        {/* Cards use h3; keep the outline h1 → h2 → h3 for screen readers. */}
+        <h2 className="sr-only">{t("projectCount", { count: page.total })}</h2>
         {page.items.length > 0 ? (
           <>
             <SystemMessage>{t("intro", { name: tool.name })}</SystemMessage>
             <ResultsGrid key={tool.slug} filters={filters} nextCursor={page.nextCursor}>
-              {page.items.map((project) => (
-                <ProjectGridCard key={project.id} project={project} />
+              {page.items.map((project, index) => (
+                <ProjectGridCard key={project.id} project={project} eager={index === 0} />
               ))}
             </ResultsGrid>
           </>

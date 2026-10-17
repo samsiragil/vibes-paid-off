@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Suspense, type ReactNode } from "react";
-import { getFormatter, getTranslations } from "next-intl/server";
+import { getFormatter, getLocale, getTranslations } from "next-intl/server";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { ProjectGridCard } from "@/components/project/project-grid-card";
+import { JsonLd } from "@/components/seo/json-ld";
 import { Avatar } from "@/components/ui/avatar";
 import { Badge, MonoLabel } from "@/components/ui/badge";
 import { SystemMessage } from "@/components/ui/bubble";
@@ -11,6 +12,7 @@ import { buttonStyles } from "@/components/ui/button";
 import { CopyLinkField } from "@/components/ui/copy-link";
 import { ExternalLink } from "@/components/ui/external-link";
 import { getPublicProfile, PROFILE_LINK_KEYS, type PublicProfile } from "@/lib/profiles/public";
+import { localeAlternates, localeUrl, ogLocale } from "@/lib/seo";
 import { displayUrl, siteUrl } from "@/lib/site";
 
 // Usernames are open-ended: no static shell; the profile data is cached (getPublicProfile).
@@ -28,10 +30,19 @@ export async function generateMetadata({
   const description =
     profile.bio ||
     t("metaDescription", { name: profile.displayName, count: profile.stats.projectCount });
+  const [locale, tMeta] = await Promise.all([getLocale(), getTranslations("meta")]);
   return {
     title,
     description,
-    openGraph: { type: "profile", title, description, username: profile.username },
+    alternates: localeAlternates(locale, `/u/${profile.username}`),
+    openGraph: {
+      type: "profile",
+      title,
+      description,
+      username: profile.username,
+      siteName: tMeta("title"),
+      locale: ogLocale(locale),
+    },
     twitter: { card: "summary_large_image", title, description },
   };
 }
@@ -70,6 +81,7 @@ async function ProfileContent({
 
   return (
     <main className="mx-auto w-full max-w-[1200px] px-4 pt-12 sm:px-6 sm:pt-16">
+      <ProfileJsonLd profile={profile} />
       <section className="flex flex-col gap-10 border-b border-border pb-11 lg:flex-row lg:items-start lg:gap-14">
         <div className="flex min-w-0 grow flex-col gap-[22px]">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-[18px]">
@@ -150,6 +162,37 @@ async function ProfileContent({
         )}
       </section>
     </main>
+  );
+}
+
+/** schema.org ProfilePage about the maker as a Person (§2.5 SEO). */
+async function ProfileJsonLd({ profile }: { profile: PublicProfile }) {
+  const locale = await getLocale();
+  const url = localeUrl(locale, `/u/${profile.username}`);
+  return (
+    <JsonLd
+      data={{
+        "@context": "https://schema.org",
+        "@type": "ProfilePage",
+        url,
+        dateCreated: profile.createdAt,
+        mainEntity: {
+          "@type": "Person",
+          "@id": url,
+          name: profile.displayName,
+          alternateName: `@${profile.username}`,
+          description: profile.bio ?? undefined,
+          image: profile.avatarUrl ?? undefined,
+          homeLocation: profile.location ? { "@type": "Place", name: profile.location } : undefined,
+          sameAs: PROFILE_LINK_KEYS.flatMap((key) => profile.links[key] ?? []),
+          interactionStatistic: {
+            "@type": "InteractionCounter",
+            interactionType: "https://schema.org/WriteAction",
+            userInteractionCount: profile.stats.projectCount,
+          },
+        },
+      }}
+    />
   );
 }
 

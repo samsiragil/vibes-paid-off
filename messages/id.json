@@ -15,7 +15,8 @@
     "login": "Masuk",
     "dashboard": "Dashboard saya",
     "openMenu": "Buka menu",
-    "closeMenu": "Tutup menu"
+    "closeMenu": "Tutup menu",
+    "skipToContent": "Lewati ke konten"
   },
   "locale": {
     "label": "Bahasa",
@@ -40,7 +41,8 @@
     "about": "Tentang",
     "freeNote": "Gratis, jalan dari donasi.",
     "buyCoffee": "Beliin kopi",
-    "copyright": "© {year} Vibes Paid Off"
+    "copyright": "© {year} Vibes Paid Off",
+    "howWePick": "Cara kami memilih"
   },
   "home": {
     "eyebrow": "Katalog vibe coding Indonesia",
@@ -847,5 +849,132 @@
         "score": "Skor"
       }
     }
+  },
+  "support": {
+    "metaTitle": "Dukung kami",
+    "metaDescription": "Kenapa Vibes Paid Off gratis, ke mana donasi dipakai, dan cara kami memilih proyek tanpa kurasi manual.",
+    "titleLead": "Kenapa",
+    "titleTail": "gratis?",
+    "faq": {
+      "freeQ": "Kok bisa gratis? Ada iklannya nggak?",
+      "freeA": "Nggak ada iklan, nggak ada fitur berbayar. Vibes Paid Off dibikin supaya maker Indonesia punya tempat pamer karya beserta cara membuatnya. Situs ini jalan di atas layanan gratis, jadi biaya wajibnya cuma domain.",
+      "moneyQ": "Terus duit donasinya buat apa?",
+      "moneyA": "Pertama nutup biaya domain. Kalau situsnya makin ramai dan database mulai penuh, donasi dipakai buat upgrade server. Semua biayanya aku tulis terbuka di halaman ini."
+    },
+    "local": {
+      "eyebrow": "Dari Indonesia",
+      "titleLead": "Traktir",
+      "titleTail": "kopi",
+      "body": "Bayar pakai QRIS, e-wallet, atau transfer bank.",
+      "cta": "Lewat {platform}"
+    },
+    "global": {
+      "eyebrow": "From abroad",
+      "titleLead": "Buy us a",
+      "titleTail": "coffee",
+      "body": "Card or PayPal, in your own currency.",
+      "cta": "Via {platform}"
+    },
+    "soon": "Link-nya segera hadir",
+    "makerTip": "Kamu maker? Pasang link traktir milikmu sendiri di profil, biar yang suka karyamu bisa langsung traktir kamu. <link>Atur di dashboard</link>",
+    "costs": {
+      "label": "Biaya saat ini, terbuka",
+      "free": "Rp0",
+      "domain": "Domain vibespaidoff.dev",
+      "domainVendor": "Cloudflare Registrar",
+      "domainCost": "±US$12–13/thn",
+      "hosting": "Hosting web",
+      "hostingVendor": "Vercel Hobby",
+      "database": "Database dan login",
+      "databaseVendor": "Supabase Free",
+      "storage": "Penyimpanan gambar",
+      "storageVendor": "Cloudflare R2, gratis 10 GB",
+      "edge": "DNS, captcha, analitik",
+      "edgeVendor": "Cloudflare",
+      "total": "Total per bulan",
+      "totalValue": "≈ Rp0",
+      "totalNote": "+ domain"
+    },
+    "later": {
+      "label": "Nanti, kalau makin ramai",
+      "body": "Upgrade database ke Supabase Pro, sekitar US$25 per bulan, saat database mendekati batas gratis."
+    },
+    "target": {
+      "label": "Target pertama",
+      "lead": "Menutup biaya domain",
+      "tail": "tahun pertama."
+    },
+    "picking": {
+      "titleLead": "Cara kami",
+      "titleTail": "memilih",
+      "question": "Siapa yang milih “Pilihan minggu ini”?",
+      "answer": "Bukan siapa-siapa. Admin nggak punya tombol buat menaikkan proyek. Semua peringkat di situs ini dihitung dari rumus yang sama, dan rumusnya ditulis terbuka di sini.",
+      "formulaLabel": "Rumusnya",
+      "formula": "skor = vote layak + 0,5 × pembalas layak",
+      "votesTitle": "Vote layak",
+      "votesBody": "Vote dihitung kalau akunnya sudah berumur minimal 3 hari (72 jam) dan proyeknya sedang tayang. Maker nggak bisa vote proyeknya sendiri. Vote dari akun baru tetap muncul di angka Worth it, cuma baru ikut peringkat setelah akunnya cukup umur.",
+      "repliersTitle": "Pembalas layak",
+      "repliersBody": "Orang yang membalas (bukan maker-nya, akunnya juga minimal 3 hari) dihitung satu kali per proyek, berapa pun jumlah balasannya. Bobotnya setengah vote, karena obrolan yang hidup juga tanda proyeknya menarik.",
+      "popularTitle": "Obrolan terpopuler minggu ini",
+      "popularBody": "Skor dari 7 hari terakhir, terus diperbarui. Kalau seri, yang vote layaknya lebih banyak menang, lalu yang tayang lebih dulu. Satu maker maksimal muncul sekali, biar nggak ada yang borong semua tempat.",
+      "pickTitle": "Pilihan minggu ini",
+      "pickBody": "Dihitung otomatis tiap Senin pukul 00.05 WIB dari skor Senin–Minggu sebelumnya, lalu dibekukan seminggu. Syaratnya: skor minimal {min}, punya screenshot, link-nya nggak diarsipkan, belum pernah terpilih, dan makernya nggak terpilih dalam 4 minggu terakhir. Kalau nggak ada yang lolos, beranda menampilkan proyek terbaru. Kalau pemenangnya disembunyikan karena laporan, peringkat kedua otomatis naik.",
+      "worthItTitle": "Paling worth it",
+      "worthItBody": "Urutan di Jelajah dan halaman tools memakai total vote layak sepanjang waktu. Kalau seri, yang lebih baru tayang ada di atas.",
+      "exampleLabel": "Contoh: pilihan terakhir",
+      "exampleSampleLabel": "Contoh perhitungan",
+      "exampleIntro": "Pilihan untuk minggu {week}, dihitung dari skor {range}:",
+      "exampleRow": "{votes} vote + 0,5 × {repliers} pembalas = {score}",
+      "exampleHidden": "Proyek yang sudah nggak tayang",
+      "exampleWinner": "Terpilih",
+      "exampleNone": "Pilihan untuk minggu {week} (skor {range}) nggak punya kandidat yang mencapai skor {min}, jadi beranda menampilkan proyek terbaru.",
+      "exampleSample": "Misalnya proyek dengan 4 vote layak dan 3 pembalas layak: skornya 4 + 0,5 × 3 = 5,5. Itu lolos ambang {min}, jadi bisa terpilih kalau skornya paling tinggi minggu itu."
+    }
+  },
+  "communityRules": {
+    "metaTitle": "Aturan komunitas",
+    "metaDescription": "Apa yang boleh dan nggak boleh di Vibes Paid Off, dan bagaimana moderasinya berjalan.",
+    "titleLead": "Aturan",
+    "titleTail": "komunitas",
+    "intro": "Vibes Paid Off itu tempat pamer karya sekaligus berbagi cara membuatnya. Aturannya sedikit, tapi berlaku buat semua orang, termasuk admin.",
+    "updated": "Terakhir diperbarui {date}",
+    "share": {
+      "title": "Yang dipamerin",
+      "own": "Proyek buatanmu sendiri, atau kamu terlibat langsung membuatnya.",
+      "ai": "Dibikin dengan bantuan AI. Nggak harus 100% AI, tapi ceritain bagian mana yang dibantu.",
+      "honest": "Prompt dan sesi yang kamu tulis harus jujur. Boleh dirapikan, jangan dikarang.",
+      "live": "Link live harus bisa dibuka. Kalau proyeknya sudah dimatikan, arsipkan dari dashboard."
+    },
+    "forbidden": {
+      "title": "Yang dilarang",
+      "illegal": "Konten dewasa, judi, penipuan, phishing, malware, atau apa pun yang melanggar hukum.",
+      "spam": "Spam, promosi berulang, atau link afiliasi yang nggak ada hubungannya dengan proyek.",
+      "privacy": "Data pribadi orang lain, API key, atau token di screenshot, prompt, dan balasan. Sensor dulu sebelum upload.",
+      "harassment": "Pelecehan, ujaran kebencian, atau merendahkan orang lain.",
+      "impersonation": "Mengaku sebagai orang lain atau memakai karya orang lain sebagai milikmu."
+    },
+    "replies": {
+      "title": "Waktu membalas",
+      "respect": "Kritik boleh, merendahkan nggak. Bahas karyanya, bukan orangnya.",
+      "useful": "Kalau mau kasih saran, kasih yang bisa langsung dicoba.",
+      "promo": "Jangan pakai balasan buat promosi proyekmu sendiri."
+    },
+    "moderation": {
+      "title": "Cara moderasinya",
+      "review": "Proyek pertama setiap maker dicek admin dulu, biasanya dalam 48 jam. Setelah disetujui, kamu jadi maker terpercaya dan proyek berikutnya langsung tayang.",
+      "rejected": "Kalau ditolak, alasannya muncul di dashboard. Kamu bisa memperbaiki proyeknya lalu mengirim ulang.",
+      "reports": "Siapa pun yang sudah login bisa melaporkan proyek atau balasan. Setelah dilaporkan 3 akun berbeda, kontennya otomatis disembunyikan sampai admin memeriksanya.",
+      "actions": "Admin bisa memulihkan, menyembunyikan, atau menghapus konten, dan mencabut status maker terpercaya kalau aturan dilanggar berulang kali.",
+      "ranking": "Admin nggak bisa memilih atau menaikkan proyek. Peringkat dihitung dari rumus yang sama untuk semua. <link>Lihat cara kami memilih</link>"
+    },
+    "closing": "Aturan ini bisa diperbarui seiring komunitasnya tumbuh."
+  },
+  "error": {
+    "title": "Ada yang",
+    "titleTail": "error",
+    "body": "Maaf, halaman ini gagal dimuat. Biasanya cukup dicoba lagi. Kalau masih gagal, tunggu beberapa menit.",
+    "retry": "Coba lagi",
+    "home": "Balik ke beranda",
+    "code": "Kode error: {digest}"
   }
 }

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { SiteFooter } from "@/components/layout/site-footer";
 import {
@@ -10,6 +10,7 @@ import {
   ProjectWorthIt,
 } from "@/components/interactions/project-interactions";
 import { ProjectDetailView } from "@/components/project/project-detail";
+import { JsonLd } from "@/components/seo/json-ld";
 import { SystemMessage } from "@/components/ui/bubble";
 import { buttonStyles } from "@/components/ui/button";
 import { getCurrentUser, isCurrentUserAdmin } from "@/lib/auth/current-user";
@@ -19,7 +20,9 @@ import {
   getPublishedProject,
   type ProjectDetail,
 } from "@/lib/projects/detail";
+import { mediaUrl } from "@/lib/media/url";
 import { rejectReasonText } from "@/lib/projects/reject-reason";
+import { localeAlternates, localeUrl, ogLocale } from "@/lib/seo";
 
 // Slugs are open-ended, so there is no static shell to validate; the public data itself is
 // cached ("use cache" in getPublishedProject) and the owner-only parts stream in per request.
@@ -36,10 +39,19 @@ export async function generateMetadata({
   }
 
   const title = `${project.title} · ${project.maker.displayName}`;
+  const [locale, tMeta] = await Promise.all([getLocale(), getTranslations("meta")]);
   return {
     title: project.title,
     description: project.tagline,
-    openGraph: { type: "article", title, description: project.tagline },
+    alternates: localeAlternates(locale, `/p/${project.slug}`),
+    openGraph: {
+      type: "article",
+      title,
+      description: project.tagline,
+      siteName: tMeta("title"),
+      locale: ogLocale(locale),
+      publishedTime: project.publishedAt ?? undefined,
+    },
     twitter: { card: "summary_large_image", title, description: project.tagline },
   };
 }
@@ -61,17 +73,20 @@ async function ProjectContent({ params }: { params: PageProps<"/[locale]/p/[slug
   const project = await getPublishedProject(slug);
   if (project) {
     return (
-      <ProjectDetailView
-        project={project}
-        ownerActions={
-          <Suspense fallback={null}>
-            <OwnerEditLink project={project} />
-          </Suspense>
-        }
-        worthIt={<ProjectWorthIt project={project} />}
-        replies={<ProjectReplies project={project} />}
-        reportLink={<ProjectReportLink project={project} />}
-      />
+      <>
+        <ProjectJsonLd project={project} />
+        <ProjectDetailView
+          project={project}
+          ownerActions={
+            <Suspense fallback={null}>
+              <OwnerEditLink project={project} />
+            </Suspense>
+          }
+          worthIt={<ProjectWorthIt project={project} />}
+          replies={<ProjectReplies project={project} />}
+          reportLink={<ProjectReportLink project={project} />}
+        />
+      </>
     );
   }
 
@@ -92,6 +107,44 @@ async function ProjectContent({ params }: { params: PageProps<"/[locale]/p/[slug
   const preview = user && (await isCurrentUserAdmin()) ? await getProjectForAdmin(slug) : null;
   if (!preview) notFound();
   return <ProjectDetailView project={preview} ownerNotice={<AdminNotice project={preview} />} />;
+}
+
+/** schema.org CreativeWork for a published project (§2.5 SEO). */
+async function ProjectJsonLd({ project }: { project: ProjectDetail }) {
+  const [locale, tCategories] = await Promise.all([getLocale(), getTranslations("categories")]);
+  const url = localeUrl(locale, `/p/${project.slug}`);
+  return (
+    <JsonLd
+      data={{
+        "@context": "https://schema.org",
+        "@type": "CreativeWork",
+        "@id": url,
+        url,
+        name: project.title,
+        alternativeHeadline: project.tagline,
+        description: project.description || project.tagline,
+        abstract: project.keyPrompt,
+        inLanguage: project.contentLang,
+        genre: tCategories(project.category),
+        keywords: project.tools.map((tool) => tool.name).join(", "),
+        image: project.media.map((image) => mediaUrl(image.key)),
+        timeRequired: `PT${project.buildTimeHours}H`,
+        datePublished: project.publishedAt ?? undefined,
+        sameAs: project.liveUrl,
+        author: {
+          "@type": "Person",
+          name: project.maker.displayName,
+          alternateName: `@${project.maker.username}`,
+          url: localeUrl(locale, `/u/${project.maker.username}`),
+        },
+        interactionStatistic: {
+          "@type": "InteractionCounter",
+          interactionType: "https://schema.org/LikeAction",
+          userInteractionCount: project.upvoteCount,
+        },
+      }}
+    />
+  );
 }
 
 async function OwnerEditLink({ project }: { project: ProjectDetail }) {

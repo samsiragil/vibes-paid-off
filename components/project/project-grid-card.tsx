@@ -15,11 +15,14 @@ export function ProjectGridCard({
   project,
   showMaker = true,
   showLang = false,
+  eager = false,
 }: {
   project: ProjectCardData;
   showMaker?: boolean;
   /** The content language badge (explore, where language is a filter). */
   showLang?: boolean;
+  /** First card of a grid: its screenshot is likely the LCP image (§ Fase 10 performance). */
+  eager?: boolean;
 }) {
   const t = useTranslations("projectCard");
   const tCategories = useTranslations("categories");
@@ -46,6 +49,7 @@ export function ProjectGridCard({
         }
         worthIt={t("worthIt", { count: project.upvoteCount })}
         showMaker={showMaker}
+        eager={eager}
         lang={showLang ? project.contentLang.toUpperCase() : undefined}
         status={<LinkStatusText status={project.linkStatus} />}
         className="h-full transition-colors group-hover:border-border-strong"
