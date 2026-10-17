@@ -51,3 +51,19 @@ export const getCurrentUser = cache(async (): Promise<CurrentUser | null> => {
     providerHandle,
   };
 });
+
+/**
+ * Whether the signed-in user may moderate (/admin). profiles.is_admin is not readable by
+ * clients, so this asks the database (is_admin()). Cached per request.
+ */
+export const isCurrentUserAdmin = cache(async (): Promise<boolean> => {
+  const user = await getCurrentUser();
+  if (!user) return false;
+  const supabase = await createClient();
+  const { data, error } = await supabase.rpc("is_admin");
+  if (error) {
+    console.error("is_admin failed", error);
+    return false;
+  }
+  return data === true;
+});

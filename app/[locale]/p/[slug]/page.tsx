@@ -12,8 +12,14 @@ import {
 import { ProjectDetailView } from "@/components/project/project-detail";
 import { SystemMessage } from "@/components/ui/bubble";
 import { buttonStyles } from "@/components/ui/button";
-import { getCurrentUser } from "@/lib/auth/current-user";
-import { getOwnProject, getPublishedProject, type ProjectDetail } from "@/lib/projects/detail";
+import { getCurrentUser, isCurrentUserAdmin } from "@/lib/auth/current-user";
+import {
+  getOwnProject,
+  getProjectForAdmin,
+  getPublishedProject,
+  type ProjectDetail,
+} from "@/lib/projects/detail";
+import { rejectReasonText } from "@/lib/projects/reject-reason";
 
 // Slugs are open-ended, so there is no static shell to validate; the public data itself is
 // cached ("use cache" in getPublishedProject) and the owner-only parts stream in per request.
@@ -69,18 +75,23 @@ async function ProjectContent({ params }: { params: PageProps<"/[locale]/p/[slug
     );
   }
 
-  // Not public: only its owner may see it (pending review, rejected, hidden after reports).
+  // Not public: only its owner may see it (pending review, rejected, hidden after reports),
+  // and admins checking the review queue or a report.
   const user = await getCurrentUser();
   const own = user ? await getOwnProject(slug, user.id) : null;
-  if (!own) notFound();
+  if (own) {
+    return (
+      <ProjectDetailView
+        project={own}
+        ownerNotice={<OwnerNotice project={own} />}
+        ownerActions={<EditLink slug={own.slug} />}
+      />
+    );
+  }
 
-  return (
-    <ProjectDetailView
-      project={own}
-      ownerNotice={<OwnerNotice project={own} />}
-      ownerActions={<EditLink slug={own.slug} />}
-    />
-  );
+  const preview = user && (await isCurrentUserAdmin()) ? await getProjectForAdmin(slug) : null;
+  if (!preview) notFound();
+  return <ProjectDetailView project={preview} ownerNotice={<AdminNotice project={preview} />} />;
 }
 
 async function OwnerEditLink({ project }: { project: ProjectDetail }) {
@@ -102,18 +113,43 @@ async function EditLink({ slug }: { slug: string }) {
 
 async function OwnerNotice({ project }: { project: ProjectDetail }) {
   const t = await getTranslations("project.ownerStatus");
+  const rejectReason =
+    project.status === "rejected"
+      ? await rejectReasonText(project.rejectCode, project.rejectReason)
+      : null;
   const message =
     project.status === "pending"
       ? t("pending")
       : project.status === "rejected"
-        ? project.rejectReason
-          ? t("rejected", { reason: project.rejectReason })
+        ? rejectReason
+          ? t("rejected", { reason: rejectReason })
           : t("rejectedNoReason")
         : t("hidden");
 
   return (
     <SystemMessage tone="soft">
       <span className="font-medium">{t("onlyYou")}</span> {message}
+    </SystemMessage>
+  );
+}
+
+async function AdminNotice({ project }: { project: ProjectDetail }) {
+  const t = await getTranslations("project.adminPreview");
+  const tStatus = await getTranslations("me.status");
+  const reason =
+    project.status === "rejected"
+      ? await rejectReasonText(project.rejectCode, project.rejectReason)
+      : null;
+  const tab = project.status === "pending" ? "" : "?tab=reports";
+
+  return (
+    <SystemMessage tone="soft">
+      <span className="font-medium">{t("title")}</span>{" "}
+      {t("status", { status: tStatus(project.status) })}
+      {reason ? ` ${t("reason", { reason })}` : null}{" "}
+      <Link href={`/admin${tab}`} className="text-accent-text underline-offset-2 hover:underline">
+        {t("back")}
+      </Link>
     </SystemMessage>
   );
 }

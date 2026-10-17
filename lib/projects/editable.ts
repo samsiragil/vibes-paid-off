@@ -9,6 +9,7 @@ export type EditableProject = {
   id: string;
   slug: string;
   status: ProjectStatus;
+  rejectCode: string | null;
   rejectReason: string | null;
   project: ProjectInput;
   media: ProjectMedia[];
@@ -26,7 +27,7 @@ export async function getEditableProject(
   const { data: row } = await supabase
     .from("projects")
     .select(
-      "id, slug, owner_id, status, reject_reason, title, tagline, description, key_prompt, lessons, live_url, repo_url, video_url, category, content_lang",
+      "id, slug, owner_id, status, reject_code, reject_reason, title, tagline, description, key_prompt, lessons, live_url, repo_url, video_url, category, content_lang",
     )
     .eq("slug", slug)
     .maybeSingle();
@@ -52,6 +53,7 @@ export async function getEditableProject(
     id: row.id,
     slug: row.slug,
     status: row.status,
+    rejectCode: row.reject_code,
     rejectReason: row.reject_reason,
     media,
     project: {

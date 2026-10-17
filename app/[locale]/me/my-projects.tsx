@@ -7,6 +7,7 @@ import { SystemMessage } from "@/components/ui/bubble";
 import { buttonStyles } from "@/components/ui/button";
 import { MediaImage } from "@/components/ui/media-image";
 import type { MyProject } from "@/lib/profiles/me";
+import { rejectReasonText } from "@/lib/projects/reject-reason";
 import type { ProjectStatus } from "@/lib/projects/types";
 import { ArchiveButton } from "./archive-button";
 
@@ -27,6 +28,35 @@ export async function OfflineNotice({ project }: { project: MyProject }) {
             strong,
           })
         : t.rich("offlineNoticeNoDate", { title: project.title, strong })}
+    </SystemMessage>
+  );
+}
+
+/**
+ * The outcome of a review (Q10: the maker's notification until emails are set up): why a
+ * project was rejected and how to resubmit it, or that it was approved and is live now.
+ */
+export async function ReviewNotice({ project }: { project: MyProject }) {
+  const t = await getTranslations("me.review");
+  const strong = (chunks: ReactNode) => <strong className="font-semibold">{chunks}</strong>;
+  const edit = (chunks: ReactNode) => (
+    <Link
+      href={`/p/${project.slug}/edit`}
+      className="font-medium text-accent-text underline underline-offset-2"
+    >
+      {chunks}
+    </Link>
+  );
+
+  if (project.status !== "rejected") {
+    return <SystemMessage>{t.rich("approved", { title: project.title, strong })}</SystemMessage>;
+  }
+  const reason = await rejectReasonText(project.rejectCode, project.rejectReason);
+  return (
+    <SystemMessage>
+      {reason
+        ? t.rich("rejected", { title: project.title, reason, strong, edit })
+        : t.rich("rejectedNoReason", { title: project.title, strong, edit })}
     </SystemMessage>
   );
 }
@@ -91,11 +121,7 @@ export async function MyProjects({
                 <p className="mt-1 max-w-full truncate rounded-xl rounded-br-sm bg-bubble px-2.5 py-1.5 text-[13px] text-ink-2">
                   {project.keyPrompt}
                 </p>
-                {project.status === "rejected" && project.rejectReason ? (
-                  <p className="mt-1.5 text-[13px] text-ink-2">
-                    {t("rejectReason", { reason: project.rejectReason })}
-                  </p>
-                ) : null}
+                {project.status === "rejected" ? <RejectReason project={project} /> : null}
               </div>
             </div>
 
@@ -161,6 +187,14 @@ export async function MyProjects({
       </div>
     </section>
   );
+}
+
+async function RejectReason({ project }: { project: MyProject }) {
+  const t = await getTranslations("me");
+  const reason = await rejectReasonText(project.rejectCode, project.rejectReason);
+  return reason ? (
+    <p className="mt-1.5 text-[13px] text-ink-2">{t("rejectReason", { reason })}</p>
+  ) : null;
 }
 
 function StatusBadge({ status, label }: { status: ProjectStatus; label: string }) {

@@ -193,6 +193,12 @@
         "invalid": "Invalid request. Reload the page.",
         "failed": "Couldn't save. Please try again."
       }
+    },
+    "adminLink": "Admin panel",
+    "review": {
+      "approved": "Good news: an admin approved <strong>{title}</strong> and it is live. You are a trusted maker now, so your next projects go live right away.",
+      "rejected": "<strong>{title}</strong> can't go live yet. Reason: {reason}. <edit>Fix the project</edit>, then save it to send it back for review.",
+      "rejectedNoReason": "<strong>{title}</strong> can't go live yet. <edit>Fix the project</edit>, then save it to send it back for review."
     }
   },
   "categories": {
@@ -454,6 +460,12 @@
       "rejected": "An admin rejected this project: “{reason}”. Fix it via Edit project to send it back for review.",
       "rejectedNoReason": "An admin rejected this project. Fix it via Edit project to send it back for review.",
       "hidden": "This project is hidden because it was reported. An admin will review it."
+    },
+    "adminPreview": {
+      "title": "Admin preview.",
+      "status": "Status: {status}. Other visitors can't see this page.",
+      "reason": "Rejection reason: {reason}.",
+      "back": "Back to the admin panel"
     }
   },
   "interactions": {
@@ -626,5 +638,214 @@
     "emptyLead": "No chats with",
     "emptyCta": "Be the first",
     "projectCount": "{count, plural, one {# chat} other {# chats}}"
+  },
+  "moderation": {
+    "rejectCodes": {
+      "incomplete": "Missing details or unclear screenshots",
+      "broken_link": "The live link can't be opened or tried",
+      "not_vibe_coded": "Not a vibe coding project",
+      "duplicate": "This project was already submitted",
+      "rules": "Breaks the community rules",
+      "other": "Another reason"
+    }
+  },
+  "emails": {
+    "review": {
+      "approved": {
+        "subject": "{title} is live on Vibes Paid Off",
+        "body": "Hi {name},\n\nYour project \"{title}\" was approved and is live now:\n{url}\n\nYou are a trusted maker from now on, so your next projects go live without waiting for review. Share the link with your friends!"
+      },
+      "rejected": {
+        "subject": "{title} can't go live yet",
+        "body": "Hi {name},\n\nThanks for sending \"{title}\". Unfortunately this project can't go live yet.\n\nReason: {reason}\n\nYou can fix it and save it again to send it back for review:\n{url}"
+      },
+      "signature": "Cheers,\nVibes Paid Off\n\nThe status of all your projects is at {url}"
+    }
+  },
+  "admin": {
+    "metaTitle": "Admin",
+    "nav": {
+      "label": "Admin menu",
+      "queue": "Review queue",
+      "reports": "Reports",
+      "tools": "Manage tools",
+      "picks": "Pick of the week",
+      "countLabel": {
+        "queue": "projects waiting",
+        "reports": "open reports",
+        "tools": "tool suggestions waiting"
+      }
+    },
+    "queue": {
+      "title": "Review <em>queue</em>",
+      "lede": "First projects from new makers. Aim to finish within {hours} hours of submission.",
+      "empty": "The queue is empty. Every project has been reviewed.",
+      "noImage": "No screenshot",
+      "newMaker": "new maker",
+      "resubmitted": "resubmitted",
+      "submitted": "sent {when}",
+      "hoursLeft": "{hours} h left",
+      "overdue": "{hours} h overdue",
+      "buildTime": "{hours, number} {hours, plural, one {hour} other {hours}}, {sessions, plural, one {# session} other {# sessions}}",
+      "approve": "Approve",
+      "reject": "Reject",
+      "rejectLabel": "Reject {title}",
+      "reasonLabel": "Reason",
+      "noteLabel": "Note for the maker (optional)",
+      "noteLabelRequired": "Note for the maker",
+      "notePlaceholder": "What needs fixing before it can go live?",
+      "cancel": "Cancel",
+      "rejectSubmit": "Reject project",
+      "saving": "Saving…",
+      "done": {
+        "approved": "“{title}” approved and live · the maker is trusted now.",
+        "rejectedEmail": "“{title}” rejected · email sent to the maker.",
+        "rejectedMe": "“{title}” rejected · the maker sees the reason on their dashboard (email is not set up yet)."
+      },
+      "errors": {
+        "unauthorized": "Your session expired. Sign in again, then retry.",
+        "forbidden": "Your account is not an admin.",
+        "not_pending": "This project was already reviewed. Reload the page.",
+        "note_required": "Write a note for “Another reason”.",
+        "invalid": "Pick a reason first.",
+        "failed": "Couldn't save. Please try again."
+      }
+    },
+    "reports": {
+      "title": "Reports",
+      "lede": "Projects or replies reported by 3 different accounts are hidden automatically until you check them.",
+      "empty": "No open reports. The community is chill right now.",
+      "autoHidden": "Hidden automatically",
+      "hidden": "Hidden",
+      "metaProject": "Project · {count, plural, one {# report} other {# reports}}",
+      "metaReply": "Reply · {count, plural, one {# report} other {# reports}}",
+      "onProject": "on “{title}”",
+      "replyLabel": "Reply on {project}",
+      "deletedReply": "A deleted reply",
+      "deletedProject": "Project deleted",
+      "targetGone": "Its author already deleted it.",
+      "reasons": "Reasons: {reasons}",
+      "byMaker": "maker",
+      "byAuthor": "by",
+      "trusted": "trusted",
+      "actions": {
+        "keep": "Keep",
+        "restore": "Restore",
+        "hide": "Hide",
+        "keepHidden": "Keep hidden",
+        "remove": "Delete",
+        "close": "Close reports",
+        "confirmRemoveLabel": "Delete {label}?",
+        "confirmRemove": "Delete it from the site for good?",
+        "confirmRemoveYes": "Yes, delete",
+        "cancel": "Cancel",
+        "revokeTrust": "Revoke trusted status",
+        "grantTrust": "Restore trusted status"
+      },
+      "done": {
+        "keep": "Reports on “{label}” closed · it stays visible.",
+        "restored": "“{label}” restored and visible again.",
+        "hide": "“{label}” hidden.",
+        "remove": "“{label}” deleted.",
+        "trustRevoked": "{name} is no longer trusted · their next project gets reviewed first.",
+        "trustGranted": "{name} is a trusted maker again."
+      },
+      "errors": {
+        "unauthorized": "Your session expired. Sign in again, then retry.",
+        "forbidden": "Your account is not an admin.",
+        "already_resolved": "These reports were already handled. Reload the page.",
+        "invalid": "Invalid request. Reload the page.",
+        "failed": "Couldn't save. Please try again."
+      }
+    },
+    "tools": {
+      "title": "Manage <em>tools</em>",
+      "lede": "The tools catalog behind the submit form, explore filters and tool pages. Inactive tools leave the pickers, but older projects keep them.",
+      "search": "Search tools",
+      "searchPlaceholder": "Name or slug",
+      "kindFilter": "Kind",
+      "allKinds": "All kinds",
+      "add": "Add tool",
+      "table": {
+        "name": "Name",
+        "slug": "Slug",
+        "kind": "Kind",
+        "projects": "Projects"
+      },
+      "shown": "{count} of {total} tools",
+      "noMatch": "No tools match.",
+      "inactive": "inactive",
+      "edit": "Edit",
+      "suggestions": {
+        "title": "Suggested by makers · {count}",
+        "lede": "Tools makers couldn't find in the catalog. Merge them into an existing tool or make a new one, and every project that suggested this name is linked right away.",
+        "usedIn": "{count, plural, one {Used in # project:} other {Used in # projects:}}",
+        "mergeLabel": "Merge into an existing tool",
+        "pickTool": "Pick a tool…",
+        "merge": "Merge",
+        "create": "Make it a new tool",
+        "reject": "Reject"
+      },
+      "done": {
+        "merged": "“{name}” merged into {tool} · {count, plural, one {# project} other {# projects}} linked.",
+        "rejected": "Suggestion “{name}” rejected.",
+        "created": "Tool “{name}” created · {count, plural, one {# project} other {# projects}} linked.",
+        "added": "Tool “{name}” added.",
+        "saved": "Changes to “{name}” saved."
+      },
+      "errors": {
+        "unauthorized": "Your session expired. Sign in again, then retry.",
+        "forbidden": "Your account is not an admin.",
+        "invalid": "Check the highlighted fields.",
+        "slug_taken": "Another tool already uses this slug.",
+        "not_found": "This tool no longer exists. Reload the page.",
+        "already_resolved": "This suggestion was already handled. Reload the page.",
+        "tool_not_found": "The target tool doesn't exist or is inactive.",
+        "failed": "Couldn't save. Please try again."
+      },
+      "form": {
+        "titleNew": "Add tool",
+        "titleEdit": "Edit {name}",
+        "titleFromSuggestion": "Make “{name}” a new tool",
+        "suggestionNote": "Once saved, the {count, plural, one {project} other {# projects}} that suggested this name will use the new tool.",
+        "name": "Name",
+        "slug": "Slug",
+        "slugHint": "The /tools/slug address. Lowercase letters, digits and hyphens.",
+        "kind": "Kind",
+        "url": "Official site",
+        "logoUrl": "Logo URL",
+        "descriptionId": "Description (Indonesian)",
+        "descriptionEn": "Description (English)",
+        "isActive": "Active",
+        "isActiveHint": "Inactive tools don't show in the submit form, filters or tool pages.",
+        "cancel": "Cancel",
+        "save": "Save",
+        "saving": "Saving…",
+        "errors": {
+          "required": "Required.",
+          "too_long": "At most {max} characters.",
+          "invalid_slug": "Use lowercase letters, digits and hyphens (for example claude-code).",
+          "invalid_url": "Use a full address starting with https://",
+          "slug_taken": "Another tool already uses this slug."
+        }
+      }
+    },
+    "picks": {
+      "title": "Pick of <em>the week</em>",
+      "lede": "Computed automatically every Monday 00:05 WIB with the same formula for every project, then frozen for the week. This panel is read-only: admins can't change the winner.",
+      "empty": "No pick of the week has been computed yet.",
+      "week": "Week of {date}",
+      "noWinner": "Nothing reached a score of {min}. The home page shows the newest project instead.",
+      "deletedProject": "Project deleted",
+      "why": "Score {score}: {votes} eligible votes and {repliers} eligible repliers.",
+      "window": "Scored on activity from {from} to {to} · stored {computed}.",
+      "candidatesCaption": "This week's top candidates and their scores",
+      "table": {
+        "project": "Project",
+        "votes": "Eligible votes",
+        "repliers": "Eligible repliers",
+        "score": "Score"
+      }
+    }
   }
 }

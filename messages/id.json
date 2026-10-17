@@ -193,6 +193,12 @@
         "invalid": "Permintaan tidak valid. Muat ulang halaman.",
         "failed": "Gagal menyimpan. Coba lagi, ya."
       }
+    },
+    "adminLink": "Panel admin",
+    "review": {
+      "approved": "Kabar baik: <strong>{title}</strong> sudah disetujui admin dan tayang. Mulai sekarang kamu maker terpercaya, jadi proyek berikutnya langsung tayang.",
+      "rejected": "<strong>{title}</strong> belum bisa tayang. Alasannya: {reason}. <edit>Perbaiki proyeknya</edit>, lalu simpan untuk mengirim ulang ke review.",
+      "rejectedNoReason": "<strong>{title}</strong> belum bisa tayang. <edit>Perbaiki proyeknya</edit>, lalu simpan untuk mengirim ulang ke review."
     }
   },
   "categories": {
@@ -454,6 +460,12 @@
       "rejected": "Proyek ini ditolak admin: “{reason}”. Perbaiki lewat Edit proyek untuk mengirim ulang ke review.",
       "rejectedNoReason": "Proyek ini ditolak admin. Perbaiki lewat Edit proyek untuk mengirim ulang ke review.",
       "hidden": "Proyek ini sedang disembunyikan karena dilaporkan. Admin akan meninjaunya."
+    },
+    "adminPreview": {
+      "title": "Pratinjau admin.",
+      "status": "Status: {status}. Pengunjung lain tidak bisa melihat halaman ini.",
+      "reason": "Alasan ditolak: {reason}.",
+      "back": "Kembali ke panel admin"
     }
   },
   "interactions": {
@@ -626,5 +638,214 @@
     "emptyLead": "Belum ada obrolan dengan",
     "emptyCta": "Jadilah yang pertama",
     "projectCount": "{count, plural, other {# obrolan}}"
+  },
+  "moderation": {
+    "rejectCodes": {
+      "incomplete": "Info belum lengkap atau screenshot tidak jelas",
+      "broken_link": "Link live tidak bisa dibuka atau dicoba",
+      "not_vibe_coded": "Bukan proyek vibe coding",
+      "duplicate": "Proyek ini sudah pernah dikirim",
+      "rules": "Melanggar aturan komunitas",
+      "other": "Alasan lain"
+    }
+  },
+  "emails": {
+    "review": {
+      "approved": {
+        "subject": "{title} sudah tayang di Vibes Paid Off",
+        "body": "Halo {name},\n\nProyekmu \"{title}\" sudah disetujui dan sekarang tayang:\n{url}\n\nMulai sekarang kamu maker terpercaya, jadi proyek berikutnya langsung tayang tanpa antre review. Bagikan link-nya ke teman-temanmu, ya!"
+      },
+      "rejected": {
+        "subject": "{title} belum bisa tayang",
+        "body": "Halo {name},\n\nTerima kasih sudah mengirim \"{title}\". Sayangnya proyek ini belum bisa tayang.\n\nAlasannya: {reason}\n\nKamu bisa memperbaikinya lalu menyimpan ulang untuk mengirimnya kembali ke review:\n{url}"
+      },
+      "signature": "Salam,\nVibes Paid Off\n\nStatus semua proyekmu ada di {url}"
+    }
+  },
+  "admin": {
+    "metaTitle": "Admin",
+    "nav": {
+      "label": "Menu admin",
+      "queue": "Antrean review",
+      "reports": "Laporan",
+      "tools": "Kelola tools",
+      "picks": "Pilihan minggu ini",
+      "countLabel": {
+        "queue": "proyek menunggu",
+        "reports": "laporan terbuka",
+        "tools": "saran tools menunggu"
+      }
+    },
+    "queue": {
+      "title": "Antrean <em>review</em>",
+      "lede": "Proyek pertama dari maker baru. Target selesai paling lama {hours} jam sejak dikirim.",
+      "empty": "Antrean kosong. Semua proyek sudah direview.",
+      "noImage": "Tanpa screenshot",
+      "newMaker": "maker baru",
+      "resubmitted": "dikirim ulang",
+      "submitted": "dikirim {when}",
+      "hoursLeft": "Sisa {hours} jam",
+      "overdue": "Lewat {hours} jam",
+      "buildTime": "{hours, number} jam, {sessions} sesi",
+      "approve": "Setujui",
+      "reject": "Tolak",
+      "rejectLabel": "Tolak {title}",
+      "reasonLabel": "Alasan",
+      "noteLabel": "Catatan untuk maker (opsional)",
+      "noteLabelRequired": "Catatan untuk maker",
+      "notePlaceholder": "Apa yang perlu diperbaiki supaya bisa tayang?",
+      "cancel": "Batal",
+      "rejectSubmit": "Tolak proyek",
+      "saving": "Menyimpan…",
+      "done": {
+        "approved": "“{title}” disetujui dan tayang · maker jadi terpercaya.",
+        "rejectedEmail": "“{title}” ditolak · email terkirim ke maker.",
+        "rejectedMe": "“{title}” ditolak · maker melihat alasannya di dashboard (email belum diaktifkan)."
+      },
+      "errors": {
+        "unauthorized": "Sesi login habis. Masuk lagi, lalu coba lagi.",
+        "forbidden": "Akunmu bukan admin.",
+        "not_pending": "Proyek ini sudah direview. Muat ulang halaman.",
+        "note_required": "Tulis catatan untuk alasan lain.",
+        "invalid": "Pilih alasan dulu.",
+        "failed": "Gagal menyimpan. Coba lagi, ya."
+      }
+    },
+    "reports": {
+      "title": "Laporan",
+      "lede": "Proyek atau balasan yang dilaporkan 3 akun berbeda otomatis disembunyikan sampai kamu periksa.",
+      "empty": "Tidak ada laporan terbuka. Komunitasnya lagi adem.",
+      "autoHidden": "Disembunyikan otomatis",
+      "hidden": "Disembunyikan",
+      "metaProject": "Proyek · {count} laporan",
+      "metaReply": "Balasan · {count} laporan",
+      "onProject": "di “{title}”",
+      "replyLabel": "Balasan di {project}",
+      "deletedReply": "Balasan yang sudah dihapus",
+      "deletedProject": "Proyek sudah dihapus",
+      "targetGone": "Kontennya sudah dihapus pemiliknya.",
+      "reasons": "Alasan: {reasons}",
+      "byMaker": "maker",
+      "byAuthor": "oleh",
+      "trusted": "terpercaya",
+      "actions": {
+        "keep": "Biarkan",
+        "restore": "Pulihkan",
+        "hide": "Sembunyikan",
+        "keepHidden": "Biarkan tersembunyi",
+        "remove": "Hapus",
+        "close": "Tutup laporan",
+        "confirmRemoveLabel": "Hapus {label}?",
+        "confirmRemove": "Hapus permanen dari situs?",
+        "confirmRemoveYes": "Ya, hapus",
+        "cancel": "Batal",
+        "revokeTrust": "Cabut status terpercaya",
+        "grantTrust": "Kembalikan status terpercaya"
+      },
+      "done": {
+        "keep": "Laporan untuk “{label}” ditutup · kontennya tetap tampil.",
+        "restored": "“{label}” dipulihkan dan tampil lagi.",
+        "hide": "“{label}” disembunyikan.",
+        "remove": "“{label}” dihapus.",
+        "trustRevoked": "Status terpercaya {name} dicabut · proyek berikutnya direview dulu.",
+        "trustGranted": "{name} kembali jadi maker terpercaya."
+      },
+      "errors": {
+        "unauthorized": "Sesi login habis. Masuk lagi, lalu coba lagi.",
+        "forbidden": "Akunmu bukan admin.",
+        "already_resolved": "Laporan ini sudah ditangani. Muat ulang halaman.",
+        "invalid": "Permintaan tidak valid. Muat ulang halaman.",
+        "failed": "Gagal menyimpan. Coba lagi, ya."
+      }
+    },
+    "tools": {
+      "title": "Kelola <em>tools</em>",
+      "lede": "Katalog tools untuk form submit, filter jelajah, dan halaman tools. Tools nonaktif hilang dari pilihan, tapi proyek lama tetap menyimpannya.",
+      "search": "Cari tools",
+      "searchPlaceholder": "Nama atau slug",
+      "kindFilter": "Jenis",
+      "allKinds": "Semua jenis",
+      "add": "Tambah tools",
+      "table": {
+        "name": "Nama",
+        "slug": "Slug",
+        "kind": "Jenis",
+        "projects": "Proyek"
+      },
+      "shown": "{count} dari {total} tools",
+      "noMatch": "Tidak ada tools yang cocok.",
+      "inactive": "nonaktif",
+      "edit": "Edit",
+      "suggestions": {
+        "title": "Saran dari maker · {count}",
+        "lede": "Tools yang tidak ditemukan maker di katalog. Gabungkan ke tools yang ada atau jadikan tools baru, dan semua proyek yang menyarankan nama ini langsung terhubung.",
+        "usedIn": "{count, plural, other {Dipakai di # proyek:}}",
+        "mergeLabel": "Gabungkan ke tools yang ada",
+        "pickTool": "Pilih tools…",
+        "merge": "Gabungkan",
+        "create": "Jadikan tools baru",
+        "reject": "Tolak"
+      },
+      "done": {
+        "merged": "“{name}” digabung ke {tool} · {count, plural, other {# proyek}} terhubung.",
+        "rejected": "Saran “{name}” ditolak.",
+        "created": "Tools “{name}” dibuat · {count, plural, other {# proyek}} terhubung.",
+        "added": "Tools “{name}” ditambahkan.",
+        "saved": "Perubahan “{name}” tersimpan."
+      },
+      "errors": {
+        "unauthorized": "Sesi login habis. Masuk lagi, lalu coba lagi.",
+        "forbidden": "Akunmu bukan admin.",
+        "invalid": "Periksa isian yang ditandai.",
+        "slug_taken": "Slug ini sudah dipakai tools lain.",
+        "not_found": "Tools ini tidak ditemukan. Muat ulang halaman.",
+        "already_resolved": "Saran ini sudah ditangani. Muat ulang halaman.",
+        "tool_not_found": "Tools tujuan tidak ditemukan atau nonaktif.",
+        "failed": "Gagal menyimpan. Coba lagi, ya."
+      },
+      "form": {
+        "titleNew": "Tambah tools",
+        "titleEdit": "Edit {name}",
+        "titleFromSuggestion": "Jadikan “{name}” tools baru",
+        "suggestionNote": "Setelah disimpan, {count, plural, other {# proyek}} yang menyarankan nama ini langsung memakai tools baru.",
+        "name": "Nama",
+        "slug": "Slug",
+        "slugHint": "Alamat halaman /tools/slug. Huruf kecil, angka, dan tanda hubung.",
+        "kind": "Jenis",
+        "url": "Situs resmi",
+        "logoUrl": "URL logo",
+        "descriptionId": "Deskripsi (Indonesia)",
+        "descriptionEn": "Deskripsi (Inggris)",
+        "isActive": "Aktif",
+        "isActiveHint": "Tools nonaktif tidak muncul di form submit, filter, dan halaman tools.",
+        "cancel": "Batal",
+        "save": "Simpan",
+        "saving": "Menyimpan…",
+        "errors": {
+          "required": "Wajib diisi.",
+          "too_long": "Maksimal {max} karakter.",
+          "invalid_slug": "Pakai huruf kecil, angka, dan tanda hubung (misalnya claude-code).",
+          "invalid_url": "Pakai alamat lengkap yang diawali https://",
+          "slug_taken": "Slug ini sudah dipakai tools lain."
+        }
+      }
+    },
+    "picks": {
+      "title": "Pilihan <em>minggu ini</em>",
+      "lede": "Dihitung otomatis setiap Senin 00:05 WIB dengan rumus yang sama untuk semua proyek, lalu dibekukan seminggu. Panel ini hanya untuk dibaca: admin tidak bisa mengubah pemenangnya.",
+      "empty": "Belum ada pilihan minggu ini yang dihitung.",
+      "week": "Minggu mulai {date}",
+      "noWinner": "Tidak ada yang mencapai skor {min}. Beranda menampilkan proyek terbaru.",
+      "deletedProject": "Proyek sudah dihapus",
+      "why": "Skor {score}: {votes} vote layak dan {repliers} pembalas layak.",
+      "window": "Dihitung dari aktivitas {from} sampai {to} · tersimpan {computed}.",
+      "candidatesCaption": "Kandidat teratas minggu ini dan skornya",
+      "table": {
+        "project": "Proyek",
+        "votes": "Vote layak",
+        "repliers": "Pembalas layak",
+        "score": "Skor"
+      }
+    }
   }
 }

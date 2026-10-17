@@ -6,11 +6,11 @@ import { Link } from "@/i18n/navigation";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { Button, buttonStyles } from "@/components/ui/button";
 import { signOut } from "@/lib/auth/actions";
-import { getCurrentUser } from "@/lib/auth/current-user";
+import { getCurrentUser, isCurrentUserAdmin } from "@/lib/auth/current-user";
 import { getMyProfileForm, getMyProjects } from "@/lib/profiles/me";
 import { displayUrl } from "@/lib/site";
 import { MeTabs, type MeTab } from "./me-tabs";
-import { MyProjects, OfflineNotice } from "./my-projects";
+import { MyProjects, OfflineNotice, ReviewNotice } from "./my-projects";
 import { ProfileForm } from "./profile-form";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -44,16 +44,23 @@ async function MeContent({
   if (!user) redirect(`/${locale}/login?next=${encodeURIComponent(`/${locale}/me`)}`);
   if (!user.username) redirect(`/${locale}/onboarding?next=${encodeURIComponent(`/${locale}/me`)}`);
 
-  const [projects, profileValues, { tab }] = await Promise.all([
+  const [projects, profileValues, { tab }, isAdmin] = await Promise.all([
     getMyProjects(user.id),
     getMyProfileForm(user.id),
     searchParams,
+    isCurrentUserAdmin(),
   ]);
   const initialTab: MeTab = tab === "profile" ? "profile" : "projects";
   const name = user.displayName || user.username;
   const offline = projects.filter(
     (project) => project.status === "published" && project.linkStatus === "offline",
   );
+  // Review outcomes (Q10: shown here until notification emails are set up): every rejected
+  // project, and approvals from the last week.
+  const reviewed = projects.filter(
+    (project) => project.status === "rejected" || project.recentlyApproved,
+  );
+  const notices = [...reviewed, ...offline];
 
   return (
     <>
@@ -65,6 +72,11 @@ async function MeContent({
           </h1>
         </div>
         <div className="flex flex-wrap items-center gap-2">
+          {isAdmin ? (
+            <Link href="/admin" className={buttonStyles({ variant: "primary" })}>
+              {t("adminLink")}
+            </Link>
+          ) : null}
           <Link href={`/u/${user.username}`} className={buttonStyles({ variant: "outline" })}>
             {t("viewProfile")} <span aria-hidden="true">↗</span>
           </Link>
@@ -77,8 +89,11 @@ async function MeContent({
         </div>
       </div>
 
-      {offline.length > 0 ? (
+      {notices.length > 0 ? (
         <div className="mt-7 flex max-w-[760px] flex-col gap-3">
+          {reviewed.map((project) => (
+            <ReviewNotice key={project.id} project={project} />
+          ))}
           {offline.map((project) => (
             <OfflineNotice key={project.id} project={project} />
           ))}

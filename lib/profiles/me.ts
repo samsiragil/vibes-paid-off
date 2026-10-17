@@ -4,13 +4,18 @@ import { createClient } from "@/lib/supabase/server";
 import type { ProfileFormValues } from "@/lib/validation/profile";
 import { parseProfileLinks } from "./public";
 
+const RECENT_APPROVAL_MS = 7 * 24 * 3_600_000;
+
 export type MyProject = {
   id: string;
   slug: string;
   title: string;
   keyPrompt: string;
   status: ProjectStatus;
+  rejectCode: string | null;
   rejectReason: string | null;
+  /** Approved by an admin within the last week (the "Kabar baik" notice on /me). */
+  recentlyApproved: boolean;
   linkStatus: LinkStatus;
   lastCheckedAt: string | null;
   upvoteCount: number;
@@ -24,20 +29,26 @@ export async function getMyProjects(userId: string): Promise<MyProject[]> {
   const { data, error } = await supabase
     .from("projects")
     .select(
-      "id, slug, title, key_prompt, status, reject_reason, link_status, last_checked_at, upvote_count, comment_count, project_media (r2_key, sort_order)",
+      "id, slug, title, key_prompt, status, reject_code, reject_reason, reviewed_at, link_status, last_checked_at, upvote_count, comment_count, project_media (r2_key, sort_order)",
     )
     .eq("owner_id", userId)
     .neq("status", "removed")
     .order("created_at", { ascending: false });
   if (error) throw new Error(`Could not load projects: ${error.message}`);
 
+  const now = Date.now();
   return data.map((row) => ({
     id: row.id,
     slug: row.slug,
     title: row.title,
     keyPrompt: row.key_prompt,
     status: row.status,
+    rejectCode: row.reject_code,
     rejectReason: row.reject_reason,
+    recentlyApproved:
+      row.status === "published" &&
+      row.reviewed_at !== null &&
+      now - Date.parse(row.reviewed_at) < RECENT_APPROVAL_MS,
     linkStatus: row.link_status,
     lastCheckedAt: row.last_checked_at,
     upvoteCount: row.upvote_count,
