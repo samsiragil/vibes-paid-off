@@ -1,6 +1,8 @@
 # Jadinya (dulu Vibes Paid Off): Spec & Implementation Plan
 
 > **Ganti nama (2026-10-23):** brand berubah dari *Vibes Paid Off* menjadi **Jadinya**, domain `jadinya.dev`. Nama lama di bawah (artboard `VPO-*`, project Supabase `vibes-paid-off-*`, bucket `vpo-*`) adalah nama infrastruktur dan desain yang sengaja tidak diubah.
+>
+> Sudah dijalankan (2026-10-23): project Vercel di-rename menjadi `jadinya` dengan domain produksi `jadinya.vercel.app`, `NEXT_PUBLIC_SITE_URL` produksi diarahkan ke sana, CORS bucket R2 produksi menerima `jadinya.vercel.app`, dan migrasi `reserve_jadinya` sudah di-push ke Supabase prod. Belum: Site URL dan Redirect URLs Supabase Auth (prod dan dev) untuk `jadinya.vercel.app`, redirect 308 dari `vibes-paid-off.vercel.app` setelah itu, domain dev (`dev-vibes-paid-off.vercel.app` masih dipakai karena project Supabase dev dan token R2 dev tidak bisa diubah dari CLI), nama aplikasi di layar izin OAuth GitHub/Google, serta semua urusan `jadinya.dev` (domain, `img.`, Resend).
 
 Sumber:
 - Brief: "Brief Katalog Vibe Coding" (rev 23, 2026-10-13), https://claude.ai/artifact/GdKYEymPs4dLgXxafuvRgw
