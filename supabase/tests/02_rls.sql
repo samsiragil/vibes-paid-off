@@ -41,6 +41,7 @@ select tap.emit(is(
 select tap.emit(ok(username_available('vibe_maker'), 'anon: username_available for a free name'));
 select tap.emit(ok(not username_available('tst_alice'), 'username_available: taken name'));
 select tap.emit(ok(not username_available('admin'), 'username_available: reserved name'));
+select tap.emit(ok(not username_available('Jadinya'), 'username_available: brand name is reserved'));
 select tap.emit(ok(not username_available('Ab'), 'username_available: bad format'));
 
 -- Bob (another user) --------------------------------------------------------------

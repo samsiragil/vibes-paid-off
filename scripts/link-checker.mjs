@@ -19,7 +19,7 @@ import { createClient } from "@supabase/supabase-js";
 const TIMEOUT_MS = 10_000;
 const CONCURRENCY = 8;
 const PAGE_SIZE = 500;
-const USER_AGENT = "Mozilla/5.0 (compatible; VibesPaidOffLinkChecker/1.0)";
+const USER_AGENT = "Mozilla/5.0 (compatible; JadinyaLinkChecker/1.0)";
 
 const args = process.argv.slice(2);
 const dryRun = args.includes("--dry-run");

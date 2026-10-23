@@ -1,4 +1,8 @@
-# Vibes Paid Off: Spec & Implementation Plan
+# Jadinya (dulu Vibes Paid Off): Spec & Implementation Plan
+
+> **Ganti nama (2026-10-23):** brand berubah dari *Vibes Paid Off* menjadi **Jadinya**, domain `jadinya.dev`. Nama lama di bawah (artboard `VPO-*`, project Supabase `vibes-paid-off-*`, bucket `vpo-*`) adalah nama infrastruktur dan desain yang sengaja tidak diubah.
+>
+> Sudah dijalankan (2026-10-23): project Vercel di-rename menjadi `jadinya` dengan domain produksi `jadinya.vercel.app`, `NEXT_PUBLIC_SITE_URL` produksi diarahkan ke sana, CORS bucket R2 produksi menerima `jadinya.vercel.app`, dan migrasi `reserve_jadinya` sudah di-push ke Supabase prod. Belum: Site URL dan Redirect URLs Supabase Auth (prod dan dev) untuk `jadinya.vercel.app`, redirect 308 dari `vibes-paid-off.vercel.app` setelah itu, domain dev (`dev-vibes-paid-off.vercel.app` masih dipakai karena project Supabase dev dan token R2 dev tidak bisa diubah dari CLI), nama aplikasi di layar izin OAuth GitHub/Google, serta semua urusan `jadinya.dev` (domain, `img.`, Resend).
 
 Sumber:
 - Brief: "Brief Katalog Vibe Coding" (rev 23, 2026-10-13), https://claude.ai/artifact/GdKYEymPs4dLgXxafuvRgw
@@ -186,7 +190,7 @@ admin/owner hapus ──► removed
 3. Browser upload langsung ke R2.
 4. `POST /api/media/finalize` → server mengambil objek tmp, `sharp` re-encode ke WebP (buang EXIF, turunkan quality sampai ≤300 KB), simpan ke `p/{projectId}/{uuid}.webp`, hapus tmp, insert `project_media`.
 5. Lifecycle rule R2 menghapus `tmp/` yang berumur lebih dari 1 hari.
-6. Gambar disajikan dari domain publik R2 (`img.vibespaidoff.dev`). Catatan: subdomain `r2.dev` dibatasi rate-nya dan tidak untuk produksi, jadi domain sebaiknya dibeli sebelum peluncuran.
+6. Gambar disajikan dari domain publik R2 (`img.jadinya.dev`). Catatan: subdomain `r2.dev` dibatasi rate-nya dan tidak untuk produksi, jadi domain sebaiknya dibeli sebelum peluncuran.
 
 ### 2.5 i18n
 
@@ -272,7 +276,7 @@ Urutan mengikuti 4 minggu di brief, dipecah lebih kecil. Setiap fase memuat tuju
 
 - [x] Jawab Q1–Q6 (lihat bagian 4).
 - [x] Jawab Q23–Q28 (semua default disetujui).
-- [ ] Beli `vibespaidoff.dev` di Cloudflare Registrar (risiko domain diambil orang).
+- [ ] Beli `jadinya.dev` di Cloudflare Registrar (risiko domain diambil orang).
 - [ ] Buat project Supabase (region Singapore) ✔ dev sudah dibuat (2026-10-15), R2 bucket `vpo-media` + domain publik, Turnstile site key, OAuth app GitHub dan Google.
 - [ ] Repo GitHub + project Vercel terhubung.
 
@@ -484,7 +488,7 @@ Sudah dicek: lint, typecheck, format, `messages:check`, build. Di browser (build
 ### Fase 11 — Isi konten & peluncuran
 
 - [ ] Isi 30 proyek awal (milik sendiri + teman yang diundang langsung).
-- [ ] Pindah ke `vibespaidoff.dev`: tambah domain di Vercel, 301 dari `vibespaidoff.vercel.app`, update redirect URL OAuth dan Supabase Auth.
+- [ ] Pindah ke `jadinya.dev`: tambah domain di Vercel, 301 dari `*.vercel.app` lama, update redirect URL OAuth dan Supabase Auth.
 - [ ] Checklist peluncuran: env produksi, rate limit aktif, Turnstile mode produksi, backup terakhir OK, admin kedua (bila ada).
 - [ ] Umumkan (komunitas, X/Threads, LinkedIn, grup kampus).
 
@@ -542,7 +546,7 @@ Setiap pertanyaan diberi **default**, yaitu asumsi yang dipakai bila belum dijaw
 *Default:* UMKM, Edukasi, Komunitas, Game, Tools developer, Alat produktivitas, Gaya hidup, Personal, AI wrapper, Lainnya. Satu kategori per proyek.
 
 **Q10. Layanan email untuk notifikasi review.** Supabase Auth hanya mengirim email auth (dengan batas ketat).
-*Default:* Resend free tier (3.000 email/bulan) dengan domain pengirim `vibespaidoff.dev`. Sebelum domain siap, notifikasi cukup tampil di `/me`.
+*Default:* Resend free tier (3.000 email/bulan) dengan domain pengirim `jadinya.dev`. Sebelum domain siap, notifikasi cukup tampil di `/me`.
 
 **Q11. Proyek yang ditolak.** Apakah admin wajib menulis alasan? Apakah maker bisa mengedit lalu mengirim ulang?
 *Default:* alasan wajib (dipilih dari daftar + catatan), maker bisa edit dan kirim ulang (kembali ke `pending`).

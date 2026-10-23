@@ -1,6 +1,6 @@
 import "server-only";
 
-// Transactional email through Resend's HTTP API (Q10: free tier, sender on vibespaidoff.dev).
+// Transactional email through Resend's HTTP API (Q10: free tier, sender on jadinya.dev).
 // Optional: without RESEND_API_KEY and EMAIL_FROM nothing is sent and makers read the outcome
 // on /me instead, which is the plan until the domain is set up.
 

@@ -9,7 +9,7 @@ export const siteUrl = (
     : "http://localhost:3000")
 ).replace(/\/+$/, "");
 
-/** "vibespaidoff.dev/u/ragil": an absolute URL without the scheme, for display. */
+/** "jadinya.dev/u/ragil": an absolute URL without the scheme, for display. */
 export function displayUrl(path: string) {
   return `${siteUrl.replace(/^https?:\/\//, "")}${path}`;
 }

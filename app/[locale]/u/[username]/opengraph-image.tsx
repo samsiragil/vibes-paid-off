@@ -6,7 +6,7 @@ import { getPublicProfile } from "@/lib/profiles/public";
 
 export const size = OG_SIZE;
 export const contentType = "image/png";
-export const alt = "Vibes Paid Off";
+export const alt = "Jadinya";
 
 /** Share card for a maker: name, handle, stats, and the bio as a chat bubble. */
 export default async function Image({
