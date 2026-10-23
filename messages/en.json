@@ -1,10 +1,10 @@
 {
   "meta": {
-    "title": "Vibes Paid Off",
+    "title": "Jadinya",
     "description": "Where Indonesian vibe coders show off their work and share how they built it."
   },
   "brand": {
-    "home": "Vibes Paid Off, go to home"
+    "home": "Jadinya, go to home"
   },
   "nav": {
     "label": "Main navigation",
@@ -41,14 +41,14 @@
     "about": "About",
     "freeNote": "Free, powered by donations.",
     "buyCoffee": "Buy us a coffee",
-    "copyright": "© {year} Vibes Paid Off",
+    "copyright": "© {year} Jadinya",
     "howWePick": "How we pick"
   },
   "home": {
     "eyebrow": "Indonesia's vibe coding catalog",
     "titleLead": "You said what,",
     "titleTail": "AI built what.",
-    "lede": "Every project here started with a single message, and the vibes paid off. See the conversation, the result, and everything in between.",
+    "lede": "Every project here started with a single message. See the conversation, how it turned out, and everything in between.",
     "ctaSubmit": "Show off your project",
     "ctaExplore": "Explore projects",
     "soon": "The catalog is being prepared. The first projects will show up here soon.",
@@ -65,7 +65,7 @@
     "latestLead": "Just",
     "latestTail": "in",
     "latestMeta": "{tools} · {time}",
-    "ctaLead": "Did your vibes pay off?",
+    "ctaLead": "Did yours turn out?",
     "ctaTail": "Tell us here.",
     "ctaPlaceholder": "Write your project's key prompt…",
     "ctaButton": "Show off your project ↑"
@@ -77,13 +77,13 @@
   },
   "auth": {
     "metaTitle": "Sign in",
-    "eyebrow": "Sign in to Vibes Paid Off",
+    "eyebrow": "Sign in to Jadinya",
     "titleLead": "Sign in first,",
     "titleTail": "then show off your work.",
     "intro": "Use your GitHub or Google account. We only receive your name, email and profile photo, with no access to your repos or other data.",
     "github": "Continue with GitHub",
     "google": "Continue with Google",
-    "note": "By signing in, you agree to follow the Vibes Paid Off community rules.",
+    "note": "By signing in, you agree to follow the Jadinya community rules.",
     "errors": {
       "oauth": "Could not reach the sign-in provider. Please try again.",
       "callback": "Sign-in did not finish. Please try again.",
@@ -562,7 +562,7 @@
   },
   "profile": {
     "metaFallbackTitle": "Profile",
-    "metaDescription": "{count, plural, =0 {Maker profile of {name}} one {# vibe coding chat from {name}} other {# vibe coding chats from {name}}} on Vibes Paid Off.",
+    "metaDescription": "{count, plural, =0 {Maker profile of {name}} one {# vibe coding chat from {name}} other {# vibe coding chats from {name}}} on Jadinya.",
     "makerSince": "maker since {date}",
     "trusted": "Trusted maker",
     "shareLabel": "Share this profile",
@@ -610,7 +610,7 @@
     "sortLabel": "Sort by",
     "sortWorthIt": "Most worth it",
     "sortNew": "Newest",
-    "count": "{count, plural, =0 {No chats} one {# chat} other {# chats}} whose vibes paid off",
+    "count": "{count, plural, =0 {No chats} one {# chat} other {# chats}} that worked out",
     "countSearch": "{count, plural, =0 {No chats} one {# chat} other {# chats}} for “{q}”",
     "empty": "Nobody has used this combination yet.",
     "emptyCta": "Want to be the first?",
@@ -654,14 +654,14 @@
   "emails": {
     "review": {
       "approved": {
-        "subject": "{title} is live on Vibes Paid Off",
+        "subject": "{title} is live on Jadinya",
         "body": "Hi {name},\n\nYour project \"{title}\" was approved and is live now:\n{url}\n\nYou are a trusted maker from now on, so your next projects go live without waiting for review. Share the link with your friends!"
       },
       "rejected": {
         "subject": "{title} can't go live yet",
         "body": "Hi {name},\n\nThanks for sending \"{title}\". Unfortunately this project can't go live yet.\n\nReason: {reason}\n\nYou can fix it and save it again to send it back for review:\n{url}"
       },
-      "signature": "Cheers,\nVibes Paid Off\n\nThe status of all your projects is at {url}"
+      "signature": "Cheers,\nJadinya\n\nThe status of all your projects is at {url}"
     }
   },
   "admin": {
@@ -852,12 +852,12 @@
   },
   "support": {
     "metaTitle": "Support us",
-    "metaDescription": "Why Vibes Paid Off is free, where donations go, and how projects are ranked without manual curation.",
+    "metaDescription": "Why Jadinya is free, where donations go, and how projects are ranked without manual curation.",
     "titleLead": "Why is it",
     "titleTail": "free?",
     "faq": {
       "freeQ": "How is this free? Are there ads?",
-      "freeA": "No ads, no paid features. Vibes Paid Off exists so Indonesian makers have a place to show their work along with how they built it. The site runs on free tiers, so the only required cost is the domain.",
+      "freeA": "No ads, no paid features. Jadinya exists so Indonesian makers have a place to show their work along with how they built it. The site runs on free tiers, so the only required cost is the domain.",
       "moneyQ": "So what are donations for?",
       "moneyA": "First, the domain. If the site grows and the database starts filling up, donations pay for a bigger server. Every cost is listed openly on this page."
     },
@@ -880,7 +880,7 @@
     "costs": {
       "label": "Current costs, in the open",
       "free": "$0",
-      "domain": "Domain vibespaidoff.dev",
+      "domain": "Domain jadinya.dev",
       "domainVendor": "Cloudflare Registrar",
       "domainCost": "±US$12–13/yr",
       "hosting": "Web hosting",
@@ -933,10 +933,10 @@
   },
   "communityRules": {
     "metaTitle": "Community rules",
-    "metaDescription": "What's allowed on Vibes Paid Off, what isn't, and how moderation works.",
+    "metaDescription": "What's allowed on Jadinya, what isn't, and how moderation works.",
     "titleLead": "Community",
     "titleTail": "rules",
-    "intro": "Vibes Paid Off is a place to show off your work and share how you built it. The rules are few, and they apply to everyone, admins included.",
+    "intro": "Jadinya is a place to show off your work and share how you built it. The rules are few, and they apply to everyone, admins included.",
     "updated": "Last updated {date}",
     "share": {
       "title": "What to share",

@@ -43,7 +43,7 @@ export function clip(text: string, max: number) {
 export function Wordmark({ size = 30 }: { size?: number }) {
   return (
     <div style={{ display: "flex", fontFamily: "Fraunces", fontSize: size, color: og.ink }}>
-      Vibes Paid&nbsp;<span style={{ fontStyle: "italic", color: og.accent }}>Off.</span>
+      Jadi<span style={{ fontStyle: "italic", color: og.accent }}>nya.</span>
     </div>
   );
 }

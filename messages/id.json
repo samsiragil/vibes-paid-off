@@ -1,10 +1,10 @@
 {
   "meta": {
-    "title": "Vibes Paid Off",
+    "title": "Jadinya",
     "description": "Tempat maker vibe coding Indonesia memamerkan karya dan berbagi cara membuatnya."
   },
   "brand": {
-    "home": "Vibes Paid Off, ke beranda"
+    "home": "Jadinya, ke beranda"
   },
   "nav": {
     "label": "Navigasi utama",
@@ -41,14 +41,14 @@
     "about": "Tentang",
     "freeNote": "Gratis, jalan dari donasi.",
     "buyCoffee": "Beliin kopi",
-    "copyright": "© {year} Vibes Paid Off",
+    "copyright": "© {year} Jadinya",
     "howWePick": "Cara kami memilih"
   },
   "home": {
     "eyebrow": "Katalog vibe coding Indonesia",
     "titleLead": "Kamu bilang apa,",
     "titleTail": "AI bikin apa.",
-    "lede": "Setiap proyek di sini dimulai dari satu pesan, dan vibes-nya terbayar. Lihat percakapannya, hasilnya, dan apa yang terjadi di antaranya.",
+    "lede": "Setiap proyek di sini dimulai dari satu pesan. Lihat percakapannya, jadinya seperti apa, dan apa yang terjadi di antaranya.",
     "ctaSubmit": "Pamerin proyekmu",
     "ctaExplore": "Jelajahi proyek",
     "soon": "Katalognya lagi disiapkan. Proyek pertama segera tayang di sini.",
@@ -65,7 +65,7 @@
     "latestLead": "Baru",
     "latestTail": "masuk",
     "latestMeta": "{tools} · {time}",
-    "ctaLead": "Vibes-mu terbayar?",
+    "ctaLead": "Proyekmu udah jadi?",
     "ctaTail": "Ceritain di sini.",
     "ctaPlaceholder": "Tulis prompt kunci proyekmu…",
     "ctaButton": "Pamerin proyekmu ↑"
@@ -77,13 +77,13 @@
   },
   "auth": {
     "metaTitle": "Masuk",
-    "eyebrow": "Masuk ke Vibes Paid Off",
+    "eyebrow": "Masuk ke Jadinya",
     "titleLead": "Masuk dulu,",
     "titleTail": "lalu pamerin karyamu.",
     "intro": "Pakai akun GitHub atau Google. Kami hanya menerima nama, email, dan foto profilmu, tanpa akses ke repo atau data lain.",
     "github": "Lanjut dengan GitHub",
     "google": "Lanjut dengan Google",
-    "note": "Dengan masuk, kamu setuju mengikuti aturan komunitas Vibes Paid Off.",
+    "note": "Dengan masuk, kamu setuju mengikuti aturan komunitas Jadinya.",
     "errors": {
       "oauth": "Gagal menghubungi penyedia login. Coba lagi, ya.",
       "callback": "Login belum selesai. Coba lagi, ya.",
@@ -562,7 +562,7 @@
   },
   "profile": {
     "metaFallbackTitle": "Profil",
-    "metaDescription": "{count, plural, =0 {Profil maker {name}} other {# obrolan vibe coding dari {name}}} di Vibes Paid Off.",
+    "metaDescription": "{count, plural, =0 {Profil maker {name}} other {# obrolan vibe coding dari {name}}} di Jadinya.",
     "makerSince": "maker sejak {date}",
     "trusted": "Maker terpercaya",
     "shareLabel": "Bagikan profil ini",
@@ -610,7 +610,7 @@
     "sortLabel": "Urutkan",
     "sortWorthIt": "Paling worth it",
     "sortNew": "Terbaru",
-    "count": "{count, plural, =0 {Belum ada obrolan} other {# obrolan}} yang vibes-nya terbayar",
+    "count": "{count, plural, =0 {Belum ada obrolan} other {# obrolan}} yang jadi",
     "countSearch": "{count, plural, =0 {Tidak ada obrolan} other {# obrolan}} untuk “{q}”",
     "empty": "Belum ada yang pakai kombinasi ini.",
     "emptyCta": "Jadilah yang pertama?",
@@ -654,14 +654,14 @@
   "emails": {
     "review": {
       "approved": {
-        "subject": "{title} sudah tayang di Vibes Paid Off",
+        "subject": "{title} sudah tayang di Jadinya",
         "body": "Halo {name},\n\nProyekmu \"{title}\" sudah disetujui dan sekarang tayang:\n{url}\n\nMulai sekarang kamu maker terpercaya, jadi proyek berikutnya langsung tayang tanpa antre review. Bagikan link-nya ke teman-temanmu, ya!"
       },
       "rejected": {
         "subject": "{title} belum bisa tayang",
         "body": "Halo {name},\n\nTerima kasih sudah mengirim \"{title}\". Sayangnya proyek ini belum bisa tayang.\n\nAlasannya: {reason}\n\nKamu bisa memperbaikinya lalu menyimpan ulang untuk mengirimnya kembali ke review:\n{url}"
       },
-      "signature": "Salam,\nVibes Paid Off\n\nStatus semua proyekmu ada di {url}"
+      "signature": "Salam,\nJadinya\n\nStatus semua proyekmu ada di {url}"
     }
   },
   "admin": {
@@ -852,12 +852,12 @@
   },
   "support": {
     "metaTitle": "Dukung kami",
-    "metaDescription": "Kenapa Vibes Paid Off gratis, ke mana donasi dipakai, dan cara kami memilih proyek tanpa kurasi manual.",
+    "metaDescription": "Kenapa Jadinya gratis, ke mana donasi dipakai, dan cara kami memilih proyek tanpa kurasi manual.",
     "titleLead": "Kenapa",
     "titleTail": "gratis?",
     "faq": {
       "freeQ": "Kok bisa gratis? Ada iklannya nggak?",
-      "freeA": "Nggak ada iklan, nggak ada fitur berbayar. Vibes Paid Off dibikin supaya maker Indonesia punya tempat pamer karya beserta cara membuatnya. Situs ini jalan di atas layanan gratis, jadi biaya wajibnya cuma domain.",
+      "freeA": "Nggak ada iklan, nggak ada fitur berbayar. Jadinya dibikin supaya maker Indonesia punya tempat pamer karya beserta cara membuatnya. Situs ini jalan di atas layanan gratis, jadi biaya wajibnya cuma domain.",
       "moneyQ": "Terus duit donasinya buat apa?",
       "moneyA": "Pertama nutup biaya domain. Kalau situsnya makin ramai dan database mulai penuh, donasi dipakai buat upgrade server. Semua biayanya aku tulis terbuka di halaman ini."
     },
@@ -880,7 +880,7 @@
     "costs": {
       "label": "Biaya saat ini, terbuka",
       "free": "Rp0",
-      "domain": "Domain vibespaidoff.dev",
+      "domain": "Domain jadinya.dev",
       "domainVendor": "Cloudflare Registrar",
       "domainCost": "±US$12–13/thn",
       "hosting": "Hosting web",
@@ -933,10 +933,10 @@
   },
   "communityRules": {
     "metaTitle": "Aturan komunitas",
-    "metaDescription": "Apa yang boleh dan nggak boleh di Vibes Paid Off, dan bagaimana moderasinya berjalan.",
+    "metaDescription": "Apa yang boleh dan nggak boleh di Jadinya, dan bagaimana moderasinya berjalan.",
     "titleLead": "Aturan",
     "titleTail": "komunitas",
-    "intro": "Vibes Paid Off itu tempat pamer karya sekaligus berbagi cara membuatnya. Aturannya sedikit, tapi berlaku buat semua orang, termasuk admin.",
+    "intro": "Jadinya itu tempat pamer karya sekaligus berbagi cara membuatnya. Aturannya sedikit, tapi berlaku buat semua orang, termasuk admin.",
     "updated": "Terakhir diperbarui {date}",
     "share": {
       "title": "Yang dipamerin",

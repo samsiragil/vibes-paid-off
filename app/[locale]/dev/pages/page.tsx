@@ -624,7 +624,7 @@ async function Preview({
               ),
               profile: (
                 <ProfileForm
-                  profileHost="vibespaidoff.dev/u/"
+                  profileHost="jadinya.dev/u/"
                   initialValues={{
                     displayName: "Ragil Samsi",
                     username: "ragil",

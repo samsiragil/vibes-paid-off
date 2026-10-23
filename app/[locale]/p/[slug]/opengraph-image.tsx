@@ -6,7 +6,7 @@ import { getPublishedProject } from "@/lib/projects/detail";
 
 export const size = OG_SIZE;
 export const contentType = "image/png";
-export const alt = "Vibes Paid Off";
+export const alt = "Jadinya";
 
 /** Share card for a project: key prompt → "X jam kemudian" → title, like the site's cards. */
 export default async function Image({

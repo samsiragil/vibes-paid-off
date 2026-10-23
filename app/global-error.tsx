@@ -38,10 +38,10 @@ export default function GlobalError({
   return (
     <html lang={locale}>
       <body className="min-h-full bg-bg text-ink">
-        <title>{`${t.title} · Vibes Paid Off`}</title>
+        <title>{`${t.title} · Jadinya`}</title>
         <main className="mx-auto flex max-w-[1200px] flex-col gap-6 px-4 pt-20 sm:px-6">
           <p className="font-serif text-2xl">
-            Vibes Paid <span className="text-accent-text italic">Off.</span>
+            Jadi<span className="text-accent-text italic">nya.</span>
           </p>
           <h1 className="font-serif text-5xl font-normal tracking-[-1px]">500 · {t.title}</h1>
           <p className="max-w-xl rounded-[18px] rounded-bl-md border border-border bg-surface px-[18px] py-3.5 text-[15px] leading-normal">
