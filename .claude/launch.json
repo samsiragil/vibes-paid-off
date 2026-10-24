@@ -6,6 +6,12 @@
       "runtimeExecutable": "C:/Users/samsi/AppData/Roaming/nvm/v22.17.1/node.exe",
       "runtimeArgs": ["node_modules/next/dist/bin/next", "dev", "-p", "3000"],
       "port": 3000
+    },
+    {
+      "name": "web-prod",
+      "runtimeExecutable": "C:/Users/samsi/AppData/Roaming/nvm/v22.17.1/node.exe",
+      "runtimeArgs": ["node_modules/next/dist/bin/next", "start", "-p", "3001"],
+      "port": 3001
     }
   ]
 }
