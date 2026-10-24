@@ -3,7 +3,13 @@ import { z } from "zod";
 import { LISTINGS_TAG, makerTag, projectTag } from "@/lib/cache-tags";
 import { MAX_MEDIA_PER_PROJECT, MAX_UPLOAD_BYTES } from "@/lib/media/limits";
 import { encodeWebp, InvalidImageError } from "@/lib/media/process";
-import { currentUserClient, mediaError, projectMediaQuota } from "@/lib/media/server";
+import {
+  consumeMediaQuota,
+  currentUserClient,
+  isSameOrigin,
+  mediaError,
+  projectMediaQuota,
+} from "@/lib/media/server";
 import { deleteObjects, getObjectBytes, putObject } from "@/lib/r2/client";
 import { r2Config } from "@/lib/r2/env";
 import { isTmpKeyOf, projectMediaKey } from "@/lib/r2/keys";
@@ -22,6 +28,7 @@ const schema = z.object({
  * p/{projectId}/{uuid}.webp, deletes the tmp object and records the image in project_media.
  */
 export async function POST(request: Request) {
+  if (!isSameOrigin(request)) return mediaError("forbidden", 403);
   const user = await currentUserClient();
   if (!user) return mediaError("unauthorized", 401);
 
@@ -36,6 +43,8 @@ export async function POST(request: Request) {
     const { canEdit, count } = await projectMediaQuota(user.supabase, projectId);
     if (!canEdit) return mediaError("forbidden", 403);
     if (count >= MAX_MEDIA_PER_PROJECT) return mediaError("limit", 409);
+    // Counted before the re-encode, so attempts that end in invalid_image use the budget too.
+    if (!(await consumeMediaQuota(user.supabase, "finalize"))) return mediaError("rate_limit", 429);
 
     const original = await getObjectBytes(tmpKey, MAX_UPLOAD_BYTES);
     if (!original) return mediaError("not_found", 404);

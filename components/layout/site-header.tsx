@@ -7,6 +7,7 @@ import { getCurrentUser } from "@/lib/auth/current-user";
 import { LocaleSwitcher } from "./locale-switcher";
 import { Wordmark } from "./logo";
 import { MobileMenu } from "./mobile-menu";
+import { NavLink } from "./nav-link";
 import { ThemeToggle } from "./theme-toggle";
 
 export type HeaderUser = { name: string; avatarUrl?: string | null };
@@ -43,9 +44,9 @@ export async function SiteHeader({ user }: { user?: HeaderUser | null }) {
 
         <nav aria-label={t("label")} className="hidden grow gap-[22px] text-sm md:flex">
           {navItems.map((item) => (
-            <Link key={item.key} href={item.href} className="text-ink hover:text-accent-text">
+            <NavLink key={item.key} href={item.href} className="text-ink hover:text-accent-text">
               {t(item.key)}
-            </Link>
+            </NavLink>
           ))}
         </nav>
 
@@ -63,13 +64,13 @@ export async function SiteHeader({ user }: { user?: HeaderUser | null }) {
           <MobileMenu>
             <nav aria-label={t("label")} className="flex flex-col">
               {navItems.map((item) => (
-                <Link
+                <NavLink
                   key={item.key}
                   href={item.href}
                   className="flex min-h-12 items-center border-b border-border text-base text-ink"
                 >
                   {t(item.key)}
-                </Link>
+                </NavLink>
               ))}
             </nav>
             <div className="mt-4 flex items-center justify-between">

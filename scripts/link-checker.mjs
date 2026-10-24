@@ -12,14 +12,14 @@
 // A link fails on HTTP >= 400, a network/TLS error, or no answer within 10 seconds. HEAD comes
 // first; anything but a success is retried once with GET, because many servers mishandle HEAD.
 // Bot walls (429, or 403 from a Cloudflare/Vercel challenge) count as alive: the site answered,
-// it only refused a datacenter IP, and a visitor's browser gets through.
+// it only refused a datacenter IP, and a visitor's browser gets through. Redirects are followed by
+// hand and never to a private or loopback address (scripts/lib/link-probe.mjs).
 import { appendFileSync } from "node:fs";
 import { createClient } from "@supabase/supabase-js";
+import { markdownCell, markdownUrl, probe } from "./lib/link-probe.mjs";
 
-const TIMEOUT_MS = 10_000;
 const CONCURRENCY = 8;
 const PAGE_SIZE = 500;
-const USER_AGENT = "Mozilla/5.0 (compatible; VibesPaidOffLinkChecker/1.0)";
 
 const args = process.argv.slice(2);
 const dryRun = args.includes("--dry-run");
@@ -88,40 +88,6 @@ async function loadProjects() {
   }
 }
 
-/** { ok, detail } for one URL; never throws. */
-async function probe(target) {
-  const head = await request(target, "HEAD");
-  if (head.ok) return head;
-  const get = await request(target, "GET");
-  return get.ok ? get : { ok: false, detail: `HEAD ${head.detail}, GET ${get.detail}` };
-}
-
-async function request(target, method) {
-  try {
-    const response = await fetch(target, {
-      method,
-      redirect: "follow",
-      signal: AbortSignal.timeout(TIMEOUT_MS),
-      headers: { "user-agent": USER_AGENT, accept: "text/html,*/*;q=0.8" },
-    });
-    // Only the status matters; do not download pages.
-    await response.body?.cancel().catch(() => {});
-
-    const status = response.status;
-    const challenged =
-      response.headers.has("cf-mitigated") || response.headers.has("x-vercel-mitigated");
-    if (status < 400) return { ok: true, detail: String(status) };
-    if (status === 429 || (status === 403 && challenged)) {
-      return { ok: true, detail: `${status} bot wall` };
-    }
-    return { ok: false, detail: String(status) };
-  } catch (error) {
-    if (error?.name === "TimeoutError") return { ok: false, detail: "timeout" };
-    const cause = error?.cause?.code ?? error?.cause?.message ?? error?.message ?? "error";
-    return { ok: false, detail: String(cause) };
-  }
-}
-
 async function record(results) {
   const rows = [];
   for (let i = 0; i < results.length; i += PAGE_SIZE) {
@@ -166,7 +132,7 @@ function writeStepSummary() {
       const row = rowById.get(project.id);
       const status = row ? `${row.link_status} (fails: ${row.link_fail_count})` : "not recorded";
       lines.push(
-        `| [${project.slug}](${project.live_url}) | ${ok ? "ok" : "fail"}: ${detail} | ${status} |`,
+        `| [${markdownCell(project.slug)}](${markdownUrl(project.live_url)}) | ${ok ? "ok" : "fail"}: ${markdownCell(detail)} | ${status} |`,
       );
     }
   }

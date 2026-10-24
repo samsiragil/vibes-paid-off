@@ -108,11 +108,14 @@ select tap.emit(throws_ok(
   'reject: unknown codes refused'
 ));
 select admin_review_project(tap.id('second-try'), false, 'broken_link', '  Link mengarah ke halaman login.  ');
+-- reviewed_by is not readable through the Data API; check it as postgres.
+select tap.as_postgres();
 select tap.emit(results_eq(
   $$ select status::text, reject_code, reject_reason, reviewed_by from projects where id = tap.id('second-try') $$,
   $$ values ('rejected', 'broken_link', 'Link mengarah ke halaman login.', tap.id('admin')) $$,
   'reject: status, code, trimmed note and reviewer stored'
 ));
+select tap.as_user(tap.id('admin'));
 
 -- Resubmitting through the edit form, with no content change (sessions only).
 select tap.as_postgres();
@@ -208,8 +211,8 @@ select tap.emit(is(
 ));
 
 -- Replies: hide, keep, remove.
-select tap.as_user(tap.id('r1'));
-insert into comments (project_id, body) values (tap.id('spammy'), 'Komentar kasar');
+select tap.as_service();
+select post_reply_as(tap.id('r1'), tap.id('spammy'), 'Komentar kasar');
 insert into tap.ids select 'rude', id from comments where body = 'Komentar kasar';
 select tap.as_user(tap.id('r2'));
 select report_content('comment', tap.id('rude'), 'harassment');
@@ -239,8 +242,8 @@ select tap.emit(is(
 ));
 
 -- A reply its author deleted before the admin looked: reports still close.
-select tap.as_user(tap.id('r1'));
-insert into comments (project_id, body) values (tap.id('spammy'), 'Sebentar saja');
+select tap.as_service();
+select post_reply_as(tap.id('r1'), tap.id('spammy'), 'Sebentar saja');
 insert into tap.ids select 'short', id from comments where body = 'Sebentar saja';
 select tap.as_user(tap.id('r2'));
 select report_content('comment', tap.id('short'), 'spam');

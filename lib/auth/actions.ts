@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { hasLocale } from "next-intl";
 import { z } from "zod";
 import { routing } from "@/i18n/routing";
+import { siteUrl } from "@/lib/site";
 import { createClient } from "@/lib/supabase/server";
 import { safeNextPath } from "./next-path";
 
@@ -22,7 +23,9 @@ export async function signInWithProvider(formData: FormData) {
   const next = safeNextPath(formData.get("next"), `/${locale}`);
   if (!provider.success) redirect(`/${locale}/login?error=provider`);
 
-  const origin = (await headers()).get("origin") ?? "http://localhost:3000";
+  // The callback must stay on the deployment that started the flow (the PKCE verifier cookie lives
+  // there), so prefer the request's Origin; fall back to the configured site, never localhost.
+  const origin = (await headers()).get("origin") ?? siteUrl;
   const callback = new URL("/auth/callback", origin);
   callback.searchParams.set("next", next);
 

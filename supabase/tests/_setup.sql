@@ -39,6 +39,14 @@ begin
 end;
 $$;
 
+-- The server (secret key): the only caller of post_reply_as().
+create function tap.as_service() returns void language plpgsql as $$
+begin
+  perform set_config('request.jwt.claims', '{"role":"service_role"}', true);
+  set local role service_role;
+end;
+$$;
+
 create function tap.as_postgres() returns void language plpgsql as $$
 begin
   reset role;

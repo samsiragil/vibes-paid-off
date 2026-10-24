@@ -1,6 +1,12 @@
 import { z } from "zod";
 import { isAcceptedImageType, MAX_MEDIA_PER_PROJECT, MAX_UPLOAD_BYTES } from "@/lib/media/limits";
-import { currentUserClient, mediaError, projectMediaQuota } from "@/lib/media/server";
+import {
+  consumeMediaQuota,
+  currentUserClient,
+  isSameOrigin,
+  mediaError,
+  projectMediaQuota,
+} from "@/lib/media/server";
 import { presignPut } from "@/lib/r2/client";
 import { r2Config } from "@/lib/r2/env";
 import { tmpKey } from "@/lib/r2/keys";
@@ -16,6 +22,7 @@ const schema = z.object({
  * to tmp/{userId}/{uuid} so the browser uploads straight to R2.
  */
 export async function POST(request: Request) {
+  if (!isSameOrigin(request)) return mediaError("forbidden", 403);
   const user = await currentUserClient();
   if (!user) return mediaError("unauthorized", 401);
 
@@ -32,6 +39,7 @@ export async function POST(request: Request) {
   if (count >= MAX_MEDIA_PER_PROJECT) return mediaError("limit", 409);
 
   try {
+    if (!(await consumeMediaQuota(user.supabase, "presign"))) return mediaError("rate_limit", 429);
     const key = tmpKey(user.userId);
     const url = await presignPut(key, contentType, size);
     return Response.json({ key, url });

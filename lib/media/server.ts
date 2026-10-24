@@ -7,6 +7,32 @@ export function mediaError(error: MediaErrorCode, status: number) {
   return Response.json({ error }, { status });
 }
 
+/**
+ * Whether the request comes from one of our own pages. The media routes act on the session cookie
+ * alone, so a cross-site form or fetch must not reach them (SameSite=Lax is the only other guard).
+ */
+export function isSameOrigin(request: Request) {
+  const origin = request.headers.get("origin");
+  const host = request.headers.get("x-forwarded-host") ?? request.headers.get("host");
+  if (!origin || !host) return false;
+  try {
+    return new URL(origin).host === host;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Counts one presign/finalize call against the account's hourly budget (consume_media_quota).
+ * Returns false once the budget is spent.
+ */
+export async function consumeMediaQuota(supabase: UserClient, kind: "presign" | "finalize") {
+  const { error } = await supabase.rpc("consume_media_quota", { p_kind: kind });
+  if (!error) return true;
+  if (error.message.startsWith("rate_limit")) return false;
+  throw error;
+}
+
 /** The signed-in user's id and a client acting as them, or null. */
 export async function currentUserClient() {
   const supabase = await createClient();

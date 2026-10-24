@@ -23,7 +23,7 @@ export function ProfileForm({
   profileHost,
 }: {
   initialValues: ProfileFormValues;
-  /** "vibespaidoff.dev/u/" shown in front of the username. */
+  /** "jadinya.dev/u/" shown in front of the username. */
   profileHost: string;
 }) {
   const t = useTranslations("me.profileForm");

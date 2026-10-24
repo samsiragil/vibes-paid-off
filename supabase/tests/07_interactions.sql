@@ -44,12 +44,28 @@ select tap.emit(throws_ok(
   'vote: maker cannot vote their own project (Q13)'
 ));
 
--- Replies --------------------------------------------------------------------------
+-- Replies: only the server posts them (post_reply_as, after Turnstile) -------------------
 select tap.as_user(tap.id('r1'));
-select tap.emit(lives_ok(
-  $$ insert into comments (project_id, body) values (tap.id('kasir'), '  Keren banget!  ') $$,
-  'reply: user can reply'
+select tap.emit(throws_ok(
+  $$ insert into comments (project_id, body) values (tap.id('kasir'), 'Langsung') $$, '42501', null,
+  'reply: users cannot insert replies directly (that would skip Turnstile)'
 ));
+select tap.emit(throws_ok(
+  $$ select post_reply_as(tap.id('r1'), tap.id('kasir'), 'Lewat RPC') $$, '42501', null,
+  'reply: users cannot call post_reply_as'
+));
+select tap.as_anon();
+select tap.emit(throws_ok(
+  $$ select post_reply_as(tap.id('r1'), tap.id('kasir'), 'Lewat RPC') $$, '42501', null,
+  'reply: anon cannot call post_reply_as'
+));
+select tap.as_service();
+select tap.emit(lives_ok(
+  $$ select post_reply_as(tap.id('r1'), tap.id('kasir'), '  Keren banget!  ') $$,
+  'reply: the server posts for the user'
+));
+select tap.emit(is(auth.uid(), null, 'reply: post_reply_as restores the caller afterwards'));
+select tap.as_user(tap.id('r1'));
 select tap.emit(results_eq(
   $$ select body, status::text from comments where project_id = tap.id('kasir') and user_id = tap.id('r1') $$,
   $$ values ('Keren banget!', 'visible') $$, 'reply: body trimmed, visible'
@@ -57,22 +73,21 @@ select tap.emit(results_eq(
 select tap.emit(is(
   (select comment_count from projects where id = tap.id('kasir')), 1, 'reply: comment_count follows'
 ));
+select tap.as_service();
 select tap.emit(throws_ok(
-  $$ insert into comments (project_id, body) values (tap.id('kasir'), '   ') $$, '23514', null,
+  $$ select post_reply_as(tap.id('r1'), tap.id('kasir'), '   ') $$, '23514', null,
   'reply: blank body refused'
 ));
 select tap.emit(throws_ok(
-  $$ insert into comments (project_id, body) values (tap.id('in-review'), 'Halo') $$, '42501', null,
+  $$ select post_reply_as(tap.id('r1'), tap.id('in-review'), 'Halo') $$, '42501', 'project_not_published',
   'reply: not on a project in review'
 ));
-select tap.as_user(tap.id('maker'));
 select tap.emit(lives_ok(
-  $$ insert into comments (project_id, body) values (tap.id('kasir'), 'Makasih!') $$,
+  $$ select post_reply_as(tap.id('maker'), tap.id('kasir'), 'Makasih!') $$,
   'reply: maker can answer on their own project'
 ));
-select tap.as_user(tap.id('nameless'));
 select tap.emit(throws_ok(
-  $$ insert into comments (project_id, body) values (tap.id('kasir'), 'Halo') $$, '42501', 'username_required',
+  $$ select post_reply_as(tap.id('nameless'), tap.id('kasir'), 'Halo') $$, '42501', 'username_required',
   'reply: needs a username'
 ));
 
@@ -92,9 +107,9 @@ select tap.emit(is(
 select tap.as_postgres();
 insert into comments (project_id, user_id, body)
 select tap.id('resep'), tap.id('r4'), 'Balasan ' || n from generate_series(1, 30) n;
-select tap.as_user(tap.id('r4'));
+select tap.as_service();
 select tap.emit(throws_like(
-  $$ insert into comments (project_id, body) values (tap.id('resep'), 'Ke-31') $$, 'rate_limit:comments%',
+  $$ select post_reply_as(tap.id('r4'), tap.id('resep'), 'Ke-31') $$, 'rate_limit:comments%',
   'reply: 31st reply in 24 hours refused'
 ));
 
@@ -136,6 +151,8 @@ select tap.emit(throws_ok(
   $$ select report_content('project', tap.id('kasir'), 'scam') $$, '23505', null,
   'report: same account twice refused'
 ));
+-- report_count is not readable through the Data API; check it as postgres.
+select tap.as_postgres();
 select tap.emit(is(
   (select report_count from projects where id = tap.id('kasir')), 1, 'report: duplicate not counted'
 ));
@@ -178,8 +195,8 @@ select tap.emit(is(
 ));
 
 -- Reporting a reply: three accounts hide it and the counter drops.
-select tap.as_user(tap.id('r1'));
-insert into comments (project_id, body) values (tap.id('resep'), 'Beli followers di sini');
+select tap.as_service();
+select post_reply_as(tap.id('r1'), tap.id('resep'), 'Beli followers di sini');
 insert into tap.ids select 'spam-reply', id from comments where body = 'Beli followers di sini';
 select tap.as_user(tap.id('r1'));
 select tap.emit(throws_ok(

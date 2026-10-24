@@ -20,11 +20,14 @@ select tap.emit(is(
 select tap.emit(is(
   set_project_archived(tap.id('kasir'), false)::text, 'live', 'owner reactivates it'
 ));
+-- link_fail_count is not readable through the Data API; check it as postgres.
+select tap.as_postgres();
 select tap.emit(results_eq(
   $$ select link_status::text, link_fail_count::int, status::text from projects where id = tap.id('kasir') $$,
   $$ values ('live', 0, 'published') $$,
   'reactivated: live, fail count reset, status unchanged'
 ));
+select tap.as_user(tap.id('alice'));
 select tap.emit(is(
   set_project_archived(tap.id('pending-one'), true)::text, 'archived', 'works for a project still in review'
 ));

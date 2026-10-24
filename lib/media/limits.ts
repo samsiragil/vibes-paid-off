@@ -16,6 +16,12 @@ export const MAX_UPLOAD_BYTES = 8 * 1024 * 1024;
 /** Longest side after resizing, in the browser and again on the server. */
 export const MAX_IMAGE_SIDE = 1600;
 
+/**
+ * Largest side the server decodes. The browser already resized to MAX_IMAGE_SIDE; the slack is
+ * for rounding, and keeps a crafted upload from forcing a huge decode.
+ */
+export const MAX_INPUT_SIDE = 2048;
+
 /** Size budget for the stored WebP. */
 export const MAX_STORED_BYTES = 300 * 1024;
 
@@ -33,6 +39,7 @@ export type MediaErrorCode =
   | "unsupported_type"
   | "not_found"
   | "invalid_image"
+  | "rate_limit"
   | "unavailable"
   | "failed";
 

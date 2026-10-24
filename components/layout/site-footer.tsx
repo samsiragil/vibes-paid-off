@@ -4,6 +4,7 @@ import { Link } from "@/i18n/navigation";
 import { buttonStyles } from "@/components/ui/button";
 import { MonoLabel } from "@/components/ui/badge";
 import { donateUrl } from "@/lib/donate";
+import { PICKING_ANCHOR } from "@/lib/site";
 import { Wordmark } from "./logo";
 
 async function getCurrentYear() {
@@ -80,6 +81,9 @@ export async function SiteFooter({ variant = "compact" }: { variant?: "full" | "
           </Link>
           <Link href="/support" className={link}>
             {t("about")}
+          </Link>
+          <Link href={`/support#${PICKING_ANCHOR}`} className={link}>
+            {t("howWePick")}
           </Link>
         </div>
         <div className="flex flex-col items-start gap-2.5">

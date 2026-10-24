@@ -1,4 +1,4 @@
-# Vibes Paid Off
+# Jadinya
 
 Katalog dan portfolio proyek vibe coding Indonesia (ID + EN). Rencana lengkap: [docs/implementation-plan.md](docs/implementation-plan.md).
 

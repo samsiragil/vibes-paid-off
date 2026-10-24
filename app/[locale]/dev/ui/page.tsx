@@ -63,7 +63,8 @@ function Section({ title, children }: { title: string; children: ReactNode }) {
 }
 
 export default function UiKitPage() {
-  if (process.env.VERCEL_ENV === "production") notFound();
+  // Local development only: hidden on every Vercel deployment, previews included.
+  if (process.env.VERCEL_ENV) notFound();
 
   return (
     <main className="mx-auto w-full max-w-[1200px] px-4 pt-10 sm:px-6">

@@ -1,12 +1,14 @@
 "use client";
 
 import { useEffect, useEffectEvent, useImperativeHandle, useRef, type Ref } from "react";
+import type { TurnstileAction } from "@/lib/turnstile";
 
 type TurnstileApi = {
   render(
     element: HTMLElement,
     options: {
       sitekey: string;
+      action: string;
       callback: (token: string) => void;
       "expired-callback": () => void;
       "error-callback": () => void;
@@ -53,11 +55,14 @@ export type TurnstileHandle = {
 /** Cloudflare Turnstile widget (explicit render). Reports the token, or null when it expires. */
 export function Turnstile({
   siteKey,
+  action,
   language,
   onToken,
   ref,
 }: {
   siteKey: string;
+  /** Checked again by verifyTurnstile, so a token only works for the form it was solved on. */
+  action: TurnstileAction;
   language: string;
   onToken: (token: string | null) => void;
   ref?: Ref<TurnstileHandle>;
@@ -73,6 +78,7 @@ export function Turnstile({
         if (cancelled || !containerRef.current) return;
         widgetRef.current = turnstile.render(containerRef.current, {
           sitekey: siteKey,
+          action,
           callback: (token) => report(token),
           "expired-callback": () => report(null),
           "error-callback": () => report(null),
@@ -88,7 +94,7 @@ export function Turnstile({
       if (widgetRef.current) window.turnstile?.remove(widgetRef.current);
       widgetRef.current = null;
     };
-  }, [siteKey, language]);
+  }, [siteKey, action, language]);
 
   useImperativeHandle(ref, () => ({
     reset() {

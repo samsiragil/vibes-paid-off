@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import {
   ExploreProvider,
@@ -25,10 +25,15 @@ import {
   type ExploreFilters,
 } from "@/lib/projects/explore-params";
 import { TOOL_KINDS, type CatalogTool } from "@/lib/projects/types";
+import { localeAlternates } from "@/lib/seo";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("explore");
-  return { title: t("metaTitle"), description: t("metaDescription") };
+  return {
+    title: t("metaTitle"),
+    description: t("metaDescription"),
+    alternates: localeAlternates(await getLocale(), "/explore"),
+  };
 }
 
 // Jelajah (VPO-Jelajah). The title is static; everything that depends on the URL query streams
@@ -109,11 +114,11 @@ async function ExploreBody({
 
         <section className="flex min-w-0 grow flex-col gap-5">
           <div className="flex flex-wrap items-center justify-between gap-3">
-            <p className="text-sm text-ink-2">
+            <h2 className="text-sm font-normal text-ink-2">
               {filters.q
                 ? t("countSearch", { count: page.total, q: filters.q })
                 : t("count", { count: page.total })}
-            </p>
+            </h2>
             <div className="flex flex-wrap items-center gap-2">
               <MobileFilters>{panel}</MobileFilters>
               <SortSwitch />
@@ -127,8 +132,8 @@ async function ExploreBody({
               nextCursor={page.nextCursor}
               showLang
             >
-              {page.items.map((project) => (
-                <ProjectGridCard key={project.id} project={project} showLang />
+              {page.items.map((project, index) => (
+                <ProjectGridCard key={project.id} project={project} showLang eager={index === 0} />
               ))}
             </ResultsGrid>
           ) : (

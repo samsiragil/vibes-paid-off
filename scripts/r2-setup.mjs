@@ -23,7 +23,7 @@ if (!R2_ACCOUNT_ID || !R2_ACCESS_KEY_ID || !R2_SECRET_ACCESS_KEY || !R2_BUCKET) 
 
 const origins = (
   process.env.R2_CORS_ORIGINS ??
-  "http://localhost:3000,https://vibes-paid-off.vercel.app,https://dev-vibes-paid-off.vercel.app"
+  "http://localhost:3000,https://jadinya.dev,https://jadinya.vercel.app,https://dev-jadinya.vercel.app"
 )
   .split(",")
   .map((origin) => origin.trim())

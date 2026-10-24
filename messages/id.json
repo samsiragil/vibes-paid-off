@@ -1,10 +1,10 @@
 {
   "meta": {
-    "title": "Vibes Paid Off",
+    "title": "Jadinya",
     "description": "Tempat maker vibe coding Indonesia memamerkan karya dan berbagi cara membuatnya."
   },
   "brand": {
-    "home": "Vibes Paid Off, ke beranda"
+    "home": "Jadinya, ke beranda"
   },
   "nav": {
     "label": "Navigasi utama",
@@ -15,7 +15,8 @@
     "login": "Masuk",
     "dashboard": "Dashboard saya",
     "openMenu": "Buka menu",
-    "closeMenu": "Tutup menu"
+    "closeMenu": "Tutup menu",
+    "skipToContent": "Lewati ke konten"
   },
   "locale": {
     "label": "Bahasa",
@@ -40,13 +41,14 @@
     "about": "Tentang",
     "freeNote": "Gratis, jalan dari donasi.",
     "buyCoffee": "Beliin kopi",
-    "copyright": "© {year} Vibes Paid Off"
+    "copyright": "© {year} Jadinya",
+    "howWePick": "Cara kami memilih"
   },
   "home": {
     "eyebrow": "Katalog vibe coding Indonesia",
     "titleLead": "Kamu bilang apa,",
     "titleTail": "AI bikin apa.",
-    "lede": "Setiap proyek di sini dimulai dari satu pesan, dan vibes-nya terbayar. Lihat percakapannya, hasilnya, dan apa yang terjadi di antaranya.",
+    "lede": "Setiap proyek di sini dimulai dari satu pesan. Lihat percakapannya, jadinya seperti apa, dan apa yang terjadi di antaranya.",
     "ctaSubmit": "Pamerin proyekmu",
     "ctaExplore": "Jelajahi proyek",
     "soon": "Katalognya lagi disiapkan. Proyek pertama segera tayang di sini.",
@@ -63,7 +65,7 @@
     "latestLead": "Baru",
     "latestTail": "masuk",
     "latestMeta": "{tools} · {time}",
-    "ctaLead": "Vibes-mu terbayar?",
+    "ctaLead": "Proyekmu udah jadi?",
     "ctaTail": "Ceritain di sini.",
     "ctaPlaceholder": "Tulis prompt kunci proyekmu…",
     "ctaButton": "Pamerin proyekmu ↑"
@@ -75,13 +77,13 @@
   },
   "auth": {
     "metaTitle": "Masuk",
-    "eyebrow": "Masuk ke Vibes Paid Off",
+    "eyebrow": "Masuk ke Jadinya",
     "titleLead": "Masuk dulu,",
     "titleTail": "lalu pamerin karyamu.",
     "intro": "Pakai akun GitHub atau Google. Kami hanya menerima nama, email, dan foto profilmu, tanpa akses ke repo atau data lain.",
     "github": "Lanjut dengan GitHub",
     "google": "Lanjut dengan Google",
-    "note": "Dengan masuk, kamu setuju mengikuti aturan komunitas Vibes Paid Off.",
+    "note": "Dengan masuk, kamu setuju mengikuti aturan komunitas Jadinya.",
     "errors": {
       "oauth": "Gagal menghubungi penyedia login. Coba lagi, ya.",
       "callback": "Login belum selesai. Coba lagi, ya.",
@@ -248,6 +250,7 @@
       "unsupported_type": "Format belum didukung. Pakai JPG, PNG, atau WebP.",
       "not_found": "Upload belum sampai ke server. Coba lagi.",
       "invalid_image": "Gambar tidak bisa dibaca. Coba file lain.",
+      "rate_limit": "Terlalu banyak upload dalam waktu singkat. Tunggu sebentar, lalu coba lagi.",
       "unavailable": "Upload gambar sedang tidak tersedia. Coba lagi nanti.",
       "failed": "Gagal menyimpan gambar. Coba lagi, ya."
     }
@@ -527,7 +530,7 @@
         "project": "Laporkan proyek ini",
         "reply": "Laporkan balasan ini"
       },
-      "intro": "Laporan tidak ditampilkan ke siapa pun selain admin. Kalau tiga akun berbeda melapor, kontennya disembunyikan dulu sampai admin meninjau.",
+      "intro": "Laporan tidak ditampilkan ke siapa pun selain admin. Kalau tiga akun lama (punya username, berumur lebih dari 3 hari) melapor, kontennya disembunyikan dulu sampai admin meninjau.",
       "reasonLabel": "Alasannya",
       "reasons": {
         "spam": "Spam atau promosi",
@@ -554,13 +557,14 @@
         "own_content": "Kamu tidak bisa melaporkan kontenmu sendiri.",
         "not_found": "Konten ini sudah tidak tayang.",
         "invalid": "Pilih salah satu alasan dulu.",
+        "rate_limit": "Kamu sudah mengirim 10 laporan hari ini. Coba lagi besok.",
         "failed": "Gagal mengirim laporan. Coba lagi sebentar."
       }
     }
   },
   "profile": {
     "metaFallbackTitle": "Profil",
-    "metaDescription": "{count, plural, =0 {Profil maker {name}} other {# obrolan vibe coding dari {name}}} di Vibes Paid Off.",
+    "metaDescription": "{count, plural, =0 {Profil maker {name}} other {# obrolan vibe coding dari {name}}} di Jadinya.",
     "makerSince": "maker sejak {date}",
     "trusted": "Maker terpercaya",
     "shareLabel": "Bagikan profil ini",
@@ -608,7 +612,7 @@
     "sortLabel": "Urutkan",
     "sortWorthIt": "Paling worth it",
     "sortNew": "Terbaru",
-    "count": "{count, plural, =0 {Belum ada obrolan} other {# obrolan}} yang vibes-nya terbayar",
+    "count": "{count, plural, =0 {Belum ada obrolan} other {# obrolan}} yang jadi",
     "countSearch": "{count, plural, =0 {Tidak ada obrolan} other {# obrolan}} untuk “{q}”",
     "empty": "Belum ada yang pakai kombinasi ini.",
     "emptyCta": "Jadilah yang pertama?",
@@ -652,14 +656,14 @@
   "emails": {
     "review": {
       "approved": {
-        "subject": "{title} sudah tayang di Vibes Paid Off",
+        "subject": "{title} sudah tayang di Jadinya",
         "body": "Halo {name},\n\nProyekmu \"{title}\" sudah disetujui dan sekarang tayang:\n{url}\n\nMulai sekarang kamu maker terpercaya, jadi proyek berikutnya langsung tayang tanpa antre review. Bagikan link-nya ke teman-temanmu, ya!"
       },
       "rejected": {
         "subject": "{title} belum bisa tayang",
         "body": "Halo {name},\n\nTerima kasih sudah mengirim \"{title}\". Sayangnya proyek ini belum bisa tayang.\n\nAlasannya: {reason}\n\nKamu bisa memperbaikinya lalu menyimpan ulang untuk mengirimnya kembali ke review:\n{url}"
       },
-      "signature": "Salam,\nVibes Paid Off\n\nStatus semua proyekmu ada di {url}"
+      "signature": "Salam,\nJadinya\n\nStatus semua proyekmu ada di {url}"
     }
   },
   "admin": {
@@ -713,7 +717,7 @@
     },
     "reports": {
       "title": "Laporan",
-      "lede": "Proyek atau balasan yang dilaporkan 3 akun berbeda otomatis disembunyikan sampai kamu periksa.",
+      "lede": "Proyek atau balasan yang dilaporkan 3 akun lama (punya username, berumur lebih dari 3 hari) otomatis disembunyikan sampai kamu periksa.",
       "empty": "Tidak ada laporan terbuka. Komunitasnya lagi adem.",
       "autoHidden": "Disembunyikan otomatis",
       "hidden": "Disembunyikan",
@@ -847,5 +851,132 @@
         "score": "Skor"
       }
     }
+  },
+  "support": {
+    "metaTitle": "Dukung kami",
+    "metaDescription": "Kenapa Jadinya gratis, ke mana donasi dipakai, dan cara kami memilih proyek tanpa kurasi manual.",
+    "titleLead": "Kenapa",
+    "titleTail": "gratis?",
+    "faq": {
+      "freeQ": "Kok bisa gratis? Ada iklannya nggak?",
+      "freeA": "Nggak ada iklan, nggak ada fitur berbayar. Jadinya dibikin supaya maker Indonesia punya tempat pamer karya beserta cara membuatnya. Situs ini jalan di atas layanan gratis, jadi biaya wajibnya cuma domain.",
+      "moneyQ": "Terus duit donasinya buat apa?",
+      "moneyA": "Pertama nutup biaya domain. Kalau situsnya makin ramai dan database mulai penuh, donasi dipakai buat upgrade server. Semua biayanya aku tulis terbuka di halaman ini."
+    },
+    "local": {
+      "eyebrow": "Dari Indonesia",
+      "titleLead": "Traktir",
+      "titleTail": "kopi",
+      "body": "Bayar pakai QRIS, e-wallet, atau transfer bank.",
+      "cta": "Lewat {platform}"
+    },
+    "global": {
+      "eyebrow": "From abroad",
+      "titleLead": "Buy us a",
+      "titleTail": "coffee",
+      "body": "Card or PayPal, in your own currency.",
+      "cta": "Via {platform}"
+    },
+    "soon": "Link-nya segera hadir",
+    "makerTip": "Kamu maker? Pasang link traktir milikmu sendiri di profil, biar yang suka karyamu bisa langsung traktir kamu. <link>Atur di dashboard</link>",
+    "costs": {
+      "label": "Biaya saat ini, terbuka",
+      "free": "Rp0",
+      "domain": "Domain jadinya.dev",
+      "domainVendor": "Cloudflare Registrar",
+      "domainCost": "±US$12–13/thn",
+      "hosting": "Hosting web",
+      "hostingVendor": "Vercel Hobby",
+      "database": "Database dan login",
+      "databaseVendor": "Supabase Free",
+      "storage": "Penyimpanan gambar",
+      "storageVendor": "Cloudflare R2, gratis 10 GB",
+      "edge": "DNS, captcha, analitik",
+      "edgeVendor": "Cloudflare",
+      "total": "Total per bulan",
+      "totalValue": "≈ Rp0",
+      "totalNote": "+ domain"
+    },
+    "later": {
+      "label": "Nanti, kalau makin ramai",
+      "body": "Upgrade database ke Supabase Pro, sekitar US$25 per bulan, saat database mendekati batas gratis."
+    },
+    "target": {
+      "label": "Target pertama",
+      "lead": "Menutup biaya domain",
+      "tail": "tahun pertama."
+    },
+    "picking": {
+      "titleLead": "Cara kami",
+      "titleTail": "memilih",
+      "question": "Siapa yang milih “Pilihan minggu ini”?",
+      "answer": "Bukan siapa-siapa. Admin nggak punya tombol buat menaikkan proyek. Semua peringkat di situs ini dihitung dari rumus yang sama, dan rumusnya ditulis terbuka di sini.",
+      "formulaLabel": "Rumusnya",
+      "formula": "skor = vote layak + 0,5 × pembalas layak",
+      "votesTitle": "Vote layak",
+      "votesBody": "Vote dihitung kalau akunnya sudah berumur minimal 3 hari (72 jam) dan proyeknya sedang tayang. Maker nggak bisa vote proyeknya sendiri. Vote dari akun baru tetap muncul di angka Worth it, cuma baru ikut peringkat setelah akunnya cukup umur.",
+      "repliersTitle": "Pembalas layak",
+      "repliersBody": "Orang yang membalas (bukan maker-nya, akunnya juga minimal 3 hari) dihitung satu kali per proyek, berapa pun jumlah balasannya. Bobotnya setengah vote, karena obrolan yang hidup juga tanda proyeknya menarik.",
+      "popularTitle": "Obrolan terpopuler minggu ini",
+      "popularBody": "Skor dari 7 hari terakhir, terus diperbarui. Kalau seri, yang vote layaknya lebih banyak menang, lalu yang tayang lebih dulu. Satu maker maksimal muncul sekali, biar nggak ada yang borong semua tempat.",
+      "pickTitle": "Pilihan minggu ini",
+      "pickBody": "Dihitung otomatis tiap Senin pukul 00.05 WIB dari skor Senin–Minggu sebelumnya, lalu dibekukan seminggu. Syaratnya: skor minimal {min}, punya screenshot, link-nya nggak diarsipkan, belum pernah terpilih, dan makernya nggak terpilih dalam 4 minggu terakhir. Kalau nggak ada yang lolos, beranda menampilkan proyek terbaru. Kalau pemenangnya disembunyikan karena laporan, peringkat kedua otomatis naik.",
+      "worthItTitle": "Paling worth it",
+      "worthItBody": "Urutan di Jelajah dan halaman tools memakai total vote layak sepanjang waktu. Kalau seri, yang lebih baru tayang ada di atas.",
+      "exampleLabel": "Contoh: pilihan terakhir",
+      "exampleSampleLabel": "Contoh perhitungan",
+      "exampleIntro": "Pilihan untuk minggu {week}, dihitung dari skor {range}:",
+      "exampleRow": "{votes} vote + 0,5 × {repliers} pembalas = {score}",
+      "exampleHidden": "Proyek yang sudah nggak tayang",
+      "exampleWinner": "Terpilih",
+      "exampleNone": "Pilihan untuk minggu {week} (skor {range}) nggak punya kandidat yang mencapai skor {min}, jadi beranda menampilkan proyek terbaru.",
+      "exampleSample": "Misalnya proyek dengan 4 vote layak dan 3 pembalas layak: skornya 4 + 0,5 × 3 = 5,5. Itu lolos ambang {min}, jadi bisa terpilih kalau skornya paling tinggi minggu itu."
+    }
+  },
+  "communityRules": {
+    "metaTitle": "Aturan komunitas",
+    "metaDescription": "Apa yang boleh dan nggak boleh di Jadinya, dan bagaimana moderasinya berjalan.",
+    "titleLead": "Aturan",
+    "titleTail": "komunitas",
+    "intro": "Jadinya itu tempat pamer karya sekaligus berbagi cara membuatnya. Aturannya sedikit, tapi berlaku buat semua orang, termasuk admin.",
+    "updated": "Terakhir diperbarui {date}",
+    "share": {
+      "title": "Yang dipamerin",
+      "own": "Proyek buatanmu sendiri, atau kamu terlibat langsung membuatnya.",
+      "ai": "Dibikin dengan bantuan AI. Nggak harus 100% AI, tapi ceritain bagian mana yang dibantu.",
+      "honest": "Prompt dan sesi yang kamu tulis harus jujur. Boleh dirapikan, jangan dikarang.",
+      "live": "Link live harus bisa dibuka. Kalau proyeknya sudah dimatikan, arsipkan dari dashboard."
+    },
+    "forbidden": {
+      "title": "Yang dilarang",
+      "illegal": "Konten dewasa, judi, penipuan, phishing, malware, atau apa pun yang melanggar hukum.",
+      "spam": "Spam, promosi berulang, atau link afiliasi yang nggak ada hubungannya dengan proyek.",
+      "privacy": "Data pribadi orang lain, API key, atau token di screenshot, prompt, dan balasan. Sensor dulu sebelum upload.",
+      "harassment": "Pelecehan, ujaran kebencian, atau merendahkan orang lain.",
+      "impersonation": "Mengaku sebagai orang lain atau memakai karya orang lain sebagai milikmu."
+    },
+    "replies": {
+      "title": "Waktu membalas",
+      "respect": "Kritik boleh, merendahkan nggak. Bahas karyanya, bukan orangnya.",
+      "useful": "Kalau mau kasih saran, kasih yang bisa langsung dicoba.",
+      "promo": "Jangan pakai balasan buat promosi proyekmu sendiri."
+    },
+    "moderation": {
+      "title": "Cara moderasinya",
+      "review": "Proyek pertama setiap maker dicek admin dulu, biasanya dalam 48 jam. Setelah disetujui, kamu jadi maker terpercaya dan proyek berikutnya langsung tayang.",
+      "rejected": "Kalau ditolak, alasannya muncul di dashboard. Kamu bisa memperbaiki proyeknya lalu mengirim ulang.",
+      "reports": "Siapa pun yang sudah login bisa melaporkan proyek atau balasan, maksimal 10 laporan sehari. Setelah dilaporkan 3 akun lama (punya username, berumur lebih dari 3 hari), kontennya otomatis disembunyikan sampai admin memeriksanya.",
+      "actions": "Admin bisa memulihkan, menyembunyikan, atau menghapus konten, dan mencabut status maker terpercaya kalau aturan dilanggar berulang kali.",
+      "ranking": "Admin nggak bisa memilih atau menaikkan proyek. Peringkat dihitung dari rumus yang sama untuk semua. <link>Lihat cara kami memilih</link>"
+    },
+    "closing": "Aturan ini bisa diperbarui seiring komunitasnya tumbuh."
+  },
+  "error": {
+    "title": "Ada yang",
+    "titleTail": "error",
+    "body": "Maaf, halaman ini gagal dimuat. Biasanya cukup dicoba lagi. Kalau masih gagal, tunggu beberapa menit.",
+    "retry": "Coba lagi",
+    "home": "Balik ke beranda",
+    "code": "Kode error: {digest}"
   }
 }

@@ -1,7 +1,9 @@
+import type { Metadata } from "next";
 import { Suspense, type ReactNode } from "react";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { HomeHeroCard } from "@/components/discovery/home-hero";
+import { JsonLd } from "@/components/seo/json-ld";
 import { ProjectRow } from "@/components/discovery/project-row";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { ProjectGridCard } from "@/components/project/project-grid-card";
@@ -12,14 +14,36 @@ import { buttonStyles } from "@/components/ui/button";
 import { pillStyles } from "@/components/ui/pill";
 import { cn } from "@/lib/cn";
 import { getHomeData } from "@/lib/projects/discovery";
+import { localeAlternates, localeUrl } from "@/lib/seo";
+
+export async function generateMetadata(): Promise<Metadata> {
+  return { alternates: localeAlternates(await getLocale()) };
+}
 
 // Beranda (VPO-Beranda). The lists are cached for minutes (getHomeData) and prerendered, so the
 // page is served from the static shell; rankings come from the database (§2.7).
 export default async function HomePage() {
   const t = await getTranslations("home");
+  const tMeta = await getTranslations("meta");
+  const locale = await getLocale();
 
   return (
     <>
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          name: tMeta("title"),
+          description: tMeta("description"),
+          url: localeUrl(locale),
+          inLanguage: locale,
+          potentialAction: {
+            "@type": "SearchAction",
+            target: `${localeUrl(locale, "/explore")}?q={search_term_string}`,
+            "query-input": "required name=search_term_string",
+          },
+        }}
+      />
       <main className="mx-auto w-full max-w-[1200px] px-4 sm:px-6">
         <section className="flex flex-col gap-12 pt-14 pb-16 lg:flex-row lg:items-center lg:gap-16 lg:pt-[88px] lg:pb-20">
           <div className="flex min-w-0 flex-col gap-[22px] lg:flex-[1_1_440px]">

@@ -627,6 +627,7 @@ export type Database = {
           isSetofReturn: false;
         };
       };
+      consume_media_quota: { Args: { p_kind: string }; Returns: undefined };
       eligible_upvotes_for: {
         Args: { p_now?: string; p_project_id: string };
         Returns: number;
@@ -654,6 +655,14 @@ export type Database = {
           eligible_votes: number;
           project_id: string;
           score: number;
+        }[];
+      };
+      post_reply_as: {
+        Args: { p_body: string; p_project_id: string; p_user_id: string };
+        Returns: {
+          body: string;
+          created_at: string;
+          id: string;
         }[];
       };
       prefix_tsquery: { Args: { p_query: string }; Returns: unknown };

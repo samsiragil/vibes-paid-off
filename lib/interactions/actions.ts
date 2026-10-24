@@ -1,10 +1,10 @@
 "use server";
 
 import { revalidateTag, updateTag } from "next/cache";
-import { headers } from "next/headers";
 import { z } from "zod";
 import { LISTINGS_TAG, makerTag, projectTag, repliesTag } from "@/lib/cache-tags";
 import { getCurrentUser } from "@/lib/auth/current-user";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
 import { verifyTurnstile } from "@/lib/turnstile";
 import { replyBodySchema, reportSchema, type ReplyErrorCode } from "@/lib/validation/interactions";
@@ -127,18 +127,12 @@ export async function postReply(request: {
     };
   }
 
-  const headerList = await headers();
-  const remoteIp =
-    headerList.get("cf-connecting-ip") ??
-    headerList.get("x-forwarded-for")?.split(",")[0]?.trim() ??
-    null;
-  if (!(await verifyTurnstile(turnstileToken, remoteIp))) return { ok: false, error: "captcha" };
+  if (!(await verifyTurnstile(turnstileToken, "reply"))) return { ok: false, error: "captcha" };
 
-  const supabase = await createClient();
-  const { data, error } = await supabase
-    .from("comments")
-    .insert({ project_id: projectId, body: body.data })
-    .select("id, body, created_at")
+  // Users cannot insert replies themselves (that would skip Turnstile); the secret-key client posts
+  // it as the signed-in user, and the database still applies the username rule and the quota.
+  const { data, error } = await createAdminClient()
+    .rpc("post_reply_as", { p_user_id: user.id, p_project_id: projectId, p_body: body.data })
     .single();
 
   if (error) {
@@ -206,7 +200,13 @@ export type ReportResult =
   | {
       ok: false;
       error:
-        "unauthorized" | "already_reported" | "own_content" | "not_found" | "invalid" | "failed";
+        | "unauthorized"
+        | "already_reported"
+        | "own_content"
+        | "not_found"
+        | "rate_limit"
+        | "invalid"
+        | "failed";
     };
 
 const reportResultSchema = z.object({
@@ -216,8 +216,9 @@ const reportResultSchema = z.object({
 });
 
 /**
- * Reports a project or a reply with a reason and an optional note. The third report from a
- * different account hides the target at once (database trigger); the pages showing it follow.
+ * Reports a project or a reply with a reason and an optional note. The third open report from an
+ * established account (username, older than 72 hours) hides the target at once (database
+ * trigger); the pages showing it follow. Each account may file 10 reports per 24 hours.
  */
 export async function reportContent(input: unknown): Promise<ReportResult> {
   const parsed = reportSchema.safeParse(input);
@@ -235,6 +236,7 @@ export async function reportContent(input: unknown): Promise<ReportResult> {
     if (error.code === "23505") return { ok: false, error: "already_reported" };
     if (error.message === "report_own_content") return { ok: false, error: "own_content" };
     if (error.message === "report_target_not_found") return { ok: false, error: "not_found" };
+    if (error.message.startsWith("rate_limit")) return { ok: false, error: "rate_limit" };
     console.error("report_content failed", error);
     return { ok: false, error: "failed" };
   }

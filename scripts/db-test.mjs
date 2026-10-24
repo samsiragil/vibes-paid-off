@@ -37,7 +37,10 @@ try {
     writeFileSync(sqlPath, `${setup}\n${readFileSync(join(testsDir, file), "utf8")}\n${finish}`);
 
     const run = spawnSync("supabase", ["db", "query", target, "-f", sqlPath], { encoding: "utf8" });
-    const output = unescape(`${run.stdout}\n${run.stderr}`);
+    // Newer CLIs return the error as JSON, so newlines and quotes arrive escaped (once or twice).
+    const output = unescape(`${run.stdout}\n${run.stderr}`)
+      .replace(/\\+n/g, "\n")
+      .replace(/\\+"/g, '"');
     const match = output.match(/TAP_RESULTS\n([\s\S]*?)\nTAP_END/);
 
     console.log(`\n# ${file}`);

@@ -10,6 +10,30 @@ const sizes = {
 
 const pixels = { xs: 26, sm: 34, md: 40, lg: 84 } as const;
 
+/**
+ * OAuth avatars come at full size (GitHub serves up to 460 px, hundreds of KB). Both providers
+ * resize through the URL, so ask for twice the rendered size (sharp on 2x screens).
+ */
+export function sizedAvatarUrl(src: string, pixels: number) {
+  const size = pixels * 2;
+  try {
+    const url = new URL(src);
+    if (url.hostname === "avatars.githubusercontent.com") {
+      url.searchParams.set("s", String(size));
+      return url.toString();
+    }
+    if (url.hostname.endsWith(".googleusercontent.com") && !url.search) {
+      // ".../a/ACg8oc...=s96-c" → "=s{size}-c"; append when there is no size suffix yet.
+      return /=s\d+(-c)?$/.test(url.pathname)
+        ? src.replace(/=s\d+(-c)?$/, `=s${size}-c`)
+        : `${src}=s${size}-c`;
+    }
+  } catch {
+    // Not a URL we know how to resize: use it as is.
+  }
+  return src;
+}
+
 export function initialsOf(name: string) {
   const parts = name.trim().split(/\s+/).filter(Boolean);
   const letters =
@@ -39,7 +63,7 @@ export function Avatar({
     return (
       <span className={classes}>
         <Image
-          src={src}
+          src={sizedAvatarUrl(src, pixels[size])}
           alt=""
           width={pixels[size]}
           height={pixels[size]}

@@ -471,7 +471,8 @@ const samplePicks: WeeklyPickView[] = [
 ];
 
 export default function DevPagesPage({ searchParams }: PageProps<"/[locale]/dev/pages">) {
-  if (process.env.VERCEL_ENV === "production") notFound();
+  // Local development only: hidden on every Vercel deployment, previews included.
+  if (process.env.VERCEL_ENV) notFound();
 
   return (
     <>
@@ -624,7 +625,7 @@ async function Preview({
               ),
               profile: (
                 <ProfileForm
-                  profileHost="vibespaidoff.dev/u/"
+                  profileHost="jadinya.dev/u/"
                   initialValues={{
                     displayName: "Ragil Samsi",
                     username: "ragil",

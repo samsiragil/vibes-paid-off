@@ -555,6 +555,7 @@ function ReplyForm({
         <div className="px-2">
           <Turnstile
             ref={turnstileRef}
+            action="reply"
             siteKey={turnstileSiteKey}
             language={locale}
             onToken={setTurnstileToken}
