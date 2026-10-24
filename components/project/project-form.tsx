@@ -589,6 +589,7 @@ function ProjectFormBody({
               <span className="sr-only">{t("turnstile")}</span>
               <Turnstile
                 ref={turnstileRef}
+                action="submit_project"
                 siteKey={turnstileSiteKey}
                 language={locale}
                 onToken={setTurnstileToken}

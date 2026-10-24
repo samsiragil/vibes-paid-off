@@ -2,13 +2,14 @@ import "server-only";
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import type { Database } from "./database.types";
-import { supabasePublishableKey, supabaseUrl } from "./env";
+import { authCookieOptions, supabasePublishableKey, supabaseUrl } from "./env";
 
 /** Supabase client acting as the signed-in user (RLS applies). For Server Components, actions and route handlers. */
 export async function createClient() {
   const cookieStore = await cookies();
 
   return createServerClient<Database>(supabaseUrl, supabasePublishableKey, {
+    cookieOptions: authCookieOptions,
     cookies: {
       getAll: () => cookieStore.getAll(),
       setAll(cookiesToSet) {

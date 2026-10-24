@@ -1,7 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import type { NextRequest, NextResponse } from "next/server";
 import type { Database } from "./database.types";
-import { supabasePublishableKey, supabaseUrl } from "./env";
+import { authCookieOptions, supabasePublishableKey, supabaseUrl } from "./env";
 
 /**
  * Refreshes an expiring session and writes the new auth cookies onto `response`
@@ -9,6 +9,7 @@ import { supabasePublishableKey, supabaseUrl } from "./env";
  */
 export async function updateSession(request: NextRequest, response: NextResponse) {
   const supabase = createServerClient<Database>(supabaseUrl, supabasePublishableKey, {
+    cookieOptions: authCookieOptions,
     cookies: {
       getAll: () => request.cookies.getAll(),
       setAll(cookiesToSet, headers) {

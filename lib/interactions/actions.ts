@@ -1,7 +1,6 @@
 "use server";
 
 import { revalidateTag, updateTag } from "next/cache";
-import { headers } from "next/headers";
 import { z } from "zod";
 import { LISTINGS_TAG, makerTag, projectTag, repliesTag } from "@/lib/cache-tags";
 import { getCurrentUser } from "@/lib/auth/current-user";
@@ -127,12 +126,7 @@ export async function postReply(request: {
     };
   }
 
-  const headerList = await headers();
-  const remoteIp =
-    headerList.get("cf-connecting-ip") ??
-    headerList.get("x-forwarded-for")?.split(",")[0]?.trim() ??
-    null;
-  if (!(await verifyTurnstile(turnstileToken, remoteIp))) return { ok: false, error: "captcha" };
+  if (!(await verifyTurnstile(turnstileToken, "reply"))) return { ok: false, error: "captcha" };
 
   const supabase = await createClient();
   const { data, error } = await supabase

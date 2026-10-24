@@ -11,6 +11,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "messages:check": "node scripts/check-messages.mjs",
+    "test": "node --experimental-strip-types --test \"lib/**/*.test.mjs\"",
     "db:push": "supabase db push --linked",
     "db:types": "supabase gen types typescript --linked --schema public > lib/supabase/database.types.ts && prettier --write lib/supabase/database.types.ts",
     "db:test": "node scripts/db-test.mjs",

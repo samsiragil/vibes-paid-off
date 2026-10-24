@@ -1,7 +1,6 @@
 "use server";
 
 import { updateTag } from "next/cache";
-import { headers } from "next/headers";
 import { z } from "zod";
 import { LISTINGS_TAG, makerTag, projectSlugTag, projectTag, TOOLS_TAG } from "@/lib/cache-tags";
 import { slugify } from "@/lib/slug";
@@ -59,12 +58,8 @@ export async function saveProject(request: {
   }
 
   if (!projectId) {
-    const headerList = await headers();
-    const remoteIp =
-      headerList.get("cf-connecting-ip") ??
-      headerList.get("x-forwarded-for")?.split(",")[0]?.trim() ??
-      null;
-    if (!(await verifyTurnstile(turnstileToken, remoteIp))) return { ok: false, error: "captcha" };
+    if (!(await verifyTurnstile(turnstileToken, "submit_project")))
+      return { ok: false, error: "captcha" };
   }
 
   const { data, error } = await supabase.rpc("upsert_project", {
