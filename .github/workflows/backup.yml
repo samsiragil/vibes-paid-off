@@ -31,10 +31,11 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v4
-      - uses: supabase/setup-cli@v1
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      # Pinned: the dump step relies on this CLI reading the password from PGPASSWORD.
+      - uses: supabase/setup-cli@1dedf2c611547ede7232d26866dd3c56ab903bbb # v1.7.3
         with:
-          version: latest
+          version: 2.109.0
 
       - name: Dump database
         id: dump
@@ -46,12 +47,25 @@ jobs:
             echo "::error::Set the repository secret SUPABASE_DB_URL."
             exit 1
           fi
+          # Keep the password out of the command lines (visible to every process on the runner):
+          # the CLI gets the URL without it and reads the decoded password from PGPASSWORD.
+          eval "$(python3 - <<'PY'
+          import os, shlex, urllib.parse
+          url = urllib.parse.urlsplit(os.environ["SUPABASE_DB_URL"])
+          userinfo, host = url.netloc.rsplit("@", 1)
+          user = userinfo.split(":", 1)[0]
+          print("export PGPASSWORD=" + shlex.quote(urllib.parse.unquote(url.password or "")))
+          print("export DUMP_URL=" + shlex.quote(urllib.parse.urlunsplit(url._replace(netloc=user + "@" + host))))
+          PY
+          )"
+          echo "::add-mask::$PGPASSWORD"
+          unset SUPABASE_DB_URL
           name="vpo-db-$(date -u +%Y-%m-%dT%H%M%SZ)"
           mkdir "$name"
           # Supabase's documented split: roles, schema, then data with triggers off on restore.
-          supabase db dump --db-url "$SUPABASE_DB_URL" --role-only -f "$name/roles.sql"
-          supabase db dump --db-url "$SUPABASE_DB_URL" -f "$name/schema.sql"
-          supabase db dump --db-url "$SUPABASE_DB_URL" --data-only --use-copy \
+          supabase db dump --db-url "$DUMP_URL" --role-only -f "$name/roles.sql"
+          supabase db dump --db-url "$DUMP_URL" -f "$name/schema.sql"
+          supabase db dump --db-url "$DUMP_URL" --data-only --use-copy \
             -x cron.job_run_details -f "$name/data.sql"
           # An empty or partial dump must fail the run, not replace a good backup.
           grep -q 'CREATE TABLE IF NOT EXISTS "public"."projects"' "$name/schema.sql"
@@ -60,8 +74,8 @@ jobs:
           ls -l "$name" "$name.tar.gz"
           echo "file=$name.tar.gz" >> "$GITHUB_OUTPUT"
 
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4.3.0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version-file: .nvmrc
           cache: pnpm
