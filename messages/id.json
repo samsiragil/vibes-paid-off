@@ -529,7 +529,7 @@
         "project": "Laporkan proyek ini",
         "reply": "Laporkan balasan ini"
       },
-      "intro": "Laporan tidak ditampilkan ke siapa pun selain admin. Kalau tiga akun berbeda melapor, kontennya disembunyikan dulu sampai admin meninjau.",
+      "intro": "Laporan tidak ditampilkan ke siapa pun selain admin. Kalau tiga akun lama (punya username, berumur lebih dari 3 hari) melapor, kontennya disembunyikan dulu sampai admin meninjau.",
       "reasonLabel": "Alasannya",
       "reasons": {
         "spam": "Spam atau promosi",
@@ -556,6 +556,7 @@
         "own_content": "Kamu tidak bisa melaporkan kontenmu sendiri.",
         "not_found": "Konten ini sudah tidak tayang.",
         "invalid": "Pilih salah satu alasan dulu.",
+        "rate_limit": "Kamu sudah mengirim 10 laporan hari ini. Coba lagi besok.",
         "failed": "Gagal mengirim laporan. Coba lagi sebentar."
       }
     }
@@ -715,7 +716,7 @@
     },
     "reports": {
       "title": "Laporan",
-      "lede": "Proyek atau balasan yang dilaporkan 3 akun berbeda otomatis disembunyikan sampai kamu periksa.",
+      "lede": "Proyek atau balasan yang dilaporkan 3 akun lama (punya username, berumur lebih dari 3 hari) otomatis disembunyikan sampai kamu periksa.",
       "empty": "Tidak ada laporan terbuka. Komunitasnya lagi adem.",
       "autoHidden": "Disembunyikan otomatis",
       "hidden": "Disembunyikan",
@@ -963,7 +964,7 @@
       "title": "Cara moderasinya",
       "review": "Proyek pertama setiap maker dicek admin dulu, biasanya dalam 48 jam. Setelah disetujui, kamu jadi maker terpercaya dan proyek berikutnya langsung tayang.",
       "rejected": "Kalau ditolak, alasannya muncul di dashboard. Kamu bisa memperbaiki proyeknya lalu mengirim ulang.",
-      "reports": "Siapa pun yang sudah login bisa melaporkan proyek atau balasan. Setelah dilaporkan 3 akun berbeda, kontennya otomatis disembunyikan sampai admin memeriksanya.",
+      "reports": "Siapa pun yang sudah login bisa melaporkan proyek atau balasan, maksimal 10 laporan sehari. Setelah dilaporkan 3 akun lama (punya username, berumur lebih dari 3 hari), kontennya otomatis disembunyikan sampai admin memeriksanya.",
       "actions": "Admin bisa memulihkan, menyembunyikan, atau menghapus konten, dan mencabut status maker terpercaya kalau aturan dilanggar berulang kali.",
       "ranking": "Admin nggak bisa memilih atau menaikkan proyek. Peringkat dihitung dari rumus yang sama untuk semua. <link>Lihat cara kami memilih</link>"
     },

@@ -200,7 +200,13 @@ export type ReportResult =
   | {
       ok: false;
       error:
-        "unauthorized" | "already_reported" | "own_content" | "not_found" | "invalid" | "failed";
+        | "unauthorized"
+        | "already_reported"
+        | "own_content"
+        | "not_found"
+        | "rate_limit"
+        | "invalid"
+        | "failed";
     };
 
 const reportResultSchema = z.object({
@@ -210,8 +216,9 @@ const reportResultSchema = z.object({
 });
 
 /**
- * Reports a project or a reply with a reason and an optional note. The third report from a
- * different account hides the target at once (database trigger); the pages showing it follow.
+ * Reports a project or a reply with a reason and an optional note. The third open report from an
+ * established account (username, older than 72 hours) hides the target at once (database
+ * trigger); the pages showing it follow. Each account may file 10 reports per 24 hours.
  */
 export async function reportContent(input: unknown): Promise<ReportResult> {
   const parsed = reportSchema.safeParse(input);
@@ -229,6 +236,7 @@ export async function reportContent(input: unknown): Promise<ReportResult> {
     if (error.code === "23505") return { ok: false, error: "already_reported" };
     if (error.message === "report_own_content") return { ok: false, error: "own_content" };
     if (error.message === "report_target_not_found") return { ok: false, error: "not_found" };
+    if (error.message.startsWith("rate_limit")) return { ok: false, error: "rate_limit" };
     console.error("report_content failed", error);
     return { ok: false, error: "failed" };
   }

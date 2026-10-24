@@ -136,6 +136,8 @@ select tap.emit(throws_ok(
   $$ select report_content('project', tap.id('kasir'), 'scam') $$, '23505', null,
   'report: same account twice refused'
 ));
+-- report_count is not readable through the Data API; check it as postgres.
+select tap.as_postgres();
 select tap.emit(is(
   (select report_count from projects where id = tap.id('kasir')), 1, 'report: duplicate not counted'
 ));

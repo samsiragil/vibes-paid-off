@@ -529,7 +529,7 @@
         "project": "Report this project",
         "reply": "Report this reply"
       },
-      "intro": "Reports are only shown to admins. When three different accounts report something, it is hidden until an admin reviews it.",
+      "intro": "Reports are only shown to admins. When three established accounts (with a username, older than 3 days) report something, it is hidden until an admin reviews it.",
       "reasonLabel": "Reason",
       "reasons": {
         "spam": "Spam or promotion",
@@ -556,6 +556,7 @@
         "own_content": "You can't report your own content.",
         "not_found": "This content is no longer public.",
         "invalid": "Pick a reason first.",
+        "rate_limit": "You've sent the maximum of 10 reports today. Try again tomorrow.",
         "failed": "Couldn't send the report. Try again in a moment."
       }
     }
@@ -715,7 +716,7 @@
     },
     "reports": {
       "title": "Reports",
-      "lede": "Projects or replies reported by 3 different accounts are hidden automatically until you check them.",
+      "lede": "Projects or replies reported by 3 established accounts (with a username, older than 3 days) are hidden automatically until you check them.",
       "empty": "No open reports. The community is chill right now.",
       "autoHidden": "Hidden automatically",
       "hidden": "Hidden",
@@ -963,7 +964,7 @@
       "title": "How moderation works",
       "review": "Every maker's first project is checked by an admin, usually within 48 hours. Once approved, you become a trusted maker and your next projects go live right away.",
       "rejected": "If it's rejected, the reason shows up in your dashboard. You can fix the project and send it again.",
-      "reports": "Anyone logged in can report a project or a reply. Once 3 different accounts report it, it's hidden automatically until an admin reviews it.",
+      "reports": "Anyone logged in can report a project or a reply, up to 10 reports a day. Once 3 established accounts (with a username, older than 3 days) report it, it's hidden automatically until an admin reviews it.",
       "actions": "Admins can restore, hide, or remove content, and revoke trusted maker status after repeated violations.",
       "ranking": "Admins can't pick or boost projects. Rankings come from the same formula for everyone. <link>See how we pick</link>"
     },
