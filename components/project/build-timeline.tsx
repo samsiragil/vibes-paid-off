@@ -1,9 +1,63 @@
 import { getTranslations } from "next-intl/server";
-import type { ProjectSessionView } from "@/lib/projects/detail";
+import type { ProjectDetail, ProjectSessionView } from "@/lib/projects/detail";
 
 /**
- * "Cara membuatnya": each build session as a short chat — the prompt (right), what came out
- * (left), and the obstacle with its fix when the maker wrote one.
+ * "Cara membuatnya": the story moments the maker chose to tell — the prompt that made them go
+ * "wah" (as their chat bubble), the hardest part, build sessions from the old form, and what
+ * they would do differently.
+ */
+export async function BuildStory({ project }: { project: ProjectDetail }) {
+  const t = await getTranslations("project.moments");
+
+  return (
+    <div className="flex flex-col gap-[18px]">
+      {project.momentWow ? (
+        <div className="flex flex-col items-end gap-2">
+          <p className="font-mono text-[11px] tracking-[0.4px] text-accent-text uppercase">
+            {t("wow")}
+          </p>
+          <p className="max-w-[88%] rounded-[20px] rounded-br-md bg-ink px-[18px] py-3.5 text-base leading-normal break-words whitespace-pre-line text-bg sm:max-w-[72%]">
+            {project.momentWow}
+          </p>
+        </div>
+      ) : null}
+
+      {project.momentHardest ? (
+        <div className="flex max-w-full gap-3 self-center rounded-2xl border border-ink bg-surface px-[18px] py-3.5 sm:max-w-[80%]">
+          <WarningIcon />
+          <div className="min-w-0">
+            <p className="font-mono text-[11px] text-muted uppercase">{t("hardest")}</p>
+            <p className="mt-1 text-[15px] leading-normal break-words whitespace-pre-line">
+              {project.momentHardest}
+            </p>
+          </div>
+        </div>
+      ) : null}
+
+      {project.sessions.length > 0 ? (
+        <section className="flex flex-col gap-[18px]">
+          <h3 className="sr-only">{t("sessions")}</h3>
+          <BuildTimeline sessions={project.sessions} />
+        </section>
+      ) : null}
+
+      {project.lessons ? (
+        <section className="mt-4 border-y border-border py-7">
+          <h3 className="font-mono text-[11px] tracking-[0.4px] text-accent-text uppercase">
+            {t("redo")}
+          </h3>
+          <p className="mt-2.5 font-display text-[22px] leading-[1.35] break-words whitespace-pre-line italic sm:text-[26px]">
+            {project.lessons}
+          </p>
+        </section>
+      ) : null}
+    </div>
+  );
+}
+
+/**
+ * Build sessions from before build_effort: each one as a short chat — the prompt (right), what
+ * came out (left), and the obstacle with its fix when the maker wrote one.
  */
 export async function BuildTimeline({ sessions }: { sessions: ProjectSessionView[] }) {
   const t = await getTranslations("project.timeline");

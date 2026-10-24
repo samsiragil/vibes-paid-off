@@ -15,13 +15,13 @@ create function tap.payload(title text, suggestion text default null) returns js
     'title', title,
     'tagline', 'Tagline ' || title,
     'key_prompt', 'Prompt kunci ' || title,
+    'build_effort', 'overnight',
     'live_url', 'https://example.com/app',
     'category', 'umkm',
     'content_lang', 'id',
     'tool_ids', jsonb_build_array(tap.tool('claude-code')),
     'suggestions', case when suggestion is null then '[]'::jsonb
-      else jsonb_build_array(jsonb_build_object('name', suggestion, 'url', 'https://foo.example.com')) end,
-    'sessions', jsonb_build_array(jsonb_build_object('duration_hours', 2, 'prompt', 'Bikin', 'result', 'Jadi'))
+      else jsonb_build_array(jsonb_build_object('name', suggestion, 'url', 'https://foo.example.com')) end
   );
 $$;
 
@@ -117,20 +117,18 @@ select tap.emit(results_eq(
 ));
 select tap.as_user(tap.id('admin'));
 
--- Resubmitting through the edit form, with no content change (sessions only).
+-- Resubmitting through the edit form, with no content change (tools only).
 select tap.as_postgres();
 update projects set submitted_at = '2020-01-01' where id = tap.id('second-try');
 select tap.as_user(tap.id('newbie'));
 select upsert_project(
   p_project_id => tap.id('second-try'),
-  p_project => tap.payload('Kedua') || jsonb_build_object('sessions', jsonb_build_array(
-    jsonb_build_object('duration_hours', 3, 'prompt', 'Perbaiki link', 'result', 'Link jalan')
-  ))
+  p_project => tap.payload('Kedua') || jsonb_build_object('tool_ids', jsonb_build_array(tap.tool('claude-code'), tap.tool('cursor')))
 );
 select tap.emit(results_eq(
   $$ select status::text, reject_code, reject_reason, submitted_at > '2020-01-01' from projects where id = tap.id('second-try') $$,
   $$ values ('pending', null::text, null::text, true) $$,
-  'resubmit: saving a rejected project (sessions only) puts it back in the queue, clock restarted'
+  'resubmit: saving a rejected project (tools only) puts it back in the queue, clock restarted'
 ));
 
 -- Content edits resubmit too (the trigger path).

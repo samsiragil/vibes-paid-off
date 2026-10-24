@@ -1,5 +1,10 @@
 import "server-only";
-import { isAiTool, type ToolKind, type ProjectStatus } from "@/lib/projects/types";
+import {
+  isAiTool,
+  type BuildEffort,
+  type ToolKind,
+  type ProjectStatus,
+} from "@/lib/projects/types";
 import { createClient } from "@/lib/supabase/server";
 import type { ReportReason } from "@/lib/validation/interactions";
 
@@ -49,8 +54,7 @@ export type QueueItem = {
   keyPrompt: string;
   liveUrl: string;
   category: string;
-  buildTimeHours: number;
-  sessionCount: number;
+  buildEffort: BuildEffort;
   submittedAt: string;
   /** Sent again after a rejection (the clock restarted). */
   resubmitted: boolean;
@@ -66,7 +70,7 @@ export async function getReviewQueue(): Promise<{ items: QueueItem[]; now: numbe
   const { data, error } = await supabase
     .from("projects")
     .select(
-      `id, slug, title, tagline, key_prompt, live_url, category, build_time_hours, session_count,
+      `id, slug, title, tagline, key_prompt, live_url, category, build_effort,
        submitted_at, created_at,
        owner:profiles!projects_owner_id_fkey (id, username, display_name, avatar_url, is_trusted),
        project_media (r2_key, sort_order),
@@ -91,8 +95,7 @@ export async function getReviewQueue(): Promise<{ items: QueueItem[]; now: numbe
       keyPrompt: row.key_prompt,
       liveUrl: row.live_url,
       category: row.category,
-      buildTimeHours: Number(row.build_time_hours),
-      sessionCount: row.session_count,
+      buildEffort: row.build_effort,
       submittedAt: row.submitted_at,
       resubmitted: Date.parse(row.submitted_at) - Date.parse(row.created_at) > 60_000,
       coverKey:

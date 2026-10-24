@@ -8,6 +8,7 @@ import { createPublicClient } from "@/lib/supabase/public";
 import { createClient } from "@/lib/supabase/server";
 import {
   isAiTool,
+  type BuildEffort,
   type ContentLang,
   type LinkStatus,
   type ProjectStatus,
@@ -50,7 +51,12 @@ export type ProjectDetail = {
   tagline: string;
   description: string;
   keyPrompt: string;
+  buildEffort: BuildEffort;
+  momentWow: string | null;
+  momentHardest: string | null;
+  /** "Kalau mulai ulang", the third story moment. */
   lessons: string | null;
+  hasStory: boolean;
   liveUrl: string;
   repoUrl: string | null;
   videoUrl: string | null;
@@ -61,12 +67,11 @@ export type ProjectDetail = {
   rejectReason: string | null;
   linkStatus: LinkStatus;
   lastCheckedAt: string | null;
-  buildTimeHours: number;
-  sessionCount: number;
   upvoteCount: number;
   publishedAt: string | null;
   createdAt: string;
   maker: ProjectMaker;
+  /** Build sessions from before build_effort (read-only now). */
   sessions: ProjectSessionView[];
   media: ProjectMedia[];
   /** AI tools first, then the rest, then suggestions (§2.8). */
@@ -79,9 +84,9 @@ const slugPattern = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 const OTHER_PROJECTS = 3;
 
 const DETAIL_SELECT = `
-  id, slug, owner_id, title, tagline, description, key_prompt, lessons, live_url, repo_url,
-  video_url, category, content_lang, status, reject_code, reject_reason, link_status, last_checked_at,
-  build_time_hours, session_count, upvote_count, published_at, created_at,
+  id, slug, owner_id, title, tagline, description, key_prompt, build_effort, moment_wow,
+  moment_hardest, lessons, has_story, live_url, repo_url, video_url, category, content_lang, status,
+  reject_code, reject_reason, link_status, last_checked_at, upvote_count, published_at, created_at,
   owner:profiles!projects_owner_id_fkey (id, username, display_name, avatar_url, bio, tip_url, is_trusted),
   project_sessions (id, sort_order, label, duration_hours, prompt, result, challenge, solution),
   project_media (id, r2_key, width, height, sort_order),
@@ -138,7 +143,11 @@ async function loadProject(
     tagline: row.tagline,
     description: row.description,
     keyPrompt: row.key_prompt,
+    buildEffort: row.build_effort,
+    momentWow: row.moment_wow || null,
+    momentHardest: row.moment_hardest || null,
     lessons: row.lessons || null,
+    hasStory: row.has_story,
     liveUrl: row.live_url,
     repoUrl: row.repo_url,
     videoUrl: row.video_url,
@@ -149,8 +158,6 @@ async function loadProject(
     rejectReason: row.reject_reason,
     linkStatus: row.link_status,
     lastCheckedAt: row.last_checked_at,
-    buildTimeHours: Number(row.build_time_hours),
-    sessionCount: row.session_count,
     upvoteCount: row.upvote_count,
     publishedAt: row.published_at,
     createdAt: row.created_at,

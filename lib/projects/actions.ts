@@ -28,6 +28,8 @@ const requestSchema = z.object({
   project: z.unknown(),
 });
 
+const projectIdSchema = z.uuid();
+
 const resultSchema = z.object({
   id: z.uuid(),
   slug: z.string(),
@@ -35,7 +37,7 @@ const resultSchema = z.object({
 });
 
 /**
- * Creates or edits a project with its sessions and tools in one transaction (upsert_project).
+ * Creates or edits a project with its tools in one transaction (upsert_project).
  * The database decides status (pending, or published for trusted makers), rate limits and
  * ownership; this action validates input and checks Turnstile on new submissions.
  */
@@ -95,4 +97,29 @@ export async function saveProject(request: {
     updateTag(TOOLS_TAG);
   }
   return { ok: true, ...saved.data };
+}
+
+/**
+ * "Nanti aja" on the /me nudge to add a build story: it stops showing for that project. RLS
+ * limits the update to the owner's own projects; the column is not content, so it never sends a
+ * project back to review.
+ */
+export async function dismissStoryNudge(projectId: string): Promise<{ ok: boolean }> {
+  const parsed = projectIdSchema.safeParse(projectId);
+  if (!parsed.success) return { ok: false };
+
+  const supabase = await createClient();
+  const { data: claims } = await supabase.auth.getClaims();
+  if (!claims?.claims?.sub) return { ok: false };
+
+  const { error } = await supabase
+    .from("projects")
+    .update({ story_nudge_dismissed_at: new Date().toISOString() })
+    .eq("id", parsed.data)
+    .eq("owner_id", claims.claims.sub);
+  if (error) {
+    console.error("dismissStoryNudge failed", error);
+    return { ok: false };
+  }
+  return { ok: true };
 }

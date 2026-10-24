@@ -201,6 +201,12 @@
       "approved": "Kabar baik: <strong>{title}</strong> sudah disetujui admin dan tayang. Mulai sekarang kamu maker terpercaya, jadi proyek berikutnya langsung tayang.",
       "rejected": "<strong>{title}</strong> belum bisa tayang. Alasannya: {reason}. <edit>Perbaiki proyeknya</edit>, lalu simpan untuk mengirim ulang ke review.",
       "rejectedNoReason": "<strong>{title}</strong> belum bisa tayang. <edit>Perbaiki proyeknya</edit>, lalu simpan untuk mengirim ulang ke review."
+    },
+    "nudge": {
+      "upvotes": "{count, plural, other {# orang}} bilang <strong>{title}</strong> worth it. Mereka penasaran gimana kamu bikinnya.",
+      "aged": "<strong>{title}</strong> sudah tayang seminggu. Ceritain gimana kamu bikinnya, biar orang makin penasaran.",
+      "cta": "Ceritain",
+      "dismiss": "Nanti aja"
     }
   },
   "categories": {
@@ -256,11 +262,11 @@
     }
   },
   "projectCard": {
-    "timeAfter": "{hours, number} jam kemudian",
-    "timeAfterSessions": "{hours, number} jam dan {sessions} sesi kemudian",
     "worthIt": "Worth it · {count}",
     "moreTools": "+{count}",
-    "hours": "{hours, number} jam"
+    "effortAfter": "{effort, select, hours {beberapa jam kemudian} overnight {semalam kemudian} weekend {satu weekend kemudian} week {seminggu kemudian} other {berminggu-minggu kemudian}}",
+    "effort": "{effort, select, hours {Beberapa jam} overnight {Semalam} weekend {Satu weekend} week {Seminggu} other {Berminggu-minggu}}",
+    "story": "ada cerita build"
   },
   "projectForm": {
     "metaSubmit": "Pamerin proyekmu",
@@ -282,12 +288,11 @@
     "draftDiscard": "Mulai dari awal",
     "optional": "(opsional)",
     "steps": {
-      "prompt": "Mulai dari yang paling penting: <strong>apa prompt kuncinya?</strong> Kalimat ini bakal jadi pembuka kartu proyekmu.",
-      "result": "Mantap. Terus <strong>jadinya apa?</strong>",
-      "media": "<strong>Kirim screenshot-nya dong.</strong> Maksimal 3, nanti otomatis dikompres. Video demo juga boleh.",
+      "link": "Mulai dari <strong>link live-nya.</strong> Judul, tagline, dan screenshot kami coba isi otomatis dari halamanmu.",
+      "prompt": "Sekarang yang paling penting: <strong>apa prompt kuncinya?</strong> Satu kalimat yang paling “ini dia”. Kalimat ini jadi pembuka kartumu.",
+      "effort": "<strong>Kira-kira berapa lama sampai jadi?</strong> Nggak perlu tepat.",
       "tools": "<strong>Pakai tools apa?</strong> Pilih semua yang kamu pakai, dari agen AI sampai hosting.",
-      "sessions": "<strong>Ceritain sesi pembuatannya.</strong> Satu sesi = sekali duduk ngoding. Total jamnya jadi “X jam kemudian” di kartu.",
-      "lessons": "Terakhir, <strong>apa pelajaran yang kamu dapat?</strong> Boleh dilewati, tapi bagian ini yang paling dicari orang.",
+      "story": "<strong>Mau sekalian cerita?</strong> Pilih momen yang paling seru, nggak harus semua. Boleh juga nanti, lewat Edit proyek.",
       "rules": "Sebelum kirim, ingat <link>aturan komunitas</link> ya:"
     },
     "rules": {
@@ -314,8 +319,6 @@
     "category": "Kategori",
     "categoryPlaceholder": "Pilih kategori",
     "contentLang": "Bahasa konten",
-    "lessons": "Pelajaran",
-    "lessonsPlaceholder": "Tulis prompt dari sudut pandang pemakainya.",
     "tools": {
       "quickPicks": "Tools populer",
       "search": "Cari tools lain",
@@ -334,35 +337,13 @@
       "suggested": "baru",
       "hint": "Minimal satu tools AI (agen, app builder, atau asisten AI)."
     },
-    "sessions": {
-      "heading": "Sesi {number}",
-      "label": "Label",
-      "labelPlaceholder": "Sabtu malam",
-      "duration": "Durasi (jam)",
-      "durationHint": "0,5–24 jam, kelipatan setengah jam.",
-      "prompt": "Prompt utama",
-      "promptPlaceholder": "Apa yang kamu minta ke AI di sesi ini?",
-      "result": "Hasilnya",
-      "resultPlaceholder": "Apa yang jadi di akhir sesi?",
-      "hasChallenge": "Ada kendala di sesi ini",
-      "challenge": "Kendala",
-      "challengePlaceholder": "Login Google bentrok di Android lama.",
-      "solution": "Solusinya",
-      "solutionPlaceholder": "Ganti ke magic link email.",
-      "add": "Tambah sesi",
-      "count": "{count}/{max} sesi",
-      "total": "Total {hours, number} jam dalam {sessions} sesi",
-      "moveUp": "Naikkan sesi {number}",
-      "moveDown": "Turunkan sesi {number}",
-      "remove": "Hapus sesi {number}"
-    },
     "preview": {
       "label": "Pratinjau kartu",
       "note": "Begini kartumu tampil di beranda, jelajah, dan profilmu.",
       "prompt": "Prompt kuncimu muncul di sini",
       "title": "Judul proyek",
       "tools": "Tools",
-      "time": "X jam kemudian"
+      "time": "X kemudian"
     },
     "turnstile": "Verifikasi keamanan",
     "submit": "Kirim untuk review",
@@ -376,8 +357,6 @@
       "too_long": "Kepanjangan, coba dipersingkat.",
       "invalid_url": "Pakai link lengkap yang diawali https://",
       "invalid_video_url": "Hanya link YouTube atau Loom.",
-      "invalid_duration": "Isi 0,5–24 jam, kelipatan setengah jam.",
-      "solution_needs_challenge": "Isi kendalanya dulu, baru solusinya.",
       "ai_tool_required": "Pilih minimal satu tools AI.",
       "too_many": "Kebanyakan. Kurangi sedikit, ya.",
       "invalid": "Isian ini belum valid."
@@ -397,10 +376,41 @@
       "mediaFailed": "Proyeknya tersimpan, tapi ada gambar yang gagal diunggah. Unggah ulang dari halaman edit, ya.",
       "view": "Lihat proyek",
       "edit": "Edit proyek",
-      "another": "Pamerin proyek lain"
+      "another": "Pamerin proyek lain",
+      "story": "Cerita build-nya bisa nyusul kapan aja.",
+      "addStory": "Tambah cerita build"
     },
     "saved": "Perubahan tersimpan.",
-    "savedPending": "Perubahan tersimpan. Proyekmu masuk antrean review lagi."
+    "savedPending": "Perubahan tersimpan. Proyekmu masuk antrean review lagi.",
+    "screenshots": "Screenshot",
+    "extras": "Detail lain",
+    "extrasHint": "deskripsi dan video demo, opsional",
+    "effortLegend": "Lama pembuatan",
+    "autofill": {
+      "fetch": "Ambil info",
+      "fetching": "Mengambil info…",
+      "filled": "Terisi dari halamanmu. Cek lagi, ya.",
+      "nothing": "Halamannya belum bisa dibaca otomatis. Isi manual saja, ya.",
+      "repo": "Dari repo: {commits, plural, other {# commit}} dalam {days, plural, other {# hari aktif}}.",
+      "repoFailed": "Repo-nya belum bisa dibaca (privat, atau link-nya salah?).",
+      "suggested": "saran dari repo",
+      "imageFailed": "Screenshot dari halamanmu belum bisa diambil. Unggah manual, ya.",
+      "failed": "Gagal mengambil info. Coba lagi, atau isi manual."
+    },
+    "moments": {
+      "wow": "Prompt yang bikin “wah”",
+      "wowQuestion": "Prompt mana yang hasilnya paling bikin kaget? Tulis prompt-nya dan apa yang terjadi.",
+      "wowPlaceholder": "“Bikin tombolnya segede jempol.” Langsung jadi, tanpa revisi.",
+      "hardest": "Kendala terbesar",
+      "hardestQuestion": "Bagian paling bikin frustrasi, dan gimana kamu lolos?",
+      "hardestPlaceholder": "Login Google bentrok di Android lama. Akhirnya ganti ke magic link email.",
+      "redo": "Kalau mulai ulang",
+      "redoQuestion": "Apa yang bakal kamu lakuin beda?",
+      "redoPlaceholder": "Tulis prompt dari sudut pandang pemakainya sejak awal.",
+      "tell": "Ceritain",
+      "remove": "Hapus {moment}",
+      "legacy": "Proyek ini juga punya {count, plural, other {# sesi}} pembuatan dari form lama. Sesi itu tetap tampil di halaman proyek."
+    }
   },
   "linkStatus": {
     "live": "Live",
@@ -428,7 +438,6 @@
     "about": "Tentang proyek ini",
     "howLead": "Cara",
     "howTail": "membuatnya",
-    "lessonsFrom": "Pelajaran dari {name}",
     "trusted": "maker terpercaya",
     "viewProfile": "Lihat profil",
     "tip": "Traktir {name} kopi",
@@ -436,7 +445,6 @@
     "meta": {
       "tools": "Tools",
       "buildTime": "Lama bikin",
-      "buildTimeValue": "{hours, number} jam, {sessions} sesi",
       "category": "Kategori",
       "repo": "Repo",
       "linkStatus": "Status link",
@@ -469,7 +477,15 @@
       "status": "Status: {status}. Pengunjung lain tidak bisa melihat halaman ini.",
       "reason": "Alasan ditolak: {reason}.",
       "back": "Kembali ke panel admin"
-    }
+    },
+    "moments": {
+      "wow": "Prompt yang bikin “wah”",
+      "hardest": "Kendala terbesar",
+      "redo": "Kalau mulai ulang",
+      "sessions": "Sesi pembuatan"
+    },
+    "storyEmpty": "Belum ada cerita build. Orang biasanya penasaran gimana proyek ini dibikin.",
+    "addStory": "Tambah cerita"
   },
   "interactions": {
     "worthIt": {
@@ -577,8 +593,7 @@
     },
     "stats": {
       "projects": "Obrolan tayang",
-      "hours": "Total waktu bikin",
-      "hoursUnit": "jam",
+      "stories": "Proyek dengan cerita build",
       "upvotes": "Orang bilang worth it",
       "topTool": "Tools andalan"
     },
@@ -587,7 +602,7 @@
     "empty": "{name} belum memamerkan obrolan. Kalau nanti sudah ada, muncul di sini.",
     "og": {
       "projects": "{count} obrolan",
-      "hours": "{hours, number} jam bikin"
+      "stories": "{count, plural, other {# cerita build}}"
     }
   },
   "explore": {
@@ -690,7 +705,7 @@
       "submitted": "dikirim {when}",
       "hoursLeft": "Sisa {hours} jam",
       "overdue": "Lewat {hours} jam",
-      "buildTime": "{hours, number} jam, {sessions} sesi",
+      "buildTime": "{effort, select, hours {Beberapa jam} overnight {Semalam} weekend {Satu weekend} week {Seminggu} other {Berminggu-minggu}}",
       "approve": "Setujui",
       "reject": "Tolak",
       "rejectLabel": "Tolak {title}",

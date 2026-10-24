@@ -9,7 +9,7 @@ import { ShareButton } from "@/components/ui/copy-link";
 import { ExternalLink } from "@/components/ui/external-link";
 import { WorthItCount } from "@/components/interactions/project-interactions";
 import type { ProjectDetail } from "@/lib/projects/detail";
-import { BuildTimeline } from "./build-timeline";
+import { BuildStory } from "./build-timeline";
 import { LinkStatusBadge } from "./link-status-badge";
 import { MediaGallery } from "./media-gallery";
 
@@ -19,8 +19,9 @@ function shortUrl(url: string) {
 }
 
 /**
- * The project page (VPO-Proyek): header with actions, the key prompt → "X jam kemudian" →
- * screenshots conversation, "Cara membuatnya" per session, lessons, and the meta sidebar.
+ * The project page (VPO-Proyek): header with actions, the key prompt → "satu weekend kemudian" →
+ * screenshots conversation, "Cara membuatnya" (the story moments and any build sessions from
+ * before build_effort), and the meta sidebar.
  * `ownerNotice` is shown to the owner while the project is not public; `ownerActions` holds
  * the owner-only buttons (streamed in separately on the cached public page). The public page
  * passes the interactions (Fase 7): the Worth it toggle, replies and the report link; without
@@ -49,13 +50,7 @@ export async function ProjectDetailView({
 
   const maker = project.maker;
   const category = tCategories(project.category);
-  const timeLabel =
-    project.sessionCount > 1
-      ? tCard("timeAfterSessions", {
-          hours: project.buildTimeHours,
-          sessions: project.sessionCount,
-        })
-      : tCard("timeAfter", { hours: project.buildTimeHours });
+  const timeLabel = tCard("effortAfter", { effort: project.buildEffort });
   const checkedDate = project.lastCheckedAt
     ? format.dateTime(new Date(project.lastCheckedAt), { dateStyle: "medium" })
     : null;
@@ -188,25 +183,18 @@ export async function ProjectDetailView({
             </section>
           ) : null}
 
-          <div className="flex items-center gap-4 pt-9 pb-2">
-            <span aria-hidden="true" className="h-px grow bg-border" />
-            <h2 className="font-display text-[28px] font-normal sm:text-[32px]">
-              {t("howLead")} <span className="italic">{t("howTail")}</span>
-            </h2>
-            <span aria-hidden="true" className="h-px grow bg-border" />
-          </div>
+          {project.hasStory ? (
+            <>
+              <div className="flex items-center gap-4 pt-9 pb-2">
+                <span aria-hidden="true" className="h-px grow bg-border" />
+                <h2 className="font-display text-[28px] font-normal sm:text-[32px]">
+                  {t("howLead")} <span className="italic">{t("howTail")}</span>
+                </h2>
+                <span aria-hidden="true" className="h-px grow bg-border" />
+              </div>
 
-          <BuildTimeline sessions={project.sessions} />
-
-          {project.lessons ? (
-            <section className="mt-4 border-y border-border py-7">
-              <h2 className="font-mono text-[11px] tracking-[0.4px] text-accent-text uppercase">
-                {t("lessonsFrom", { name: maker.displayName })}
-              </h2>
-              <p className="mt-2.5 font-display text-[22px] leading-[1.35] break-words whitespace-pre-line italic sm:text-[26px]">
-                {project.lessons}
-              </p>
-            </section>
+              <BuildStory project={project} />
+            </>
           ) : null}
 
           {replies}
@@ -261,12 +249,7 @@ export async function ProjectDetailView({
               </>
             ) : null}
             <MetaTerm>{t("meta.buildTime")}</MetaTerm>
-            <dd>
-              {t("meta.buildTimeValue", {
-                hours: project.buildTimeHours,
-                sessions: project.sessionCount,
-              })}
-            </dd>
+            <dd>{tCard("effort", { effort: project.buildEffort })}</dd>
             <MetaTerm>{t("meta.category")}</MetaTerm>
             <dd>{category}</dd>
             {project.repoUrl ? (

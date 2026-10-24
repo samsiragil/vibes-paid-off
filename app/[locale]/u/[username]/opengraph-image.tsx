@@ -28,7 +28,7 @@ export default async function Image({
   const stats = [
     `@${profile.username}`,
     t("og.projects", { count: profile.stats.projectCount }),
-    t("og.hours", { hours: profile.stats.totalHours }),
+    t("og.stories", { count: profile.stats.storyCount }),
   ].join(" · ");
 
   return renderOgImage(

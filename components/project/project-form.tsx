@@ -17,6 +17,7 @@ import { SystemMessage } from "@/components/ui/bubble";
 import { Button, buttonStyles } from "@/components/ui/button";
 import { Field, Input, Select, Textarea } from "@/components/ui/field";
 import { Link, useRouter } from "@/i18n/navigation";
+import { autofillFromLinks, type AutofillSuggestion } from "@/lib/autofill/actions";
 import { cn } from "@/lib/cn";
 import { donateUrl } from "@/lib/donate";
 import type { ProjectMedia } from "@/lib/media/limits";
@@ -26,38 +27,54 @@ import {
   emptyFormValues,
   fromProjectInput,
   hasContent,
-  parseHours,
   readDraft,
   toProjectInput,
   writeDraft,
   type ProjectFormValues,
-  type SessionValues,
 } from "@/lib/projects/form-values";
 import {
   isAiTool,
   toolsSummary,
+  type BuildEffort,
   type CatalogTool,
   type ContentLang,
   type ProjectStatus,
+  type StoryMoment,
 } from "@/lib/projects/types";
 import {
+  httpsUrlPattern,
   PROJECT_LIMITS,
   projectFieldErrors,
   projectSchema,
   type ProjectFieldErrors,
   type ProjectInput,
 } from "@/lib/validation/project";
+import { EffortPicker } from "./effort-picker";
 import { FormSkeleton } from "./form-skeleton";
 import { MediaUploader, type MediaUploaderHandle } from "./media-uploader";
 import { ProjectCardView } from "./project-card";
-import { SessionEditor } from "./session-editor";
+import { StoryMoments } from "./story-moments";
 import { ToolPicker } from "./tool-picker";
 import { Turnstile, type TurnstileHandle } from "./turnstile";
 
 export type ProjectFormMode =
-  { kind: "create"; isTrusted: boolean } | { kind: "edit"; projectId: string; slug: string };
+  | { kind: "create"; isTrusted: boolean }
+  | { kind: "edit"; projectId: string; slug: string; legacySessionCount: number };
 
 type Success = { status: ProjectStatus; slug: string; mediaFailed: boolean };
+
+/** Story moments and the form values that hold them ("redo" is lessons). */
+const momentKeys = {
+  wow: "momentWow",
+  hardest: "momentHardest",
+  redo: "lessons",
+} as const satisfies Record<StoryMoment, keyof ProjectFormValues>;
+
+type AutofillState =
+  | { status: "idle" }
+  | { status: "loading" }
+  | { status: "done"; suggestion: AutofillSuggestion; imageFailed: boolean }
+  | { status: "error"; error: "unauthorized" | "rate_limit" | "failed" };
 
 /** Ids of the form controls; errors focus the first one in page order. */
 const fieldId = (path: string) => `pf-${path.replaceAll(".", "-")}`;
@@ -82,8 +99,9 @@ const subscribeNothing = () => () => {};
 /**
  * The conversational submit/edit form (VPO-Submit): the site asks, the maker answers in
  * right-aligned bubbles, with a live card preview beside it. Shared by /submit and
- * /p/[slug]/edit. Rendered only after hydration, so the submit draft (localStorage) can seed
- * the initial state without a server/client mismatch.
+ * /p/[slug]/edit. Four answers publish a project (link, key prompt, rough build time, tools);
+ * the build story is optional and can come later. Rendered only after hydration, so the submit
+ * draft (localStorage) can seed the initial state without a server/client mismatch.
  */
 export function ProjectForm(props: ProjectFormProps) {
   const hydrated = useSyncExternalStore(
@@ -133,12 +151,17 @@ function ProjectFormBody({
   const [savedStatus, setSavedStatus] = useState<ProjectStatus | null>(null);
   const [restoredAt, setRestoredAt] = useState<number | null>(draft?.savedAt ?? null);
   const [coverUrl, setCoverUrl] = useState<string | null>(null);
+  const [mediaCount, setMediaCount] = useState(initialMedia.length);
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const [autofill, setAutofill] = useState<AutofillState>({ status: "idle" });
+  const [suggestedEffort, setSuggestedEffort] = useState<BuildEffort | null>(null);
 
   const uploaderRef = useRef<MediaUploaderHandle>(null);
   const turnstileRef = useRef<TurnstileHandle>(null);
   const focusErrorRef = useRef(false);
   const successRef = useRef<HTMLDivElement>(null);
+  /** The live/repo links autofill last ran for, so leaving the field does not repeat it. */
+  const autofilledForRef = useRef<string | null>(null);
 
   // Keep the draft current while typing.
   useEffect(() => {
@@ -163,15 +186,25 @@ function ProjectFormBody({
     if (success) successRef.current?.scrollIntoView({ block: "center", behavior: "smooth" });
   }, [success]);
 
+  // "Tambah cerita" links to /p/[slug]/edit#cerita; the form renders after hydration, so the
+  // browser's own jump to the anchor happened before the section existed.
+  useEffect(() => {
+    if (window.location.hash === "#cerita") {
+      document.getElementById("cerita")?.scrollIntoView({ block: "start" });
+    }
+  }, []);
+
   const toolById = useMemo(() => new Map(tools.map((tool) => [tool.id, tool])), [tools]);
+
+  function clearErrors(paths: string[]) {
+    setErrors((previous) =>
+      Object.fromEntries(Object.entries(previous).filter(([path]) => !paths.includes(path))),
+    );
+  }
 
   function update<K extends keyof ProjectFormValues>(key: K, value: ProjectFormValues[K]) {
     setValues((previous) => ({ ...previous, [key]: value }));
-    if (errors[key]) {
-      setErrors((previous) =>
-        Object.fromEntries(Object.entries(previous).filter(([path]) => path !== key)),
-      );
-    }
+    if (errors[key]) clearErrors([key]);
     setSavedStatus(null);
   }
 
@@ -180,27 +213,8 @@ function ProjectFormBody({
     change: (previous: ProjectFormValues[K]) => ProjectFormValues[K],
   ) {
     setValues((previous) => ({ ...previous, [key]: change(previous[key]) }));
-    if (errors[key] || errors.toolIds) {
-      setErrors((previous) =>
-        Object.fromEntries(
-          Object.entries(previous).filter(([path]) => path !== key && path !== "toolIds"),
-        ),
-      );
-    }
+    if (errors[key] || errors.toolIds) clearErrors([key, "toolIds"]);
     setSavedStatus(null);
-  }
-
-  function updateSessions(sessions: SessionValues[], options?: { reordered?: boolean }) {
-    setValues((previous) => ({ ...previous, sessions }));
-    setSavedStatus(null);
-    // Session errors are keyed by position; after a move they would point at the wrong card.
-    if (options?.reordered) {
-      setErrors((previous) =>
-        Object.fromEntries(
-          Object.entries(previous).filter(([path]) => !path.startsWith("sessions")),
-        ),
-      );
-    }
   }
 
   function fieldError(path: string) {
@@ -232,6 +246,74 @@ function ProjectFormBody({
     focusErrorRef.current = Object.keys(fieldErrors).length > 0;
     setErrors(fieldErrors);
     setFormError(error);
+  }
+
+  /**
+   * Fills the form from the live page and repo. Only empty fields are filled, so whatever the
+   * maker typed stays; the screenshot is added only while there is none.
+   */
+  async function runAutofill() {
+    const liveUrl = values.liveUrl.trim();
+    const repoUrl = values.repoUrl.trim();
+    if (!httpsUrlPattern.test(liveUrl) || autofill.status === "loading") return;
+    autofilledForRef.current = `${liveUrl} ${repoUrl}`;
+    setAutofill({ status: "loading" });
+
+    const result = await autofillFromLinks({ liveUrl, repoUrl });
+    if (!result.ok) {
+      setAutofill({ status: "error", error: result.error === "invalid" ? "failed" : result.error });
+      return;
+    }
+    const { suggestion } = result;
+    setValues((previous) => ({
+      ...previous,
+      title: previous.title.trim() ? previous.title : (suggestion.title ?? previous.title),
+      tagline: previous.tagline.trim()
+        ? previous.tagline
+        : (suggestion.tagline ?? previous.tagline),
+      description: previous.description.trim()
+        ? previous.description
+        : (suggestion.description ?? previous.description),
+      // A new project's language follows the page; an existing one keeps what the maker chose.
+      contentLang:
+        isCreate && suggestion.contentLang ? suggestion.contentLang : previous.contentLang,
+      buildEffort: previous.buildEffort || (suggestion.effort ?? ""),
+    }));
+    clearErrors(["title", "tagline", "description", "buildEffort"]);
+    setSuggestedEffort(suggestion.effort);
+    setSavedStatus(null);
+
+    let imageFailed = false;
+    if (suggestion.imageUrl && mediaCount === 0) {
+      imageFailed = !(await addAutofillImage(suggestion.imageUrl));
+    }
+    setAutofill({ status: "done", suggestion, imageFailed });
+  }
+
+  async function addAutofillImage(url: string) {
+    try {
+      const response = await fetch("/api/autofill/image", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ url }),
+      });
+      if (!response.ok) return false;
+      const blob = await response.blob();
+      const extension = blob.type.split("/")[1] ?? "png";
+      uploaderRef.current?.addFiles([
+        new File([blob], `screenshot.${extension}`, { type: blob.type }),
+      ]);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  /** Leaving a link field runs autofill once per link pair, while title and tagline are empty. */
+  function autofillOnBlur() {
+    if (autofilledForRef.current === `${values.liveUrl.trim()} ${values.repoUrl.trim()}`) return;
+    if (values.title.trim() || values.tagline.trim()) return;
+    void runAutofill();
   }
 
   function onSubmit(event: FormEvent<HTMLFormElement>) {
@@ -287,21 +369,18 @@ function ProjectFormBody({
     setErrors({});
     setFormError(null);
     setRestoredAt(null);
+    setAutofill({ status: "idle" });
+    setSuggestedEffort(null);
+    autofilledForRef.current = null;
   }
 
   // Live preview -------------------------------------------------------------------
-  const sessionHours = values.sessions.map((session) => parseHours(session.durationHours));
-  const totalHours = sessionHours.reduce(
-    (sum, hours) =>
-      sum +
-      (Number.isFinite(hours) && hours > 0 && hours <= PROJECT_LIMITS.maxSessionHours ? hours : 0),
-    0,
-  );
-  const sessionCount = values.sessions.length;
-  const timeLabel =
-    totalHours > 0
-      ? tCard("timeAfterSessions", { hours: totalHours, sessions: sessionCount })
-      : t("preview.time");
+  const timeLabel = values.buildEffort
+    ? tCard("effortAfter", { effort: values.buildEffort })
+    : t("preview.time");
+  const legacySessions = mode.kind === "edit" ? mode.legacySessionCount : 0;
+  const hasStory =
+    legacySessions > 0 || Object.values(momentKeys).some((key) => values[key].trim() !== "");
   const summary = toolsSummary([
     ...values.toolIds.flatMap((toolId) => {
       const tool = toolById.get(toolId);
@@ -325,6 +404,9 @@ function ProjectFormBody({
           setValues(emptyFormValues(values.contentLang));
           setSuccess(null);
           setRestoredAt(null);
+          setAutofill({ status: "idle" });
+          setSuggestedEffort(null);
+          autofilledForRef.current = null;
           window.scrollTo({ top: 0 });
         }}
       />
@@ -334,6 +416,10 @@ function ProjectFormBody({
   const submitLabel = isCreate ? (mode.isTrusted ? t("submitTrusted") : t("submit")) : t("save");
   const pendingLabel =
     phase === "uploading" ? t("uploading") : isCreate ? t("sending") : t("saving");
+  const canAutofill = httpsUrlPattern.test(values.liveUrl.trim());
+  const extrasOpen = Boolean(
+    values.description.trim() || values.videoUrl.trim() || errors.description || errors.videoUrl,
+  );
 
   return (
     <div className="flex flex-col gap-10 pt-11 lg:flex-row lg:items-start lg:gap-14">
@@ -353,6 +439,92 @@ function ProjectFormBody({
           </SystemMessage>
         ) : null}
 
+        {/* 1. Link: autofill fills title, tagline and the first screenshot. */}
+        <Question>{t.rich("steps.link", { strong })}</Question>
+        <Answer>
+          <div className="grid gap-3.5 sm:grid-cols-2 sm:gap-3">
+            <Field id={fieldId("liveUrl")} label={t("liveUrl")} error={fieldError("liveUrl")}>
+              <Input
+                {...errorProps("liveUrl")}
+                type="url"
+                inputMode="url"
+                autoComplete="url"
+                value={values.liveUrl}
+                placeholder={t("liveUrlPlaceholder")}
+                onChange={(event) => update("liveUrl", event.target.value)}
+                onBlur={autofillOnBlur}
+                className={inputClass}
+              />
+            </Field>
+            <Field
+              id={fieldId("repoUrl")}
+              label={<Optional label={t("repoUrl")} note={t("optional")} />}
+              error={fieldError("repoUrl")}
+            >
+              <Input
+                {...errorProps("repoUrl")}
+                type="url"
+                inputMode="url"
+                value={values.repoUrl}
+                placeholder={t("repoUrlPlaceholder")}
+                onChange={(event) => update("repoUrl", event.target.value)}
+                onBlur={autofillOnBlur}
+                className={inputClass}
+              />
+            </Field>
+          </div>
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+            <Button
+              variant="outline"
+              size="sm"
+              disabled={!canAutofill || autofill.status === "loading"}
+              onClick={() => void runAutofill()}
+            >
+              {autofill.status === "loading" ? t("autofill.fetching") : t("autofill.fetch")}
+            </Button>
+            <AutofillStatus state={autofill} />
+          </div>
+
+          <Field id={fieldId("title")} label={t("title")} error={fieldError("title")}>
+            <Input
+              {...errorProps("title")}
+              value={values.title}
+              maxLength={PROJECT_LIMITS.title}
+              placeholder={t("titlePlaceholder")}
+              onChange={(event) => update("title", event.target.value)}
+              className={inputClass}
+            />
+          </Field>
+          <Field
+            id={fieldId("tagline")}
+            label={t("tagline")}
+            error={fieldError("tagline")}
+            counter={`${values.tagline.length}/${PROJECT_LIMITS.tagline}`}
+          >
+            <Input
+              {...errorProps("tagline")}
+              value={values.tagline}
+              maxLength={PROJECT_LIMITS.tagline}
+              placeholder={t("taglinePlaceholder")}
+              onChange={(event) => update("tagline", event.target.value)}
+              className={inputClass}
+            />
+          </Field>
+          <div className="flex flex-col gap-2">
+            <p className="text-sm font-medium text-ink">{t("screenshots")}</p>
+            <MediaUploader
+              ref={uploaderRef}
+              projectId={isCreate ? undefined : mode.projectId}
+              initialMedia={initialMedia}
+              onChange={(change) => {
+                setCoverUrl(change.previews[0]?.url ?? null);
+                setMediaCount(change.previews.length);
+              }}
+            />
+          </div>
+        </Answer>
+
+        {/* 2. Key prompt. */}
         <Question>{t.rich("steps.prompt", { strong })}</Question>
         <Answer
           className={cn("p-1.5 sm:p-1.5", errors.keyPrompt && "border-red-700 dark:border-red-400")}
@@ -386,104 +558,19 @@ function ProjectFormBody({
           </div>
         </Answer>
 
-        <Question>{t.rich("steps.result", { strong })}</Question>
+        {/* 3. Rough build time. */}
+        <Question>{t.rich("steps.effort", { strong })}</Question>
         <Answer>
-          <Field id={fieldId("title")} label={t("title")} error={fieldError("title")}>
-            <Input
-              {...errorProps("title")}
-              value={values.title}
-              maxLength={PROJECT_LIMITS.title}
-              placeholder={t("titlePlaceholder")}
-              onChange={(event) => update("title", event.target.value)}
-              className={inputClass}
-            />
-          </Field>
-          <Field
-            id={fieldId("tagline")}
-            label={t("tagline")}
-            error={fieldError("tagline")}
-            counter={`${values.tagline.length}/${PROJECT_LIMITS.tagline}`}
-          >
-            <Input
-              {...errorProps("tagline")}
-              value={values.tagline}
-              maxLength={PROJECT_LIMITS.tagline}
-              placeholder={t("taglinePlaceholder")}
-              onChange={(event) => update("tagline", event.target.value)}
-              className={inputClass}
-            />
-          </Field>
-          <Field
-            id={fieldId("description")}
-            label={<Optional label={t("description")} note={t("optional")} />}
-            error={fieldError("description")}
-          >
-            <Textarea
-              {...errorProps("description")}
-              rows={3}
-              value={values.description}
-              maxLength={PROJECT_LIMITS.description}
-              placeholder={t("descriptionPlaceholder")}
-              onChange={(event) => update("description", event.target.value)}
-              className={textareaClass}
-            />
-          </Field>
-          <div className="grid gap-3.5 sm:grid-cols-2 sm:gap-3">
-            <Field id={fieldId("liveUrl")} label={t("liveUrl")} error={fieldError("liveUrl")}>
-              <Input
-                {...errorProps("liveUrl")}
-                type="url"
-                inputMode="url"
-                autoComplete="url"
-                value={values.liveUrl}
-                placeholder={t("liveUrlPlaceholder")}
-                onChange={(event) => update("liveUrl", event.target.value)}
-                className={inputClass}
-              />
-            </Field>
-            <Field
-              id={fieldId("repoUrl")}
-              label={<Optional label={t("repoUrl")} note={t("optional")} />}
-              error={fieldError("repoUrl")}
-            >
-              <Input
-                {...errorProps("repoUrl")}
-                type="url"
-                inputMode="url"
-                value={values.repoUrl}
-                placeholder={t("repoUrlPlaceholder")}
-                onChange={(event) => update("repoUrl", event.target.value)}
-                className={inputClass}
-              />
-            </Field>
-          </div>
-        </Answer>
-
-        <Question>{t.rich("steps.media", { strong })}</Question>
-        <Answer>
-          <MediaUploader
-            ref={uploaderRef}
-            projectId={isCreate ? undefined : mode.projectId}
-            initialMedia={initialMedia}
-            onChange={(change) => setCoverUrl(change.previews[0]?.url ?? null)}
+          <EffortPicker
+            id={fieldId("buildEffort")}
+            value={values.buildEffort}
+            suggested={suggestedEffort}
+            error={fieldError("buildEffort")}
+            onChange={(effort) => update("buildEffort", effort)}
           />
-          <Field
-            id={fieldId("videoUrl")}
-            label={<Optional label={t("videoUrl")} note={t("videoUrlHint")} />}
-            error={fieldError("videoUrl")}
-          >
-            <Input
-              {...errorProps("videoUrl")}
-              type="url"
-              inputMode="url"
-              value={values.videoUrl}
-              placeholder={t("videoUrlPlaceholder")}
-              onChange={(event) => update("videoUrl", event.target.value)}
-              className={inputClass}
-            />
-          </Field>
         </Answer>
 
+        {/* 4. Tools, category and language. */}
         <Question>{t.rich("steps.tools", { strong })}</Question>
         <Answer>
           <ToolPicker
@@ -533,37 +620,80 @@ function ProjectFormBody({
               </div>
             </fieldset>
           </div>
+
+          <details open={extrasOpen} className="group rounded-2xl border border-border px-3.5 py-3">
+            <summary className="flex min-h-6 cursor-pointer list-none items-center gap-2 text-sm font-medium text-ink [&::-webkit-details-marker]:hidden">
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+                className="transition-transform group-open:rotate-90"
+              >
+                <path d="M9 6l6 6-6 6" />
+              </svg>
+              {t("extras")} <span className="font-normal text-muted">{t("extrasHint")}</span>
+            </summary>
+            <div className="mt-3.5 flex flex-col gap-3.5">
+              <Field
+                id={fieldId("description")}
+                label={<Optional label={t("description")} note={t("optional")} />}
+                error={fieldError("description")}
+              >
+                <Textarea
+                  {...errorProps("description")}
+                  rows={3}
+                  value={values.description}
+                  maxLength={PROJECT_LIMITS.description}
+                  placeholder={t("descriptionPlaceholder")}
+                  onChange={(event) => update("description", event.target.value)}
+                  className={textareaClass}
+                />
+              </Field>
+              <Field
+                id={fieldId("videoUrl")}
+                label={<Optional label={t("videoUrl")} note={t("videoUrlHint")} />}
+                error={fieldError("videoUrl")}
+              >
+                <Input
+                  {...errorProps("videoUrl")}
+                  type="url"
+                  inputMode="url"
+                  value={values.videoUrl}
+                  placeholder={t("videoUrlPlaceholder")}
+                  onChange={(event) => update("videoUrl", event.target.value)}
+                  className={inputClass}
+                />
+              </Field>
+            </div>
+          </details>
         </Answer>
 
-        <Question>{t.rich("steps.sessions", { strong })}</Question>
+        {/* Optional: the build story, now or later from the edit page. */}
+        <div id="cerita" className="scroll-mt-6">
+          <Question>{t.rich("steps.story", { strong })}</Question>
+        </div>
         <Answer className="bg-bg">
-          <SessionEditor
-            idPrefix={fieldId("sessions")}
-            sessions={values.sessions}
-            totalLabel={t("sessions.total", { hours: totalHours, sessions: sessionCount })}
-            error={fieldError("sessions")}
-            fieldError={(index, field) => fieldError(`sessions.${index}.${field}`)}
-            onChange={updateSessions}
+          <StoryMoments
+            idFor={(moment) => fieldId(momentKeys[moment])}
+            values={{
+              wow: values.momentWow,
+              hardest: values.momentHardest,
+              redo: values.lessons,
+            }}
+            fieldError={(moment) => fieldError(momentKeys[moment])}
+            onChange={(moment, value) => update(momentKeys[moment], value)}
           />
-        </Answer>
-
-        <Question>{t.rich("steps.lessons", { strong })}</Question>
-        <Answer>
-          <Field
-            id={fieldId("lessons")}
-            label={<Optional label={t("lessons")} note={t("optional")} />}
-            error={fieldError("lessons")}
-          >
-            <Textarea
-              {...errorProps("lessons")}
-              rows={3}
-              value={values.lessons}
-              maxLength={PROJECT_LIMITS.lessons}
-              placeholder={t("lessonsPlaceholder")}
-              onChange={(event) => update("lessons", event.target.value)}
-              className={textareaClass}
-            />
-          </Field>
+          {legacySessions > 0 ? (
+            <p className="text-[13px] leading-normal text-muted">
+              {t("moments.legacy", { count: legacySessions })}
+            </p>
+          ) : null}
         </Answer>
 
         {isCreate ? (
@@ -645,6 +775,7 @@ function ProjectFormBody({
           category={values.category ? tCategories(values.category) : undefined}
           prompt={values.keyPrompt.trim() || t("preview.prompt")}
           timeLabel={timeLabel}
+          story={hasStory ? tCard("story") : undefined}
           imageUrl={coverUrl}
           title={values.title.trim() || t("preview.title")}
           tools={toolsLabel}
@@ -659,6 +790,36 @@ function ProjectFormBody({
 
 function strong(chunks: ReactNode) {
   return <strong className="font-semibold">{chunks}</strong>;
+}
+
+/** What autofill found (or why it found nothing), next to the "Ambil info" button. */
+function AutofillStatus({ state }: { state: AutofillState }) {
+  const t = useTranslations("projectForm");
+  const tMedia = useTranslations("media.errors");
+  if (state.status === "idle" || state.status === "loading") return null;
+
+  const lines: string[] = [];
+  if (state.status === "error") {
+    lines.push(
+      state.error === "unauthorized"
+        ? t("formErrors.unauthorized")
+        : state.error === "rate_limit"
+          ? tMedia("rate_limit")
+          : t("autofill.failed"),
+    );
+  } else {
+    const { suggestion } = state;
+    lines.push(suggestion.pageFailed ? t("autofill.nothing") : t("autofill.filled"));
+    if (suggestion.repo) lines.push(t("autofill.repo", suggestion.repo));
+    if (suggestion.repoFailed) lines.push(t("autofill.repoFailed"));
+    if (state.imageFailed) lines.push(t("autofill.imageFailed"));
+  }
+
+  return (
+    <p role="status" className="min-w-0 flex-1 text-[13px] leading-normal text-ink-2">
+      {lines.join(" ")}
+    </p>
+  );
 }
 
 /** The site's question, as a left-aligned chat bubble. */
@@ -738,12 +899,16 @@ function SuccessMessage({
           <span role="alert">{t("mediaFailed")}</span>
         </SystemMessage>
       ) : null}
+      <SystemMessage>{t("story")}</SystemMessage>
       <div className="flex flex-wrap gap-3 pl-[46px]">
         <Link href={`/p/${success.slug}`} className={buttonStyles({ variant: "primary" })}>
           {t("view")}
         </Link>
-        <Link href={`/p/${success.slug}/edit`} className={buttonStyles({ variant: "outline" })}>
-          {t("edit")}
+        <Link
+          href={`/p/${success.slug}/edit#cerita`}
+          className={buttonStyles({ variant: "outline" })}
+        >
+          {t("addStory")}
         </Link>
         <Button variant="ghost" onClick={onAnother}>
           {t("another")}

@@ -136,10 +136,7 @@ async function ProfileContent({
 
       <dl className="grid grid-cols-2 border-b border-border md:grid-cols-4">
         <Stat label={t("stats.projects")}>{format.number(profile.stats.projectCount)}</Stat>
-        <Stat label={t("stats.hours")}>
-          {format.number(profile.stats.totalHours)}{" "}
-          <span className="text-[22px] italic sm:text-[26px]">{t("stats.hoursUnit")}</span>
-        </Stat>
+        <Stat label={t("stats.stories")}>{format.number(profile.stats.storyCount)}</Stat>
         <Stat label={t("stats.upvotes")}>{format.number(profile.stats.upvoteCount)}</Stat>
         <Stat label={t("stats.topTool")} small>
           {profile.stats.topTool ?? "—"}

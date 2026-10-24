@@ -15,6 +15,9 @@ create function tap.payload(title text default 'Kasir Warung') returns jsonb lan
     'tagline', 'Catat jualan harian dari HP',
     'description', 'Buat warung kelontong.',
     'key_prompt', 'Bikin kasir buat warung kelontong, tombolnya gede.',
+    'build_effort', 'weekend',
+    'moment_wow', 'Minta tombol segede jempol, langsung jadi.',
+    'moment_hardest', '',
     'lessons', 'Tulis prompt dari sudut pandang pemakainya.',
     'live_url', 'https://kasir.example.com',
     'repo_url', null,
@@ -22,12 +25,7 @@ create function tap.payload(title text default 'Kasir Warung') returns jsonb lan
     'category', 'umkm',
     'content_lang', 'id',
     'tool_ids', jsonb_build_array(tap.tool('claude-code'), tap.tool('supabase')),
-    'suggestions', jsonb_build_array(jsonb_build_object('name', 'Alat Rahasia', 'url', 'https://rahasia.example.com')),
-    'sessions', jsonb_build_array(
-      jsonb_build_object('label', 'Sabtu malam', 'duration_hours', 2.5, 'prompt', 'Bikin layar kasir', 'result', 'Layar kasir jadi',
-        'challenge', 'Tombol kekecilan', 'solution', 'Minta tombol 64px'),
-      jsonb_build_object('duration_hours', 1, 'prompt', 'Tambah rekap mingguan', 'result', 'Rekap jadi')
-    )
+    'suggestions', jsonb_build_array(jsonb_build_object('name', 'Alat Rahasia', 'url', 'https://rahasia.example.com'))
   );
 $$;
 
@@ -39,14 +37,14 @@ insert into tap.ids
 select 'a1', (upsert_project(p_slug_base => 'kasir-warung', p_project => tap.payload() || '{"status": "published"}'::jsonb) ->> 'id')::uuid;
 
 select tap.emit(results_eq(
-  $$ select slug, status::text, session_count::int, build_time_hours, owner_id from projects where id = tap.id('a1') $$,
-  $$ values ('kasir-warung', 'pending', 2, 3.5::numeric(5, 1), tap.id('alice')) $$,
-  'new maker: project is pending, sessions derived, status in payload ignored'
+  $$ select slug, status::text, owner_id, build_effort::text, session_count::int from projects where id = tap.id('a1') $$,
+  $$ values ('kasir-warung', 'pending', tap.id('alice'), 'weekend', 0) $$,
+  'new maker: project is pending, status in payload ignored, no sessions needed'
 ));
 select tap.emit(results_eq(
-  $$ select sort_order::int, label, challenge from project_sessions where project_id = tap.id('a1') order by sort_order $$,
-  $$ values (0, 'Sabtu malam', 'Tombol kekecilan'), (1, null, null) $$,
-  'sessions stored in order'
+  $$ select moment_wow, moment_hardest, has_story from projects where id = tap.id('a1') $$,
+  $$ values ('Minta tombol segede jempol, langsung jadi.', null::text, true) $$,
+  'moments stored (empty ones as null); has_story set'
 ));
 select tap.emit(is(
   (select count(*)::int from project_tools where project_id = tap.id('a1')), 2, 'tools linked'
@@ -79,13 +77,17 @@ select tap.emit(throws_ok(
   '22023', 'ai_tool_required', 'needs at least one AI tool'
 ));
 select tap.emit(throws_ok(
-  $$ select upsert_project(p_slug_base => 'x', p_project => tap.payload() || '{"sessions": []}'::jsonb) $$,
-  '22023', 'invalid_sessions', 'needs at least one session'
+  $$ select upsert_project(p_slug_base => 'x', p_project => tap.payload() - 'build_effort') $$,
+  '23502', null, 'build_effort is required'
 ));
 select tap.emit(throws_ok(
-  format($$ select upsert_project(p_slug_base => 'x', p_project => tap.payload() || jsonb_build_object('sessions', %L::jsonb)) $$,
-    (select jsonb_agg(jsonb_build_object('duration_hours', 1, 'prompt', 'p', 'result', 'r')) from generate_series(1, 11))),
-  '22023', 'invalid_sessions', 'at most 10 sessions'
+  $$ select upsert_project(p_slug_base => 'x', p_project => tap.payload() || '{"build_effort": "forever"}'::jsonb) $$,
+  '22P02', null, 'build_effort must be on the scale'
+));
+select tap.emit(throws_ok(
+  format($$ select upsert_project(p_slug_base => 'x', p_project => tap.payload() || jsonb_build_object('moment_hardest', %L)) $$,
+    repeat('x', 1001)),
+  '23514', null, 'moments are at most 1000 characters'
 ));
 select tap.emit(throws_ok(
   $$ select upsert_project(p_slug_base => 'x', p_project => tap.payload() || '{"live_url": "http://insecure.example.com"}'::jsonb) $$,
@@ -112,27 +114,29 @@ select tap.emit(throws_ok(
 ));
 
 -- Edit ----------------------------------------------------------------------------
+-- A project from before build_effort: its old sessions stay through an edit.
 select tap.as_postgres();
-insert into tap.ids select 's0', id from project_sessions where project_id = tap.id('a1') and sort_order = 0;
+insert into project_sessions (project_id, sort_order, duration_hours, prompt, result)
+values (tap.id('a1'), 0, 2.5, 'Bikin layar kasir', 'Layar kasir jadi');
 
 select tap.as_user(tap.id('alice'));
 select upsert_project(p_project_id => tap.id('a1'), p_slug_base => 'ignored', p_project => tap.payload('Kasir Warung Bu Tini') || jsonb_build_object(
+  'build_effort', 'week',
+  'moment_wow', '',
+  'moment_hardest', 'Login Google bentrok, ganti magic link.',
   'tool_ids', jsonb_build_array(tap.tool('cursor')),
   'suggestions', '[]'::jsonb,
-  'sessions', jsonb_build_array(
-    jsonb_build_object('duration_hours', 4, 'prompt', 'Sesi baru di depan', 'result', 'Hasil baru'),
-    jsonb_build_object('id', tap.id('s0'), 'label', 'Sabtu malam', 'duration_hours', 3, 'prompt', 'Bikin layar kasir', 'result', 'Layar kasir jadi')
-  )
+  'sessions', '[]'::jsonb
 ));
 select tap.emit(results_eq(
-  $$ select title, slug, status::text, build_time_hours, session_count::int from projects where id = tap.id('a1') $$,
-  $$ values ('Kasir Warung Bu Tini', 'kasir-warung', 'pending', 7.0::numeric(5, 1), 2) $$,
-  'owner: edit saved, slug stays'
+  $$ select title, slug, status::text, build_effort::text, moment_wow, moment_hardest from projects where id = tap.id('a1') $$,
+  $$ values ('Kasir Warung Bu Tini', 'kasir-warung', 'pending', 'week', null::text, 'Login Google bentrok, ganti magic link.') $$,
+  'owner: edit saved, slug stays, a cleared moment becomes null'
 ));
 select tap.emit(results_eq(
-  $$ select sort_order::int, id = tap.id('s0'), challenge from project_sessions where project_id = tap.id('a1') order by sort_order $$,
-  $$ values (0, false, null::text), (1, true, null::text) $$,
-  'owner: kept session keeps its id and moves; removed session is gone'
+  $$ select session_count::int, build_time_hours from projects where id = tap.id('a1') $$,
+  $$ values (1, 2.5::numeric(5, 1)) $$,
+  'owner: old sessions are left alone by an edit (sessions in the payload are ignored)'
 ));
 select tap.emit(results_eq(
   $$ select t.slug from project_tools pt join tools t on t.id = pt.tool_id where pt.project_id = tap.id('a1') $$,
@@ -148,11 +152,6 @@ select tap.as_user(tap.id('bob'));
 select tap.emit(throws_ok(
   $$ select upsert_project(p_project_id => tap.id('a1'), p_slug_base => 'x', p_project => tap.payload('Dibajak')) $$,
   '42501', 'not_allowed', 'other user: cannot edit'
-));
-select tap.emit(throws_ok(
-  $$ select upsert_project(p_project_id => tap.id('a1'), p_slug_base => 'x', p_project => tap.payload() || jsonb_build_object('sessions',
-    jsonb_build_array(jsonb_build_object('id', tap.id('s0'), 'duration_hours', 1, 'prompt', 'p', 'result', 'r')))) $$,
-  '42501', 'not_allowed', 'other user: cannot touch sessions through the RPC'
 ));
 
 select tap.as_postgres();

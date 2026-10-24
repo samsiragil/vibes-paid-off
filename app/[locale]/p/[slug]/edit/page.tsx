@@ -78,7 +78,12 @@ async function EditContent({ params }: { params: PageProps<"/[locale]/p/[slug]/e
         </SystemMessage>
       ) : null}
       <ProjectForm
-        mode={{ kind: "edit", projectId: project.id, slug: project.slug }}
+        mode={{
+          kind: "edit",
+          projectId: project.id,
+          slug: project.slug,
+          legacySessionCount: project.legacySessionCount,
+        }}
         maker={{ name: user.displayName || user.username, avatarUrl: user.avatarUrl }}
         tools={tools}
         quickPickIds={quickPickIds(tools)}

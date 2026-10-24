@@ -10,7 +10,7 @@ import { getCurrentUser, isCurrentUserAdmin } from "@/lib/auth/current-user";
 import { getMyProfileForm, getMyProjects } from "@/lib/profiles/me";
 import { displayUrl } from "@/lib/site";
 import { MeTabs, type MeTab } from "./me-tabs";
-import { MyProjects, OfflineNotice, ReviewNotice } from "./my-projects";
+import { MyProjects, OfflineNotice, ReviewNotice, StoryNudge } from "./my-projects";
 import { ProfileForm } from "./profile-form";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -60,7 +60,11 @@ async function MeContent({
   const reviewed = projects.filter(
     (project) => project.status === "rejected" || project.recentlyApproved,
   );
-  const notices = [...reviewed, ...offline];
+  // One "ceritain dong" nudge at a time: the story people are most curious about.
+  const nudge = projects
+    .filter((project) => project.storyNudge)
+    .sort((a, b) => b.upvoteCount - a.upvoteCount)[0];
+  const notices = [...reviewed, ...offline, ...(nudge ? [nudge] : [])];
 
   return (
     <>
@@ -97,6 +101,7 @@ async function MeContent({
           {offline.map((project) => (
             <OfflineNotice key={project.id} project={project} />
           ))}
+          {nudge ? <StoryNudge project={nudge} /> : null}
         </div>
       ) : null}
 

@@ -46,6 +46,8 @@ export type MediaUploaderHandle = {
    * (submit flow). Resolves to true when all of them were stored.
    */
   uploadPending(projectId: string): Promise<boolean>;
+  /** Adds images as if the maker had picked them (the autofill screenshot). */
+  addFiles(files: File[]): void;
 };
 
 /** What the form needs for the live card preview: images in order, and whether work is pending. */
@@ -154,7 +156,7 @@ export function MediaUploader({
     }
   }
 
-  function addFiles(fileList: FileList | null) {
+  function addFiles(fileList: FileList | File[] | null) {
     if (!fileList || fileList.length === 0) return;
     setNotice(null);
     const files = Array.from(fileList);
@@ -249,6 +251,7 @@ export function MediaUploader({
       );
       return results.every(Boolean) && itemsRef.current.every((item) => item.status === "done");
     },
+    addFiles,
   }));
 
   const emitChange = useEffectEvent((next: Item[]) =>

@@ -201,6 +201,12 @@
       "approved": "Good news: an admin approved <strong>{title}</strong> and it is live. You are a trusted maker now, so your next projects go live right away.",
       "rejected": "<strong>{title}</strong> can't go live yet. Reason: {reason}. <edit>Fix the project</edit>, then save it to send it back for review.",
       "rejectedNoReason": "<strong>{title}</strong> can't go live yet. <edit>Fix the project</edit>, then save it to send it back for review."
+    },
+    "nudge": {
+      "upvotes": "{count, plural, one {# person} other {# people}} said <strong>{title}</strong> was worth it. They're curious how you built it.",
+      "aged": "<strong>{title}</strong> has been live for a week. Tell people how you built it.",
+      "cta": "Tell the story",
+      "dismiss": "Maybe later"
     }
   },
   "categories": {
@@ -256,11 +262,11 @@
     }
   },
   "projectCard": {
-    "timeAfter": "{hours, number} {hours, plural, one {hour} other {hours}} later",
-    "timeAfterSessions": "{hours, number} {hours, plural, one {hour} other {hours}} and {sessions, plural, one {# session} other {# sessions}} later",
     "worthIt": "Worth it · {count}",
     "moreTools": "+{count}",
-    "hours": "{hours, number} {hours, plural, one {hour} other {hours}}"
+    "effortAfter": "{effort, select, hours {a few hours later} overnight {one night later} weekend {one weekend later} week {a week later} other {weeks later}}",
+    "effort": "{effort, select, hours {A few hours} overnight {One night} weekend {One weekend} week {A week} other {Weeks}}",
+    "story": "has a build story"
   },
   "projectForm": {
     "metaSubmit": "Show off your project",
@@ -282,12 +288,11 @@
     "draftDiscard": "Start over",
     "optional": "(optional)",
     "steps": {
-      "prompt": "Start with what matters most: <strong>what was the key prompt?</strong> It opens your project card.",
-      "result": "Nice. <strong>So what did you get?</strong>",
-      "media": "<strong>Send some screenshots.</strong> Up to 3, compressed automatically. A demo video works too.",
+      "link": "Start with <strong>the live link.</strong> We'll try to fill in the title, tagline, and screenshot from your page.",
+      "prompt": "Now the most important part: <strong>what was the key prompt?</strong> The one line that made it click. It opens your card.",
+      "effort": "<strong>Roughly how long did it take?</strong> No need to be exact.",
       "tools": "<strong>Which tools did you use?</strong> Pick everything, from AI agents to hosting.",
-      "sessions": "<strong>Tell us about the build sessions.</strong> One session = one sitting. The total becomes “X hours later” on the card.",
-      "lessons": "Last one: <strong>what did you learn?</strong> You can skip it, but this is what people look for most.",
+      "story": "<strong>Want to tell the story too?</strong> Pick the moments worth telling, not all of them. You can also add them later from Edit project.",
       "rules": "Before sending, remember the <link>community rules</link>:"
     },
     "rules": {
@@ -314,8 +319,6 @@
     "category": "Category",
     "categoryPlaceholder": "Pick a category",
     "contentLang": "Content language",
-    "lessons": "Lessons",
-    "lessonsPlaceholder": "Write prompts from the user's point of view.",
     "tools": {
       "quickPicks": "Popular tools",
       "search": "Search other tools",
@@ -334,35 +337,13 @@
       "suggested": "new",
       "hint": "At least one AI tool (agent, app builder, or AI assistant)."
     },
-    "sessions": {
-      "heading": "Session {number}",
-      "label": "Label",
-      "labelPlaceholder": "Saturday night",
-      "duration": "Duration (hours)",
-      "durationHint": "0.5–24 hours, in half-hour steps.",
-      "prompt": "Main prompt",
-      "promptPlaceholder": "What did you ask the AI in this session?",
-      "result": "Result",
-      "resultPlaceholder": "What was done by the end of the session?",
-      "hasChallenge": "I hit a problem in this session",
-      "challenge": "Problem",
-      "challengePlaceholder": "Google sign-in broke on older Android phones.",
-      "solution": "Solution",
-      "solutionPlaceholder": "Switched to email magic links.",
-      "add": "Add session",
-      "count": "{count}/{max} sessions",
-      "total": "Total {hours, number} {hours, plural, one {hour} other {hours}} over {sessions, plural, one {# session} other {# sessions}}",
-      "moveUp": "Move session {number} up",
-      "moveDown": "Move session {number} down",
-      "remove": "Remove session {number}"
-    },
     "preview": {
       "label": "Card preview",
       "note": "This is how your card shows up on the home page, in explore, and on your profile.",
       "prompt": "Your key prompt shows up here",
       "title": "Project title",
       "tools": "Tools",
-      "time": "X hours later"
+      "time": "X later"
     },
     "turnstile": "Security check",
     "submit": "Send for review",
@@ -376,8 +357,6 @@
       "too_long": "Too long, please shorten it.",
       "invalid_url": "Use a full link starting with https://",
       "invalid_video_url": "YouTube or Loom links only.",
-      "invalid_duration": "Enter 0.5–24 hours, in half-hour steps.",
-      "solution_needs_challenge": "Fill in the problem first, then the solution.",
       "ai_tool_required": "Pick at least one AI tool.",
       "too_many": "Too many. Please remove a few.",
       "invalid": "This is not valid yet."
@@ -397,10 +376,41 @@
       "mediaFailed": "The project is saved, but some images failed to upload. Upload them again from the edit page.",
       "view": "View project",
       "edit": "Edit project",
-      "another": "Show off another project"
+      "another": "Show off another project",
+      "story": "The build story can come later, whenever you like.",
+      "addStory": "Add the build story"
     },
     "saved": "Changes saved.",
-    "savedPending": "Changes saved. Your project is back in the review queue."
+    "savedPending": "Changes saved. Your project is back in the review queue.",
+    "screenshots": "Screenshots",
+    "extras": "More details",
+    "extrasHint": "description and demo video, optional",
+    "effortLegend": "Build time",
+    "autofill": {
+      "fetch": "Fetch info",
+      "fetching": "Fetching info…",
+      "filled": "Filled in from your page. Give it a quick check.",
+      "nothing": "We couldn't read that page automatically. Fill it in by hand.",
+      "repo": "From the repo: {commits, plural, one {# commit} other {# commits}} over {days, plural, one {# active day} other {# active days}}.",
+      "repoFailed": "We couldn't read the repo (private, or a typo in the link?).",
+      "suggested": "suggested by your repo",
+      "imageFailed": "We couldn't grab a screenshot from your page. Upload one by hand.",
+      "failed": "Couldn't fetch the info. Try again, or fill it in by hand."
+    },
+    "moments": {
+      "wow": "The prompt that made you go “whoa”",
+      "wowQuestion": "Which prompt surprised you most? Share the prompt and what happened.",
+      "wowPlaceholder": "“Make the buttons thumb-sized.” Done in one go, no edits.",
+      "hardest": "The hardest part",
+      "hardestQuestion": "What was most frustrating, and how did you get past it?",
+      "hardestPlaceholder": "Google sign-in broke on older Android phones. Switched to email magic links.",
+      "redo": "If you started over",
+      "redoQuestion": "What would you do differently?",
+      "redoPlaceholder": "Write prompts from the user's point of view from the start.",
+      "tell": "Tell it",
+      "remove": "Remove {moment}",
+      "legacy": "This project also has {count, plural, one {# build session} other {# build sessions}} from the old form. They still show on the project page."
+    }
   },
   "linkStatus": {
     "live": "Live",
@@ -428,7 +438,6 @@
     "about": "About this project",
     "howLead": "How it was",
     "howTail": "made",
-    "lessonsFrom": "Lessons from {name}",
     "trusted": "trusted maker",
     "viewProfile": "View profile",
     "tip": "Buy {name} a coffee",
@@ -436,7 +445,6 @@
     "meta": {
       "tools": "Tools",
       "buildTime": "Build time",
-      "buildTimeValue": "{hours, number} {hours, plural, one {hour} other {hours}}, {sessions, plural, one {# session} other {# sessions}}",
       "category": "Category",
       "repo": "Repo",
       "linkStatus": "Link status",
@@ -469,7 +477,15 @@
       "status": "Status: {status}. Other visitors can't see this page.",
       "reason": "Rejection reason: {reason}.",
       "back": "Back to the admin panel"
-    }
+    },
+    "moments": {
+      "wow": "The prompt that made them go “whoa”",
+      "hardest": "The hardest part",
+      "redo": "If they started over",
+      "sessions": "Build sessions"
+    },
+    "storyEmpty": "No build story yet. People usually want to know how this was made.",
+    "addStory": "Add the story"
   },
   "interactions": {
     "worthIt": {
@@ -577,8 +593,7 @@
     },
     "stats": {
       "projects": "Chats live",
-      "hours": "Total build time",
-      "hoursUnit": "hours",
+      "stories": "Projects with a build story",
       "upvotes": "People said worth it",
       "topTool": "Go-to tool"
     },
@@ -587,7 +602,7 @@
     "empty": "{name} hasn't shown off any chats yet. They'll show up here once they do.",
     "og": {
       "projects": "{count, plural, one {# chat} other {# chats}}",
-      "hours": "{hours, number} {hours, plural, one {hour} other {hours}} building"
+      "stories": "{count, plural, one {# build story} other {# build stories}}"
     }
   },
   "explore": {
@@ -690,7 +705,7 @@
       "submitted": "sent {when}",
       "hoursLeft": "{hours} h left",
       "overdue": "{hours} h overdue",
-      "buildTime": "{hours, number} {hours, plural, one {hour} other {hours}}, {sessions, plural, one {# session} other {# sessions}}",
+      "buildTime": "{effort, select, hours {A few hours} overnight {One night} weekend {One weekend} week {A week} other {Weeks}}",
       "approve": "Approve",
       "reject": "Reject",
       "rejectLabel": "Reject {title}",

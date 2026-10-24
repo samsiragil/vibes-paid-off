@@ -11,6 +11,8 @@ export type EditableProject = {
   status: ProjectStatus;
   rejectCode: string | null;
   rejectReason: string | null;
+  /** Build sessions from before build_effort; they stay on the project page, read-only. */
+  legacySessionCount: number;
   project: ProjectInput;
   media: ProjectMedia[];
 };
@@ -27,18 +29,13 @@ export async function getEditableProject(
   const { data: row } = await supabase
     .from("projects")
     .select(
-      "id, slug, owner_id, status, reject_code, reject_reason, title, tagline, description, key_prompt, lessons, live_url, repo_url, video_url, category, content_lang",
+      "id, slug, owner_id, status, reject_code, reject_reason, title, tagline, description, key_prompt, build_effort, moment_wow, moment_hardest, lessons, live_url, repo_url, video_url, category, content_lang, session_count",
     )
     .eq("slug", slug)
     .maybeSingle();
   if (!row || row.owner_id !== userId || row.status === "removed") return null;
 
-  const [sessions, tools, suggestions, media] = await Promise.all([
-    supabase
-      .from("project_sessions")
-      .select("id, label, duration_hours, prompt, result, challenge, solution")
-      .eq("project_id", row.id)
-      .order("sort_order"),
+  const [tools, suggestions, media] = await Promise.all([
     supabase.from("project_tools").select("tool_id").eq("project_id", row.id),
     supabase
       .from("tool_suggestions")
@@ -55,6 +52,7 @@ export async function getEditableProject(
     status: row.status,
     rejectCode: row.reject_code,
     rejectReason: row.reject_reason,
+    legacySessionCount: row.session_count,
     media,
     project: {
       keyPrompt: row.key_prompt,
@@ -66,20 +64,14 @@ export async function getEditableProject(
       videoUrl: row.video_url ?? "",
       category: row.category,
       contentLang: row.content_lang as ContentLang,
+      buildEffort: row.build_effort,
       toolIds: (tools.data ?? []).map((tool) => tool.tool_id),
       suggestions: (suggestions.data ?? []).map((suggestion) => ({
         name: suggestion.name,
         url: suggestion.url ?? "",
       })),
-      sessions: (sessions.data ?? []).map((session) => ({
-        id: session.id,
-        label: session.label ?? "",
-        durationHours: Number(session.duration_hours),
-        prompt: session.prompt,
-        result: session.result,
-        challenge: session.challenge ?? "",
-        solution: session.solution ?? "",
-      })),
+      momentWow: row.moment_wow ?? "",
+      momentHardest: row.moment_hardest ?? "",
       lessons: row.lessons ?? "",
     },
   };

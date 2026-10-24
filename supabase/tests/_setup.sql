@@ -82,8 +82,8 @@ declare
   pid uuid;
 begin
   -- created_at is in the past so fixtures do not count toward the daily rate limit.
-  insert into public.projects (owner_id, slug, title, tagline, key_prompt, live_url, category, status, published_at, created_at)
-  values (owner, 'tst-' || slug, 'Test ' || slug, 'Tagline ' || slug, 'Prompt kunci ' || slug,
+  insert into public.projects (owner_id, slug, title, tagline, key_prompt, build_effort, live_url, category, status, published_at, created_at)
+  values (owner, 'tst-' || slug, 'Test ' || slug, 'Tagline ' || slug, 'Prompt kunci ' || slug, 'weekend',
     'https://example.com/' || slug, 'other', status,
     case when status = 'published' then published end, '2020-06-01')
   returning id into pid;

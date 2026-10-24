@@ -6,6 +6,20 @@ export type ToolKind = Database["public"]["Enums"]["tool_kind"];
 export type ProjectStatus = Database["public"]["Enums"]["project_status"];
 export type ContentLang = Database["public"]["Enums"]["content_lang"];
 export type LinkStatus = Database["public"]["Enums"]["link_status"];
+export type BuildEffort = Database["public"]["Enums"]["build_effort"];
+
+/** Rough build time, shortest first: the chips on the submit form and "X kemudian" on cards. */
+export const BUILD_EFFORTS = [
+  "hours",
+  "overnight",
+  "weekend",
+  "week",
+  "longer",
+] as const satisfies readonly BuildEffort[];
+
+/** The three optional story moments; "redo" is stored in projects.lessons. */
+export const STORY_MOMENTS = ["wow", "hardest", "redo"] as const;
+export type StoryMoment = (typeof STORY_MOMENTS)[number];
 
 export const TOOL_KINDS: ToolKind[] = [
   "ai_agent",

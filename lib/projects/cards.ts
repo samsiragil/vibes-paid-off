@@ -1,4 +1,10 @@
-import { isAiTool, type ContentLang, type LinkStatus, type ToolKind } from "./types";
+import {
+  isAiTool,
+  type BuildEffort,
+  type ContentLang,
+  type LinkStatus,
+  type ToolKind,
+} from "./types";
 
 /** What an "obrolan" card or row needs (profile, home, explore, tools). */
 export type ProjectCardData = {
@@ -9,7 +15,9 @@ export type ProjectCardData = {
   keyPrompt: string;
   category: string;
   contentLang: ContentLang;
-  buildTimeHours: number;
+  buildEffort: BuildEffort;
+  /** Has story moments, lessons or old build sessions (the "ada cerita build" label). */
+  hasStory: boolean;
   upvoteCount: number;
   commentCount: number;
   linkStatus: LinkStatus;
@@ -22,8 +30,8 @@ export type ProjectCardData = {
 
 /** Columns for `.select()` on projects that `toProjectCard` maps. */
 export const PROJECT_CARD_SELECT = `
-  id, slug, title, tagline, key_prompt, category, content_lang, build_time_hours, upvote_count,
-  comment_count, link_status, published_at,
+  id, slug, title, tagline, key_prompt, category, content_lang, build_effort, has_story,
+  upvote_count, comment_count, link_status, published_at,
   owner:profiles!projects_owner_id_fkey (username, display_name, avatar_url),
   project_media (r2_key, sort_order),
   project_tools (tools (name, kind)),
@@ -38,7 +46,8 @@ type CardRow = {
   key_prompt: string;
   category: string;
   content_lang: ContentLang;
-  build_time_hours: number | string;
+  build_effort: BuildEffort;
+  has_story: boolean;
   upvote_count: number;
   comment_count: number;
   link_status: LinkStatus;
@@ -66,7 +75,8 @@ export function toProjectCard(row: CardRow): ProjectCardData {
     keyPrompt: row.key_prompt,
     category: row.category,
     contentLang: row.content_lang,
-    buildTimeHours: Number(row.build_time_hours),
+    buildEffort: row.build_effort,
+    hasStory: row.has_story,
     upvoteCount: row.upvote_count,
     commentCount: row.comment_count,
     linkStatus: row.link_status,

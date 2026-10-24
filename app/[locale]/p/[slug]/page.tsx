@@ -128,7 +128,6 @@ async function ProjectJsonLd({ project }: { project: ProjectDetail }) {
         genre: tCategories(project.category),
         keywords: project.tools.map((tool) => tool.name).join(", "),
         image: project.media.map((image) => mediaUrl(image.key)),
-        timeRequired: `PT${project.buildTimeHours}H`,
         datePublished: project.publishedAt ?? undefined,
         sameAs: project.liveUrl,
         author: {

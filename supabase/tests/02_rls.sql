@@ -126,8 +126,8 @@ select tap.emit(is(
 select tap.emit(ok(not is_admin(), 'owner: is_admin() is false'));
 
 -- New untrusted project lands in pending, even when the client asks for published.
-insert into projects (owner_id, slug, title, tagline, key_prompt, live_url, category)
-values (tap.id('alice'), 'tst-alice-new', 'Baru', 'Tagline', 'Prompt', 'https://example.com', 'other');
+insert into projects (owner_id, slug, title, tagline, key_prompt, build_effort, live_url, category)
+values (tap.id('alice'), 'tst-alice-new', 'Baru', 'Tagline', 'Prompt', 'weekend', 'https://example.com', 'other');
 insert into project_sessions (project_id, sort_order, duration_hours, prompt, result)
 select id, 0, 1.5, 'Sesi satu', 'Jadi' from projects where slug = 'tst-alice-new';
 insert into project_sessions (project_id, sort_order, duration_hours, prompt, result, label)
@@ -153,39 +153,44 @@ select tap.emit(throws_ok(
   '42501', null, 'owner: cannot add sessions to someone else''s project'
 ));
 select tap.emit(throws_ok(
-  $$ insert into projects (owner_id, slug, title, tagline, key_prompt, live_url, category, status)
-     values (tap.id('alice'), 'tst-x', 'x', 'x', 'x', 'https://example.com', 'other', 'published') $$,
+  $$ insert into projects (owner_id, slug, title, tagline, key_prompt, build_effort, live_url, category, status)
+     values (tap.id('alice'), 'tst-x', 'x', 'x', 'x', 'hours', 'https://example.com', 'other', 'published') $$,
   '42501', null, 'insert: client cannot set status'
 ));
 select tap.emit(throws_ok(
-  $$ insert into projects (owner_id, slug, title, tagline, key_prompt, live_url, category)
-     values (tap.id('bob'), 'tst-y', 'y', 'y', 'y', 'https://example.com', 'other') $$,
+  $$ insert into projects (owner_id, slug, title, tagline, key_prompt, build_effort, live_url, category)
+     values (tap.id('bob'), 'tst-y', 'y', 'y', 'y', 'hours', 'https://example.com', 'other') $$,
   '42501', null, 'insert: cannot create a project for someone else'
 ));
 select tap.emit(throws_ok(
-  $$ insert into projects (owner_id, slug, title, tagline, key_prompt, live_url, category)
-     values (tap.id('alice'), 'tst-z', 'z', 'z', 'z', 'http://example.com', 'other') $$,
+  $$ insert into projects (owner_id, slug, title, tagline, key_prompt, build_effort, live_url, category)
+     values (tap.id('alice'), 'tst-z', 'z', 'z', 'z', 'hours', 'http://example.com', 'other') $$,
   '23514', null, 'insert: live_url must be https'
 ));
 
 -- Rate limit: alice already made one project in the last 24 hours (via the API); two more are allowed.
-insert into projects (owner_id, slug, title, tagline, key_prompt, live_url, category)
-values (tap.id('alice'), 'tst-alice-2', 'Dua', 'T', 'P', 'https://example.com', 'other'),
-       (tap.id('alice'), 'tst-alice-3', 'Tiga', 'T', 'P', 'https://example.com', 'other');
+insert into projects (owner_id, slug, title, tagline, key_prompt, build_effort, live_url, category)
+values (tap.id('alice'), 'tst-alice-2', 'Dua', 'T', 'P', 'hours', 'https://example.com', 'other'),
+       (tap.id('alice'), 'tst-alice-3', 'Tiga', 'T', 'P', 'hours', 'https://example.com', 'other');
 select tap.emit(throws_ok(
-  $$ insert into projects (owner_id, slug, title, tagline, key_prompt, live_url, category)
-     values (tap.id('alice'), 'tst-alice-4', 'Empat', 'T', 'P', 'https://example.com', 'other') $$,
+  $$ insert into projects (owner_id, slug, title, tagline, key_prompt, build_effort, live_url, category)
+     values (tap.id('alice'), 'tst-alice-4', 'Empat', 'T', 'P', 'hours', 'https://example.com', 'other') $$,
   'P0001', 'rate_limit:projects', 'rate limit: 3 projects per 24 hours'
 ));
-select tap.emit(throws_ok(
-  $$ set constraints all immediate $$, 'P0001', 'project_sessions_required', 'a project needs at least one session'
+select tap.emit(lives_ok(
+  $$ set constraints all immediate $$, 'a project without build sessions is fine (sessions are optional)'
+));
+select tap.emit(results_eq(
+  $$ select slug, has_story from projects where slug in ('tst-alice-new', 'tst-alice-2') order by slug $$,
+  $$ values ('tst-alice-2', false), ('tst-alice-new', true) $$,
+  'has_story: old build sessions count as a story'
 ));
 
 -- No username yet ----------------------------------------------------------------
 select tap.as_user(tap.id('nousername'));
 select tap.emit(throws_ok(
-  $$ insert into projects (owner_id, slug, title, tagline, key_prompt, live_url, category)
-     values (tap.id('nousername'), 'tst-nu', 'x', 'x', 'x', 'https://example.com', 'other') $$,
+  $$ insert into projects (owner_id, slug, title, tagline, key_prompt, build_effort, live_url, category)
+     values (tap.id('nousername'), 'tst-nu', 'x', 'x', 'x', 'hours', 'https://example.com', 'other') $$,
   '42501', null, 'insert: requires a username (onboarding)'
 ));
 select tap.emit(lives_ok(
@@ -251,8 +256,8 @@ select tap.as_user(tap.id('alice'));
 select tap.as_postgres();
 update projects set created_at = now() - interval '2 days' where owner_id = tap.id('alice');
 select tap.as_user(tap.id('alice'));
-insert into projects (owner_id, slug, title, tagline, key_prompt, live_url, category)
-values (tap.id('alice'), 'tst-alice-trusted', 'Dipercaya', 'T', 'P', 'https://example.com', 'other');
+insert into projects (owner_id, slug, title, tagline, key_prompt, build_effort, live_url, category)
+values (tap.id('alice'), 'tst-alice-trusted', 'Dipercaya', 'T', 'P', 'hours', 'https://example.com', 'other');
 select tap.emit(is(
   (select status::text from projects where slug = 'tst-alice-trusted'), 'published',
   'trusted maker publishes directly'

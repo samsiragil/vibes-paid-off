@@ -1,21 +1,8 @@
 import type { ProjectInput } from "@/lib/validation/project";
-import type { ContentLang } from "./types";
+import type { BuildEffort, ContentLang } from "./types";
 
 // What the submit/edit form holds while the maker types: strings as typed, plus stable keys for
 // list items. toProjectInput() turns it into the shape projectSchema validates.
-
-export type SessionValues = {
-  key: string;
-  id?: string;
-  label: string;
-  durationHours: string;
-  prompt: string;
-  result: string;
-  /** "Ada kendala?" toggle; the challenge text is kept while hidden but not sent. */
-  hasChallenge: boolean;
-  challenge: string;
-  solution: string;
-};
 
 export type SuggestionValues = { key: string; name: string; url: string };
 
@@ -29,27 +16,17 @@ export type ProjectFormValues = {
   videoUrl: string;
   category: string;
   contentLang: ContentLang;
+  /** Empty until the maker taps a chip. */
+  buildEffort: BuildEffort | "";
   toolIds: number[];
   suggestions: SuggestionValues[];
-  sessions: SessionValues[];
+  momentWow: string;
+  momentHardest: string;
   lessons: string;
 };
 
 export function newKey() {
   return crypto.randomUUID();
-}
-
-export function emptySession(): SessionValues {
-  return {
-    key: newKey(),
-    label: "",
-    durationHours: "",
-    prompt: "",
-    result: "",
-    hasChallenge: false,
-    challenge: "",
-    solution: "",
-  };
 }
 
 export function emptyFormValues(contentLang: ContentLang): ProjectFormValues {
@@ -63,20 +40,19 @@ export function emptyFormValues(contentLang: ContentLang): ProjectFormValues {
     videoUrl: "",
     category: "",
     contentLang,
+    buildEffort: "",
     toolIds: [],
     suggestions: [],
-    sessions: [emptySession()],
+    momentWow: "",
+    momentHardest: "",
     lessons: "",
   };
 }
 
-/** "2,5" or "2.5" → 2.5; anything else → NaN (shown as invalid_duration). */
-export function parseHours(value: string) {
-  const normalized = value.trim().replace(",", ".");
-  return normalized === "" ? Number.NaN : Number(normalized);
-}
-
-export function toProjectInput(values: ProjectFormValues): ProjectInput {
+/** The form's answers in the shape projectSchema checks (an unpicked effort fails as required). */
+export function toProjectInput(
+  values: ProjectFormValues,
+): Omit<ProjectInput, "buildEffort"> & { buildEffort: BuildEffort | "" } {
   return {
     keyPrompt: values.keyPrompt,
     title: values.title,
@@ -87,17 +63,11 @@ export function toProjectInput(values: ProjectFormValues): ProjectInput {
     videoUrl: values.videoUrl,
     category: values.category,
     contentLang: values.contentLang,
+    buildEffort: values.buildEffort,
     toolIds: values.toolIds,
     suggestions: values.suggestions.map(({ name, url }) => ({ name, url })),
-    sessions: values.sessions.map((session) => ({
-      ...(session.id ? { id: session.id } : {}),
-      label: session.label,
-      durationHours: parseHours(session.durationHours),
-      prompt: session.prompt,
-      result: session.result,
-      challenge: session.hasChallenge ? session.challenge : "",
-      solution: session.hasChallenge ? session.solution : "",
-    })),
+    momentWow: values.momentWow,
+    momentHardest: values.momentHardest,
     lessons: values.lessons,
   };
 }
@@ -106,17 +76,6 @@ export function fromProjectInput(project: ProjectInput): ProjectFormValues {
   return {
     ...project,
     suggestions: project.suggestions.map((suggestion) => ({ key: newKey(), ...suggestion })),
-    sessions: project.sessions.map((session) => ({
-      key: session.id ?? newKey(),
-      id: session.id,
-      label: session.label,
-      durationHours: String(session.durationHours),
-      prompt: session.prompt,
-      result: session.result,
-      hasChallenge: session.challenge !== "",
-      challenge: session.challenge,
-      solution: session.solution,
-    })),
   };
 }
 
@@ -124,7 +83,8 @@ export function fromProjectInput(project: ProjectInput): ProjectFormValues {
 // the answers. Images are not kept (they are in-memory files until the project exists).
 
 const draftKey = "vpo:submit-draft";
-const draftVersion = 1;
+// 2: build_effort and story moments replaced build sessions; older drafts are dropped.
+const draftVersion = 2;
 
 type StoredDraft = { v: number; savedAt: number; values: ProjectFormValues };
 
@@ -133,7 +93,7 @@ export function readDraft(): { savedAt: number; values: ProjectFormValues } | nu
     const raw = window.localStorage.getItem(draftKey);
     if (!raw) return null;
     const draft = JSON.parse(raw) as StoredDraft;
-    if (draft.v !== draftVersion || !draft.values || !Array.isArray(draft.values.sessions)) {
+    if (draft.v !== draftVersion || !draft.values || !Array.isArray(draft.values.toolIds)) {
       return null;
     }
     return { savedAt: draft.savedAt, values: draft.values };
@@ -167,9 +127,11 @@ export function hasContent(values: ProjectFormValues) {
     values.tagline.trim() ||
     values.description.trim() ||
     values.liveUrl.trim() ||
+    values.buildEffort ||
     values.toolIds.length ||
     values.suggestions.length ||
-    values.lessons.trim() ||
-    values.sessions.some((session) => session.prompt.trim() || session.result.trim()),
+    values.momentWow.trim() ||
+    values.momentHardest.trim() ||
+    values.lessons.trim(),
   );
 }

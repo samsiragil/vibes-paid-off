@@ -60,7 +60,7 @@ export async function HomeHeroCard({ hero }: { hero: HomeHero }) {
           className="size-9 text-xs"
         />
       </div>
-      <TimeGap>{tCard("timeAfter", { hours: project.buildTimeHours })}</TimeGap>
+      <TimeGap>{tCard("effortAfter", { effort: project.buildEffort })}</TimeGap>
       <div className="flex items-end gap-2.5">
         <AiAvatar />
         <ResultBubble

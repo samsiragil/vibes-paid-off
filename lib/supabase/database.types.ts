@@ -233,6 +233,7 @@ export type Database = {
       };
       projects: {
         Row: {
+          build_effort: Database["public"]["Enums"]["build_effort"];
           build_time_hours: number;
           category: string;
           comment_count: number;
@@ -240,6 +241,7 @@ export type Database = {
           created_at: string;
           description: string;
           eligible_upvote_count: number;
+          has_story: boolean;
           id: string;
           key_prompt: string;
           last_checked_at: string | null;
@@ -247,6 +249,8 @@ export type Database = {
           link_fail_count: number;
           link_status: Database["public"]["Enums"]["link_status"];
           live_url: string;
+          moment_hardest: string | null;
+          moment_wow: string | null;
           owner_id: string;
           published_at: string | null;
           reject_code: string | null;
@@ -259,6 +263,7 @@ export type Database = {
           session_count: number;
           slug: string;
           status: Database["public"]["Enums"]["project_status"];
+          story_nudge_dismissed_at: string | null;
           submitted_at: string;
           tagline: string;
           title: string;
@@ -267,6 +272,7 @@ export type Database = {
           video_url: string | null;
         };
         Insert: {
+          build_effort: Database["public"]["Enums"]["build_effort"];
           build_time_hours?: number;
           category: string;
           comment_count?: number;
@@ -274,6 +280,7 @@ export type Database = {
           created_at?: string;
           description?: string;
           eligible_upvote_count?: number;
+          has_story?: never;
           id?: string;
           key_prompt: string;
           last_checked_at?: string | null;
@@ -281,6 +288,8 @@ export type Database = {
           link_fail_count?: number;
           link_status?: Database["public"]["Enums"]["link_status"];
           live_url: string;
+          moment_hardest?: string | null;
+          moment_wow?: string | null;
           owner_id: string;
           published_at?: string | null;
           reject_code?: string | null;
@@ -293,6 +302,7 @@ export type Database = {
           session_count?: number;
           slug: string;
           status?: Database["public"]["Enums"]["project_status"];
+          story_nudge_dismissed_at?: string | null;
           submitted_at?: string;
           tagline: string;
           title: string;
@@ -301,6 +311,7 @@ export type Database = {
           video_url?: string | null;
         };
         Update: {
+          build_effort?: Database["public"]["Enums"]["build_effort"];
           build_time_hours?: number;
           category?: string;
           comment_count?: number;
@@ -308,6 +319,7 @@ export type Database = {
           created_at?: string;
           description?: string;
           eligible_upvote_count?: number;
+          has_story?: never;
           id?: string;
           key_prompt?: string;
           last_checked_at?: string | null;
@@ -315,6 +327,8 @@ export type Database = {
           link_fail_count?: number;
           link_status?: Database["public"]["Enums"]["link_status"];
           live_url?: string;
+          moment_hardest?: string | null;
+          moment_wow?: string | null;
           owner_id?: string;
           published_at?: string | null;
           reject_code?: string | null;
@@ -327,6 +341,7 @@ export type Database = {
           session_count?: number;
           slug?: string;
           status?: Database["public"]["Enums"]["project_status"];
+          story_nudge_dismissed_at?: string | null;
           submitted_at?: string;
           tagline?: string;
           title?: string;
@@ -742,6 +757,7 @@ export type Database = {
       wib_week_start: { Args: { p_at?: string }; Returns: string };
     };
     Enums: {
+      build_effort: "hours" | "overnight" | "weekend" | "week" | "longer";
       comment_status: "visible" | "hidden";
       content_lang: "id" | "en";
       link_status: "live" | "offline" | "archived";
@@ -878,6 +894,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      build_effort: ["hours", "overnight", "weekend", "week", "longer"],
       comment_status: ["visible", "hidden"],
       content_lang: ["id", "en"],
       link_status: ["live", "offline", "archived"],

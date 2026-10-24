@@ -23,10 +23,13 @@ export function isSameOrigin(request: Request) {
 }
 
 /**
- * Counts one presign/finalize call against the account's hourly budget (consume_media_quota).
- * Returns false once the budget is spent.
+ * Counts one presign/finalize/autofill call against the account's hourly budget
+ * (consume_media_quota). Returns false once the budget is spent.
  */
-export async function consumeMediaQuota(supabase: UserClient, kind: "presign" | "finalize") {
+export async function consumeMediaQuota(
+  supabase: UserClient,
+  kind: "presign" | "finalize" | "autofill",
+) {
   const { error } = await supabase.rpc("consume_media_quota", { p_kind: kind });
   if (!error) return true;
   if (error.message.startsWith("rate_limit")) return false;

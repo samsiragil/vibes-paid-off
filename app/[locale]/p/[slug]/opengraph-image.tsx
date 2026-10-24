@@ -8,7 +8,7 @@ export const size = OG_SIZE;
 export const contentType = "image/png";
 export const alt = "Jadinya";
 
-/** Share card for a project: key prompt → "X jam kemudian" → title, like the site's cards. */
+/** Share card for a project: key prompt → "satu weekend kemudian" → title, like the site's cards. */
 export default async function Image({
   params,
 }: {
@@ -25,13 +25,7 @@ export default async function Image({
 
   const tCard = await getTranslations({ locale, namespace: "projectCard" });
   const tCategories = await getTranslations({ locale, namespace: "categories" });
-  const timeLabel =
-    project.sessionCount > 1
-      ? tCard("timeAfterSessions", {
-          hours: project.buildTimeHours,
-          sessions: project.sessionCount,
-        })
-      : tCard("timeAfter", { hours: project.buildTimeHours });
+  const timeLabel = tCard("effortAfter", { effort: project.buildEffort });
 
   return renderOgImage(
     <div style={{ display: "flex", flexDirection: "column", flexGrow: 1 }}>

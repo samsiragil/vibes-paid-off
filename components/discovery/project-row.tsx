@@ -19,7 +19,7 @@ export async function ProjectRow({ project }: { project: ProjectCardData }) {
     summary.rest > 0
       ? `${summary.names} ${tCard("moreTools", { count: summary.rest })}`
       : summary.names;
-  const hours = tCard("hours", { hours: project.buildTimeHours });
+  const effort = tCard("effort", { effort: project.buildEffort });
 
   return (
     <Link
@@ -56,7 +56,7 @@ export async function ProjectRow({ project }: { project: ProjectCardData }) {
         <div className="min-w-0">
           <h3 className="truncate text-sm font-semibold group-hover:underline">{project.title}</h3>
           <p className="truncate text-xs text-muted">
-            {tools ? t("latestMeta", { tools, time: hours }) : hours}
+            {tools ? t("latestMeta", { tools, time: effort }) : effort}
           </p>
         </div>
       </div>

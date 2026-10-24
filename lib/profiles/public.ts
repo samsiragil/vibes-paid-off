@@ -24,7 +24,8 @@ export type PublicProfile = {
   projects: ProjectCardData[];
   stats: {
     projectCount: number;
-    totalHours: number;
+    /** Published projects with a build story. */
+    storyCount: number;
     upvoteCount: number;
     /** The tool used in most published projects (AI tools win ties). */
     topTool: string | null;
@@ -102,7 +103,7 @@ export async function getPublicProfile(username: string): Promise<PublicProfile 
     projects,
     stats: {
       projectCount: projects.length,
-      totalHours: projects.reduce((sum, project) => sum + project.buildTimeHours, 0),
+      storyCount: projects.filter((project) => project.hasStory).length,
       upvoteCount: projects.reduce((sum, project) => sum + project.upvoteCount, 0),
       topTool: topToolOf(projects),
     },

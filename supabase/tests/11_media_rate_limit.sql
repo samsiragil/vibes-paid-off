@@ -35,3 +35,11 @@ select tap.as_user(tap.id('maker'));
 select tap.emit(lives_ok(
   $$ select consume_media_quota('finalize') $$, 'media quota: the window is one hour'
 ));
+
+-- Autofill (link preview and screenshot fetches) has its own budget of 30 per hour.
+select tap.as_user(tap.id('other'));
+select consume_media_quota('autofill') from generate_series(1, 30);
+select tap.emit(throws_like(
+  $$ select consume_media_quota('autofill') $$, 'rate_limit:media%',
+  'media quota: the 31st autofill in an hour is refused'
+));

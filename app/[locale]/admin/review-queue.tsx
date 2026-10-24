@@ -142,7 +142,7 @@ export async function QueueCard({ item, now }: { item: QueueItem; now: number })
           {[
             item.tools.join(", "),
             tCategory(item.category),
-            t("buildTime", { hours: item.buildTimeHours, sessions: item.sessionCount }),
+            t("buildTime", { effort: item.buildEffort }),
           ]
             .filter(Boolean)
             .join(" · ")}{" "}

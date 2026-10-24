@@ -7,7 +7,7 @@ import { cn } from "@/lib/cn";
 
 /**
  * The "obrolan" card used in grids (home, explore, profile) and as the live preview on the
- * submit form: maker, key prompt, "X jam kemudian", screenshot + title, tools and Worth it.
+ * submit form: maker, key prompt, "satu weekend kemudian", screenshot + title, tools and Worth it.
  * Purely presentational; callers pass translated labels.
  */
 export function ProjectCardView({
@@ -16,6 +16,7 @@ export function ProjectCardView({
   category,
   prompt,
   timeLabel,
+  story,
   imageUrl,
   title,
   tools,
@@ -32,6 +33,8 @@ export function ProjectCardView({
   category?: string;
   prompt: string;
   timeLabel: string;
+  /** "ada cerita build", shown after the time label when the project has a build story. */
+  story?: string;
   imageUrl?: string | null;
   title: string;
   tools: string;
@@ -75,7 +78,15 @@ export function ProjectCardView({
         </div>
       )}
       <PromptBubble className={cn("break-words", muted && "text-muted")}>{prompt}</PromptBubble>
-      <TimeGap>{timeLabel}</TimeGap>
+      <TimeGap>
+        {timeLabel}
+        {story ? (
+          <>
+            {" · "}
+            <span className="text-accent-text">{story}</span>
+          </>
+        ) : null}
+      </TimeGap>
       <ResultBubble>
         <div className="relative h-[130px] overflow-hidden rounded-[10px] bg-placeholder">
           {imageUrl ? (

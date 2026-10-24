@@ -10,6 +10,7 @@ import type { MyProject } from "@/lib/profiles/me";
 import { rejectReasonText } from "@/lib/projects/reject-reason";
 import type { ProjectStatus } from "@/lib/projects/types";
 import { ArchiveButton } from "./archive-button";
+import { DismissibleNudge } from "./story-nudge";
 
 // The "Proyek saya" tab of /me (VPO-Me) and the offline-link notice above the tabs.
 
@@ -29,6 +30,33 @@ export async function OfflineNotice({ project }: { project: MyProject }) {
           })
         : t.rich("offlineNoticeNoDate", { title: project.title, strong })}
     </SystemMessage>
+  );
+}
+
+/**
+ * "12 orang bilang Kasir Warung worth it. Mereka penasaran gimana kamu bikinnya." A published
+ * project without a build story, once people noticed it or after a week live (MyProject.storyNudge).
+ */
+export async function StoryNudge({ project }: { project: MyProject }) {
+  const t = await getTranslations("me.nudge");
+  const strong = (chunks: ReactNode) => <strong className="font-semibold">{chunks}</strong>;
+
+  return (
+    <DismissibleNudge
+      projectId={project.id}
+      action={
+        <Link
+          href={`/p/${project.slug}/edit#cerita`}
+          className={buttonStyles({ variant: "primary", size: "sm" })}
+        >
+          {t("cta")}
+        </Link>
+      }
+    >
+      {project.upvoteCount > 0
+        ? t.rich("upvotes", { count: project.upvoteCount, title: project.title, strong })
+        : t.rich("aged", { title: project.title, strong })}
+    </DismissibleNudge>
   );
 }
 

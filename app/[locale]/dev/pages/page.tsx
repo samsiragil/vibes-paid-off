@@ -21,8 +21,9 @@ import type {
 import type { MyProject } from "@/lib/profiles/me";
 import type { ProjectCardData } from "@/lib/projects/cards";
 import type { ProjectDetail } from "@/lib/projects/detail";
+import type { BuildEffort } from "@/lib/projects/types";
 import { MeTabs } from "../../me/me-tabs";
-import { MyProjects, OfflineNotice, ReviewNotice } from "../../me/my-projects";
+import { MyProjects, OfflineNotice, ReviewNotice, StoryNudge } from "../../me/my-projects";
 import { ProfileForm } from "../../me/profile-form";
 import { ActionLogProvider } from "../../admin/action-log";
 import { ReportCard } from "../../admin/reports";
@@ -59,6 +60,11 @@ const baseProject: ProjectDetail = {
   description: "",
   keyPrompt:
     "Bikin kasir buat warung kelontong, tombolnya gede, bisa dipakai ibu-ibu tanpa tutorial.",
+  buildEffort: "weekend",
+  momentWow:
+    "“Tombolnya segede jempol, warnanya beda tiap kategori.” Sekali jalan, Bu Tini langsung bisa pakai.",
+  momentHardest: null,
+  hasStory: true,
   lessons:
     "Tulis prompt dari sudut pandang pemakainya, bukan dari daftar fiturnya. “Ibu-ibu tanpa tutorial” menghasilkan desain yang lebih baik daripada spesifikasi sepanjang apa pun.",
   liveUrl: "https://example.com",
@@ -71,8 +77,6 @@ const baseProject: ProjectDetail = {
   rejectReason: null,
   linkStatus: "offline",
   lastCheckedAt: "2026-10-15T03:00:00Z",
-  buildTimeHours: 6,
-  sessionCount: 2,
   upvoteCount: 128,
   publishedAt: "2026-10-10T03:00:00Z",
   createdAt: "2026-10-10T03:00:00Z",
@@ -137,6 +141,7 @@ const myProjects: MyProject[] = [
     upvoteCount: 128,
     commentCount: 2,
     coverKey: null,
+    storyNudge: true,
   },
   {
     id: "p2",
@@ -152,6 +157,7 @@ const myProjects: MyProject[] = [
     upvoteCount: 87,
     commentCount: 4,
     coverKey: null,
+    storyNudge: false,
   },
   {
     id: "p3",
@@ -167,6 +173,7 @@ const myProjects: MyProject[] = [
     upvoteCount: 0,
     commentCount: 0,
     coverKey: null,
+    storyNudge: false,
   },
   {
     id: "p4",
@@ -182,6 +189,7 @@ const myProjects: MyProject[] = [
     upvoteCount: 0,
     commentCount: 0,
     coverKey: null,
+    storyNudge: false,
   },
 ];
 
@@ -191,7 +199,7 @@ function sampleCard(
   keyPrompt: string,
   maker: string,
   tools: { name: string; ai: boolean }[],
-  hours: number,
+  effort: BuildEffort,
   votes: number,
 ): ProjectCardData {
   return {
@@ -202,7 +210,8 @@ function sampleCard(
     keyPrompt,
     category: ["umkm", "community", "lifestyle", "game"][n % 4],
     contentLang: n === 3 ? "en" : "id",
-    buildTimeHours: hours,
+    buildEffort: effort,
+    hasStory: n % 2 === 1,
     upvoteCount: votes,
     commentCount: n % 3,
     linkStatus: "live",
@@ -223,7 +232,7 @@ const sampleCards: ProjectCardData[] = [
       { name: "Lovable", ai: true },
       { name: "WhatsApp Cloud API", ai: false },
     ],
-    3,
+    "hours",
     94,
   ),
   sampleCard(
@@ -232,7 +241,7 @@ const sampleCards: ProjectCardData[] = [
     "Foto isi kulkas, kasih tiga resep yang bisa dimasak dalam 20 menit.",
     "Ragil Samsi",
     [{ name: "Claude Code", ai: true }],
-    9,
+    "overnight",
     87,
   ),
   sampleCard(
@@ -245,7 +254,7 @@ const sampleCards: ProjectCardData[] = [
       { name: "Vercel", ai: false },
       { name: "Supabase", ai: false },
     ],
-    13,
+    "weekend",
     61,
   ),
 ];
@@ -303,8 +312,7 @@ const sampleQueue: QueueItem[] = [
     keyPrompt: "Absensi praktikum pakai QR, asisten lab bisa rekap per minggu.",
     liveUrl: "https://absenlab.example.com",
     category: "education",
-    buildTimeHours: 5,
-    sessionCount: 2,
+    buildEffort: "weekend",
     submittedAt: "2026-10-17T00:00:00Z",
     resubmitted: false,
     coverKey: null,
@@ -319,8 +327,7 @@ const sampleQueue: QueueItem[] = [
     keyPrompt: "Hitung ongkir beberapa kurir sekaligus, tinggal tempel alamat dari chat pembeli.",
     liveUrl: "https://ongkirumkm.example.com",
     category: "umkm",
-    buildTimeHours: 6,
-    sessionCount: 1,
+    buildEffort: "overnight",
     submittedAt: "2026-10-14T00:00:00Z",
     resubmitted: true,
     coverKey: null,
@@ -610,6 +617,7 @@ async function Preview({
               <ReviewNotice project={myProjects[2]} />
               <ReviewNotice project={myProjects[0]} />
               <OfflineNotice project={myProjects[1]} />
+              <StoryNudge project={myProjects[0]} />
             </div>
           ) : null}
           <MeTabs

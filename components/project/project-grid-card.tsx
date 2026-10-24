@@ -39,7 +39,8 @@ export function ProjectGridCard({
         // Explore (VPO-Jelajah) shows the language instead of the category in the corner.
         category={showLang ? undefined : tCategories(project.category)}
         prompt={project.keyPrompt}
-        timeLabel={t("timeAfter", { hours: project.buildTimeHours })}
+        timeLabel={t("effortAfter", { effort: project.buildEffort })}
+        story={project.hasStory ? t("story") : undefined}
         imageUrl={project.coverKey ? mediaUrl(project.coverKey) : null}
         title={project.title}
         tools={
