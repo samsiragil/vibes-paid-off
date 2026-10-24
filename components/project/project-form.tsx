@@ -484,6 +484,7 @@ function ProjectFormBody({
             </Button>
             <AutofillStatus state={autofill} />
           </div>
+          <AutofillAbout />
 
           <Field id={fieldId("title")} label={t("title")} error={fieldError("title")}>
             <Input
@@ -810,7 +811,13 @@ function AutofillStatus({ state }: { state: AutofillState }) {
   } else {
     const { suggestion } = state;
     lines.push(suggestion.pageFailed ? t("autofill.nothing") : t("autofill.filled"));
-    if (suggestion.repo) lines.push(t("autofill.repo", suggestion.repo));
+    if (suggestion.repo)
+      lines.push(
+        t("autofill.repo", {
+          commits: suggestion.repo.commits,
+          days: suggestion.repo.activeDays,
+        }),
+      );
     if (suggestion.repoFailed) lines.push(t("autofill.repoFailed"));
     if (state.imageFailed) lines.push(t("autofill.imageFailed"));
   }
@@ -819,6 +826,52 @@ function AutofillStatus({ state }: { state: AutofillState }) {
     <p role="status" className="min-w-0 flex-1 text-[13px] leading-normal text-ink-2">
       {lines.join(" ")}
     </p>
+  );
+}
+
+/** What "Ambil info" reads from the live page and the repo, folded under the button. */
+function AutofillAbout() {
+  const t = useTranslations("projectForm.autofill.about");
+  const sources = [
+    { heading: t("web"), items: [t("webTitle"), t("webTagline"), t("webImage"), t("webLang")] },
+    { heading: t("repo"), items: [t("repoDescription"), t("repoReadme"), t("repoCommits")] },
+  ];
+
+  return (
+    <details className="group -mt-1.5 text-[13px] leading-normal text-ink-2">
+      <summary className="inline-flex min-h-6 cursor-pointer list-none items-center gap-1.5 underline-offset-2 hover:underline [&::-webkit-details-marker]:hidden">
+        <svg
+          width="12"
+          height="12"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden="true"
+          className="transition-transform group-open:rotate-90"
+        >
+          <path d="M9 6l6 6-6 6" />
+        </svg>
+        {t("toggle")}
+      </summary>
+      <div className="mt-2 flex flex-col gap-3 rounded-2xl border border-border px-3.5 py-3">
+        <div className="grid gap-3 sm:grid-cols-2">
+          {sources.map((source) => (
+            <div key={source.heading}>
+              <p className="font-medium text-ink">{source.heading}</p>
+              <ul className="mt-1 list-disc space-y-0.5 pl-4">
+                {source.items.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+        <p className="text-muted">{t("note")}</p>
+      </div>
+    </details>
   );
 }
 

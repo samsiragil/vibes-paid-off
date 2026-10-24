@@ -395,7 +395,20 @@
       "repoFailed": "Repo-nya belum bisa dibaca (privat, atau link-nya salah?).",
       "suggested": "saran dari repo",
       "imageFailed": "Screenshot dari halamanmu belum bisa diambil. Unggah manual, ya.",
-      "failed": "Gagal mengambil info. Coba lagi, atau isi manual."
+      "failed": "Gagal mengambil info. Coba lagi, atau isi manual.",
+      "about": {
+        "toggle": "Apa saja yang diambil Jadinya?",
+        "web": "Dari halaman web",
+        "webTitle": "Judul, dari og:title atau judul halaman",
+        "webTagline": "Tagline, dari meta description",
+        "webImage": "Screenshot cover, dari og:image",
+        "webLang": "Bahasa konten, dari atribut lang halaman",
+        "repo": "Dari repo GitHub (publik)",
+        "repoDescription": "Deskripsi repo, cadangan kalau halaman tidak punya deskripsi",
+        "repoReadme": "Paragraf pertama README, untuk deskripsi",
+        "repoCommits": "Jumlah commit dan hari aktif, untuk menebak lama pembuatan",
+        "note": "Yang dibaca cuma bagian head halaman dan data publik repo. Belum ada yang disimpan sampai kamu kirim, dan semuanya bisa kamu ubah."
+      }
     },
     "moments": {
       "wow": "Prompt yang bikin “wah”",

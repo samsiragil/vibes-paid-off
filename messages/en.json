@@ -395,7 +395,20 @@
       "repoFailed": "We couldn't read the repo (private, or a typo in the link?).",
       "suggested": "suggested by your repo",
       "imageFailed": "We couldn't grab a screenshot from your page. Upload one by hand.",
-      "failed": "Couldn't fetch the info. Try again, or fill it in by hand."
+      "failed": "Couldn't fetch the info. Try again, or fill it in by hand.",
+      "about": {
+        "toggle": "What does Jadinya fetch?",
+        "web": "From your web page",
+        "webTitle": "Title, from og:title or the page title",
+        "webTagline": "Tagline, from the meta description",
+        "webImage": "Cover screenshot, from og:image",
+        "webLang": "Content language, from the page's lang attribute",
+        "repo": "From your GitHub repo (public)",
+        "repoDescription": "Repo description, a fallback when the page has none",
+        "repoReadme": "The README's first paragraph, for the description",
+        "repoCommits": "Commit count and active days, to guess how long the build took",
+        "note": "Only the page's head and the repo's public data are read. Nothing is saved until you submit, and you can change all of it."
+      }
     },
     "moments": {
       "wow": "The prompt that made you go “whoa”",
