@@ -1,0 +1,97 @@
+[
+  {
+    "id": "01-jejak-jadi",
+    "name": "Jejak Jadi",
+    "scores": [
+      4,
+      5,
+      5,
+      4,
+      5
+    ],
+    "reasons": [
+      "J dengan keping terpisah memberi ciri, meski monogram J umum.",
+      "Pita 40 unit dan celah 24 unit tetap terbaca pada 16 px.",
+      "Nama serta hubungan pesan–hasil bertemu dalam satu tanda.",
+      "Bentuk sederhana tanpa efek; karakter huruf tetap bergantung pada pemakaian konsisten.",
+      "Kait, keping, dan gerak menetap mudah diturunkan ke ikon dan pola."
+    ],
+    "primary": "#A44732"
+  },
+  {
+    "id": "02-temu-hasil",
+    "name": "Temu Hasil",
+    "scores": [
+      3,
+      4,
+      5,
+      4,
+      5
+    ],
+    "reasons": [
+      "Pasangan siku umum; offset dan rongga terbuka memberi pembeda terbatas.",
+      "Massa tebal terbaca; celah 16 unit menjadi sekitar 1 px dan perlu tetap utuh.",
+      "Pasangan prompt–hasil mengikuti struktur data secara langsung.",
+      "Dua bentuk sederhana tidak bergantung tren efek.",
+      "Sangat cocok untuk layout pasangan, ikon, dan transisi keadaan."
+    ],
+    "primary": "#365D4A"
+  },
+  {
+    "id": "03-keping-jadi",
+    "name": "Keping Jadi",
+    "scores": [
+      3,
+      4,
+      4,
+      4,
+      5
+    ],
+    "reasons": [
+      "Asimetri tiga keping membantu, tetapi berlian modular adalah bentuk umum.",
+      "Celah 24 unit tetap jelas; keping kecil masih terlihat namun paling ringan.",
+      "Merakit proses menjadi hasil relevan, walau tidak khusus menggambarkan katalog.",
+      "Geometri sederhana; hindari bahasa visual aset digital.",
+      "Modul dapat menjadi pola, ilustrasi proses, dan motion yang kaya."
+    ],
+    "primary": "#345C82"
+  },
+  {
+    "id": "04-lembar-lanjut",
+    "name": "Lembar Lanjut",
+    "scores": [
+      3,
+      5,
+      4,
+      4,
+      4
+    ],
+    "reasons": [
+      "Asimetri memberi ciri, namun buku terbuka merupakan metafora sangat umum.",
+      "Dua bidang besar dan celah 24 unit tetap jelas.",
+      "Kuat untuk proses dan pembelajaran; lebih lemah untuk pamer karya.",
+      "Metafora mudah dimengerti dan tidak bergantung pada tren AI.",
+      "Bahasa lembar berguna untuk konten editorial, tetapi kurang luas dari modul."
+    ],
+    "primary": "#77602D"
+  },
+  {
+    "id": "05-jadi-terbuka",
+    "name": "Jadi Terbuka",
+    "scores": [
+      4,
+      4,
+      3,
+      4,
+      4
+    ],
+    "reasons": [
+      "Takikan dan a khusus membedakan wordmark, meski kerangka huruf familier.",
+      "Varian kecil tanpa takikan mempertahankan mangkuk dan batang; ciri takikan hilang di favicon.",
+      "Nama kuat, tetapi a bukan inisial dan hubungan dengan mekanisme produk lebih lemah.",
+      "Modifikasi terbatas menjaga keterbacaan dan menghindari font dekoratif.",
+      "Mangkuk dan takikan bisa meluas ke UI, tetapi perlu disiplin agar tidak berlebihan."
+    ],
+    "primary": "#704434"
+  }
+]

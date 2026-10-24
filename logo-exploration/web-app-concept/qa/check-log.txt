@@ -1,0 +1,239 @@
+{
+  "errors": [],
+  "checks": [
+    {
+      "name": "vote-toggle",
+      "pass": true
+    },
+    {
+      "name": "detail-open",
+      "pass": true
+    },
+    {
+      "name": "lessons-tab",
+      "pass": true
+    },
+    {
+      "name": "search",
+      "pass": true
+    },
+    {
+      "name": "empty",
+      "pass": true
+    },
+    {
+      "name": "reset",
+      "pass": true
+    },
+    {
+      "name": "category",
+      "pass": true
+    },
+    {
+      "name": "draft-feedback",
+      "pass": true
+    },
+    {
+      "name": "carousel",
+      "pass": true
+    }
+  ],
+  "layout": [
+    {
+      "label": "gallery-desktop-light",
+      "width": 1068,
+      "scrollWidth": 1068,
+      "font": true,
+      "fontSemibold": true,
+      "app": {
+        "x": 0,
+        "y": 0,
+        "width": 1068,
+        "height": 1280,
+        "top": 0,
+        "right": 1068,
+        "bottom": 1280,
+        "left": 0
+      }
+    },
+    {
+      "label": "gallery-desktop-dark",
+      "width": 1068,
+      "scrollWidth": 1068,
+      "font": true,
+      "fontSemibold": true,
+      "app": {
+        "x": 0,
+        "y": 0,
+        "width": 1068,
+        "height": 1280,
+        "top": 0,
+        "right": 1068,
+        "bottom": 1280,
+        "left": 0
+      }
+    },
+    {
+      "label": "journal-desktop-light",
+      "width": 1068,
+      "scrollWidth": 1068,
+      "font": true,
+      "fontSemibold": true,
+      "app": {
+        "x": 0,
+        "y": 0,
+        "width": 1068,
+        "height": 1280,
+        "top": 0,
+        "right": 1068,
+        "bottom": 1280,
+        "left": 0
+      }
+    },
+    {
+      "label": "journal-mobile-light",
+      "width": 358,
+      "scrollWidth": 358,
+      "font": true,
+      "fontSemibold": true,
+      "app": {
+        "x": 0,
+        "y": 0,
+        "width": 358,
+        "height": 2220,
+        "top": 0,
+        "right": 358,
+        "bottom": 2220,
+        "left": 0
+      }
+    },
+    {
+      "label": "gallery-mobile-light",
+      "width": 358,
+      "scrollWidth": 358,
+      "font": true,
+      "fontSemibold": true,
+      "app": {
+        "x": 0,
+        "y": 0,
+        "width": 358,
+        "height": 2220,
+        "top": 0,
+        "right": 358,
+        "bottom": 2220,
+        "left": 0
+      }
+    },
+    {
+      "label": "gallery-narrow-dark",
+      "width": 288,
+      "scrollWidth": 288,
+      "font": true,
+      "fontSemibold": true,
+      "app": {
+        "x": 0,
+        "y": 0,
+        "width": 288,
+        "height": 2220,
+        "top": 0,
+        "right": 288,
+        "bottom": 2220,
+        "left": 0
+      }
+    }
+  ],
+  "formInfo": {
+    "valid": true,
+    "status": "Draft contoh “Uji konsep” siap dilanjutkan ke sesi pembuatan. Tidak ada data yang dikirim.",
+    "fields": [
+      {
+        "name": "title",
+        "value": "Uji konsep",
+        "valid": true,
+        "message": ""
+      },
+      {
+        "name": "prompt",
+        "value": "Buat daftar kecil.",
+        "valid": true,
+        "message": ""
+      },
+      {
+        "name": "url",
+        "value": "https://example.com",
+        "valid": true,
+        "message": ""
+      },
+      {
+        "name": "",
+        "value": "",
+        "valid": true,
+        "message": ""
+      }
+    ]
+  },
+  "carouselButtons": [
+    {
+      "text": "",
+      "label": "Sebelumnya"
+    },
+    {
+      "text": "Galeri karya",
+      "label": null
+    },
+    {
+      "text": "Jurnal maker",
+      "label": null
+    },
+    {
+      "text": "",
+      "label": "Berikutnya"
+    }
+  ],
+  "contrast": [
+    {
+      "name": "brand-light",
+      "ratio": 5.96
+    },
+    {
+      "name": "brand-dark",
+      "ratio": 7.85
+    },
+    {
+      "name": "text-light",
+      "ratio": 14.32
+    },
+    {
+      "name": "muted-light",
+      "ratio": 6.07
+    },
+    {
+      "name": "muted-dark",
+      "ratio": 7.49
+    },
+    {
+      "name": "input-light",
+      "ratio": 3.34
+    },
+    {
+      "name": "input-dark",
+      "ratio": 3.54
+    },
+    {
+      "name": "pinus-light",
+      "ratio": 7.44
+    },
+    {
+      "name": "pinus-dark",
+      "ratio": 7.68
+    },
+    {
+      "name": "tinta-light",
+      "ratio": 7
+    },
+    {
+      "name": "tinta-dark",
+      "ratio": 8.3
+    }
+  ]
+}

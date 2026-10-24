@@ -1,0 +1,1258 @@
+{
+  "desktop": {
+    "viewport": 1440,
+    "scrollWidth": 1440,
+    "fontLoaded": true,
+    "images": 56,
+    "brokenImages": [],
+    "sizeTests": [
+      {
+        "asset": "01-jejak-jadi/symbol-small.svg",
+        "expected": 16,
+        "width": 16,
+        "height": 16
+      },
+      {
+        "asset": "01-jejak-jadi/symbol.svg",
+        "expected": 32,
+        "width": 32,
+        "height": 32
+      },
+      {
+        "asset": "01-jejak-jadi/symbol.svg",
+        "expected": 64,
+        "width": 64,
+        "height": 64
+      },
+      {
+        "asset": "01-jejak-jadi/symbol.svg",
+        "expected": 256,
+        "width": 256,
+        "height": 256
+      },
+      {
+        "asset": "02-temu-hasil/symbol-small.svg",
+        "expected": 16,
+        "width": 16,
+        "height": 16
+      },
+      {
+        "asset": "02-temu-hasil/symbol.svg",
+        "expected": 32,
+        "width": 32,
+        "height": 32
+      },
+      {
+        "asset": "02-temu-hasil/symbol.svg",
+        "expected": 64,
+        "width": 64,
+        "height": 64
+      },
+      {
+        "asset": "02-temu-hasil/symbol.svg",
+        "expected": 256,
+        "width": 256,
+        "height": 256
+      },
+      {
+        "asset": "03-keping-jadi/symbol-small.svg",
+        "expected": 16,
+        "width": 16,
+        "height": 16
+      },
+      {
+        "asset": "03-keping-jadi/symbol.svg",
+        "expected": 32,
+        "width": 32,
+        "height": 32
+      },
+      {
+        "asset": "03-keping-jadi/symbol.svg",
+        "expected": 64,
+        "width": 64,
+        "height": 64
+      },
+      {
+        "asset": "03-keping-jadi/symbol.svg",
+        "expected": 256,
+        "width": 256,
+        "height": 256
+      },
+      {
+        "asset": "04-lembar-lanjut/symbol-small.svg",
+        "expected": 16,
+        "width": 16,
+        "height": 16
+      },
+      {
+        "asset": "04-lembar-lanjut/symbol.svg",
+        "expected": 32,
+        "width": 32,
+        "height": 32
+      },
+      {
+        "asset": "04-lembar-lanjut/symbol.svg",
+        "expected": 64,
+        "width": 64,
+        "height": 64
+      },
+      {
+        "asset": "04-lembar-lanjut/symbol.svg",
+        "expected": 256,
+        "width": 256,
+        "height": 256
+      },
+      {
+        "asset": "05-jadi-terbuka/symbol-small.svg",
+        "expected": 16,
+        "width": 16,
+        "height": 16
+      },
+      {
+        "asset": "05-jadi-terbuka/symbol.svg",
+        "expected": 32,
+        "width": 32,
+        "height": 32
+      },
+      {
+        "asset": "05-jadi-terbuka/symbol.svg",
+        "expected": 64,
+        "width": 64,
+        "height": 64
+      },
+      {
+        "asset": "05-jadi-terbuka/symbol.svg",
+        "expected": 256,
+        "width": 256,
+        "height": 256
+      }
+    ],
+    "headerLogos": [
+      {
+        "width": 128.59375,
+        "height": 40
+      },
+      {
+        "width": 128.59375,
+        "height": 40
+      },
+      {
+        "width": 128.59375,
+        "height": 40
+      },
+      {
+        "width": 128.59375,
+        "height": 40
+      },
+      {
+        "width": 135,
+        "height": 40
+      }
+    ]
+  },
+  "mobile": {
+    "viewport": 390,
+    "scrollWidth": 390,
+    "fontLoaded": true,
+    "images": 56,
+    "brokenImages": [],
+    "sizeTests": [
+      {
+        "asset": "01-jejak-jadi/symbol-small.svg",
+        "expected": 16,
+        "width": 16,
+        "height": 16
+      },
+      {
+        "asset": "01-jejak-jadi/symbol.svg",
+        "expected": 32,
+        "width": 32,
+        "height": 32
+      },
+      {
+        "asset": "01-jejak-jadi/symbol.svg",
+        "expected": 64,
+        "width": 64,
+        "height": 64
+      },
+      {
+        "asset": "01-jejak-jadi/symbol.svg",
+        "expected": 256,
+        "width": 256,
+        "height": 256
+      },
+      {
+        "asset": "02-temu-hasil/symbol-small.svg",
+        "expected": 16,
+        "width": 16,
+        "height": 16
+      },
+      {
+        "asset": "02-temu-hasil/symbol.svg",
+        "expected": 32,
+        "width": 32,
+        "height": 32
+      },
+      {
+        "asset": "02-temu-hasil/symbol.svg",
+        "expected": 64,
+        "width": 64,
+        "height": 64
+      },
+      {
+        "asset": "02-temu-hasil/symbol.svg",
+        "expected": 256,
+        "width": 256,
+        "height": 256
+      },
+      {
+        "asset": "03-keping-jadi/symbol-small.svg",
+        "expected": 16,
+        "width": 16,
+        "height": 16
+      },
+      {
+        "asset": "03-keping-jadi/symbol.svg",
+        "expected": 32,
+        "width": 32,
+        "height": 32
+      },
+      {
+        "asset": "03-keping-jadi/symbol.svg",
+        "expected": 64,
+        "width": 64,
+        "height": 64
+      },
+      {
+        "asset": "03-keping-jadi/symbol.svg",
+        "expected": 256,
+        "width": 256,
+        "height": 256
+      },
+      {
+        "asset": "04-lembar-lanjut/symbol-small.svg",
+        "expected": 16,
+        "width": 16,
+        "height": 16
+      },
+      {
+        "asset": "04-lembar-lanjut/symbol.svg",
+        "expected": 32,
+        "width": 32,
+        "height": 32
+      },
+      {
+        "asset": "04-lembar-lanjut/symbol.svg",
+        "expected": 64,
+        "width": 64,
+        "height": 64
+      },
+      {
+        "asset": "04-lembar-lanjut/symbol.svg",
+        "expected": 256,
+        "width": 256,
+        "height": 256
+      },
+      {
+        "asset": "05-jadi-terbuka/symbol-small.svg",
+        "expected": 16,
+        "width": 16,
+        "height": 16
+      },
+      {
+        "asset": "05-jadi-terbuka/symbol.svg",
+        "expected": 32,
+        "width": 32,
+        "height": 32
+      },
+      {
+        "asset": "05-jadi-terbuka/symbol.svg",
+        "expected": 64,
+        "width": 64,
+        "height": 64
+      },
+      {
+        "asset": "05-jadi-terbuka/symbol.svg",
+        "expected": 256,
+        "width": 256,
+        "height": 256
+      }
+    ],
+    "headerLogos": [
+      {
+        "width": 128.59375,
+        "height": 40
+      },
+      {
+        "width": 128.59375,
+        "height": 40
+      },
+      {
+        "width": 128.59375,
+        "height": 40
+      },
+      {
+        "width": 128.59375,
+        "height": 40
+      },
+      {
+        "width": 135,
+        "height": 40
+      }
+    ]
+  },
+  "svg": [
+    {
+      "file": "01-jejak-jadi/app-icon.svg",
+      "viewBox": [
+        0,
+        0,
+        256,
+        256
+      ],
+      "bounds": [
+        0,
+        0,
+        256,
+        256
+      ],
+      "clipped": false
+    },
+    {
+      "file": "01-jejak-jadi/horizontal-black.svg",
+      "viewBox": [
+        0,
+        0,
+        823,
+        256
+      ],
+      "bounds": [
+        48,
+        40,
+        734.7680053710938,
+        176
+      ],
+      "clipped": false
+    },
+    {
+      "file": "01-jejak-jadi/horizontal-white.svg",
+      "viewBox": [
+        0,
+        0,
+        823,
+        256
+      ],
+      "bounds": [
+        48,
+        40,
+        734.7680053710938,
+        176
+      ],
+      "clipped": false
+    },
+    {
+      "file": "01-jejak-jadi/horizontal.svg",
+      "viewBox": [
+        0,
+        0,
+        823,
+        256
+      ],
+      "bounds": [
+        48,
+        40,
+        734.7680053710938,
+        176
+      ],
+      "clipped": false
+    },
+    {
+      "file": "01-jejak-jadi/mono-black.svg",
+      "viewBox": [
+        0,
+        0,
+        256,
+        256
+      ],
+      "bounds": [
+        48,
+        40,
+        168,
+        176
+      ],
+      "clipped": false
+    },
+    {
+      "file": "01-jejak-jadi/mono-white.svg",
+      "viewBox": [
+        0,
+        0,
+        256,
+        256
+      ],
+      "bounds": [
+        48,
+        40,
+        168,
+        176
+      ],
+      "clipped": false
+    },
+    {
+      "file": "01-jejak-jadi/mono.svg",
+      "viewBox": [
+        0,
+        0,
+        256,
+        256
+      ],
+      "bounds": [
+        48,
+        40,
+        168,
+        176
+      ],
+      "clipped": false
+    },
+    {
+      "file": "01-jejak-jadi/symbol-small.svg",
+      "viewBox": [
+        0,
+        0,
+        256,
+        256
+      ],
+      "bounds": [
+        48,
+        40,
+        168,
+        176
+      ],
+      "clipped": false
+    },
+    {
+      "file": "01-jejak-jadi/symbol.svg",
+      "viewBox": [
+        0,
+        0,
+        256,
+        256
+      ],
+      "bounds": [
+        48,
+        40,
+        168,
+        176
+      ],
+      "clipped": false
+    },
+    {
+      "file": "01-jejak-jadi/wordmark.svg",
+      "viewBox": [
+        0,
+        0,
+        499,
+        256
+      ],
+      "bounds": [
+        0,
+        60.660003662109375,
+        490.76800537109375,
+        134.6800079345703
+      ],
+      "clipped": false
+    },
+    {
+      "file": "02-temu-hasil/app-icon.svg",
+      "viewBox": [
+        0,
+        0,
+        256,
+        256
+      ],
+      "bounds": [
+        0,
+        0,
+        256,
+        256
+      ],
+      "clipped": false
+    },
+    {
+      "file": "02-temu-hasil/horizontal-black.svg",
+      "viewBox": [
+        0,
+        0,
+        823,
+        256
+      ],
+      "bounds": [
+        40,
+        48,
+        742.7680053710938,
+        160
+      ],
+      "clipped": false
+    },
+    {
+      "file": "02-temu-hasil/horizontal-white.svg",
+      "viewBox": [
+        0,
+        0,
+        823,
+        256
+      ],
+      "bounds": [
+        40,
+        48,
+        742.7680053710938,
+        160
+      ],
+      "clipped": false
+    },
+    {
+      "file": "02-temu-hasil/horizontal.svg",
+      "viewBox": [
+        0,
+        0,
+        823,
+        256
+      ],
+      "bounds": [
+        40,
+        48,
+        742.7680053710938,
+        160
+      ],
+      "clipped": false
+    },
+    {
+      "file": "02-temu-hasil/mono-black.svg",
+      "viewBox": [
+        0,
+        0,
+        256,
+        256
+      ],
+      "bounds": [
+        40,
+        48,
+        176,
+        160
+      ],
+      "clipped": false
+    },
+    {
+      "file": "02-temu-hasil/mono-white.svg",
+      "viewBox": [
+        0,
+        0,
+        256,
+        256
+      ],
+      "bounds": [
+        40,
+        48,
+        176,
+        160
+      ],
+      "clipped": false
+    },
+    {
+      "file": "02-temu-hasil/mono.svg",
+      "viewBox": [
+        0,
+        0,
+        256,
+        256
+      ],
+      "bounds": [
+        40,
+        48,
+        176,
+        160
+      ],
+      "clipped": false
+    },
+    {
+      "file": "02-temu-hasil/symbol-small.svg",
+      "viewBox": [
+        0,
+        0,
+        256,
+        256
+      ],
+      "bounds": [
+        40,
+        48,
+        176,
+        160
+      ],
+      "clipped": false
+    },
+    {
+      "file": "02-temu-hasil/symbol.svg",
+      "viewBox": [
+        0,
+        0,
+        256,
+        256
+      ],
+      "bounds": [
+        40,
+        48,
+        176,
+        160
+      ],
+      "clipped": false
+    },
+    {
+      "file": "02-temu-hasil/wordmark.svg",
+      "viewBox": [
+        0,
+        0,
+        499,
+        256
+      ],
+      "bounds": [
+        0,
+        60.660003662109375,
+        490.76800537109375,
+        134.6800079345703
+      ],
+      "clipped": false
+    },
+    {
+      "file": "03-keping-jadi/app-icon.svg",
+      "viewBox": [
+        0,
+        0,
+        256,
+        256
+      ],
+      "bounds": [
+        0,
+        0,
+        256,
+        256
+      ],
+      "clipped": false
+    },
+    {
+      "file": "03-keping-jadi/horizontal-black.svg",
+      "viewBox": [
+        0,
+        0,
+        823,
+        256
+      ],
+      "bounds": [
+        32,
+        44,
+        750.7680053710938,
+        168
+      ],
+      "clipped": false
+    },
+    {
+      "file": "03-keping-jadi/horizontal-white.svg",
+      "viewBox": [
+        0,
+        0,
+        823,
+        256
+      ],
+      "bounds": [
+        32,
+        44,
+        750.7680053710938,
+        168
+      ],
+      "clipped": false
+    },
+    {
+      "file": "03-keping-jadi/horizontal.svg",
+      "viewBox": [
+        0,
+        0,
+        823,
+        256
+      ],
+      "bounds": [
+        32,
+        44,
+        750.7680053710938,
+        168
+      ],
+      "clipped": false
+    },
+    {
+      "file": "03-keping-jadi/mono-black.svg",
+      "viewBox": [
+        0,
+        0,
+        256,
+        256
+      ],
+      "bounds": [
+        32,
+        44,
+        192,
+        168
+      ],
+      "clipped": false
+    },
+    {
+      "file": "03-keping-jadi/mono-white.svg",
+      "viewBox": [
+        0,
+        0,
+        256,
+        256
+      ],
+      "bounds": [
+        32,
+        44,
+        192,
+        168
+      ],
+      "clipped": false
+    },
+    {
+      "file": "03-keping-jadi/mono.svg",
+      "viewBox": [
+        0,
+        0,
+        256,
+        256
+      ],
+      "bounds": [
+        32,
+        44,
+        192,
+        168
+      ],
+      "clipped": false
+    },
+    {
+      "file": "03-keping-jadi/symbol-small.svg",
+      "viewBox": [
+        0,
+        0,
+        256,
+        256
+      ],
+      "bounds": [
+        32,
+        44,
+        192,
+        168
+      ],
+      "clipped": false
+    },
+    {
+      "file": "03-keping-jadi/symbol.svg",
+      "viewBox": [
+        0,
+        0,
+        256,
+        256
+      ],
+      "bounds": [
+        32,
+        44,
+        192,
+        168
+      ],
+      "clipped": false
+    },
+    {
+      "file": "03-keping-jadi/wordmark.svg",
+      "viewBox": [
+        0,
+        0,
+        499,
+        256
+      ],
+      "bounds": [
+        0,
+        60.660003662109375,
+        490.76800537109375,
+        134.6800079345703
+      ],
+      "clipped": false
+    },
+    {
+      "file": "04-lembar-lanjut/app-icon.svg",
+      "viewBox": [
+        0,
+        0,
+        256,
+        256
+      ],
+      "bounds": [
+        0,
+        0,
+        256,
+        256
+      ],
+      "clipped": false
+    },
+    {
+      "file": "04-lembar-lanjut/horizontal-black.svg",
+      "viewBox": [
+        0,
+        0,
+        823,
+        256
+      ],
+      "bounds": [
+        40,
+        40,
+        742.7680053710938,
+        176
+      ],
+      "clipped": false
+    },
+    {
+      "file": "04-lembar-lanjut/horizontal-white.svg",
+      "viewBox": [
+        0,
+        0,
+        823,
+        256
+      ],
+      "bounds": [
+        40,
+        40,
+        742.7680053710938,
+        176
+      ],
+      "clipped": false
+    },
+    {
+      "file": "04-lembar-lanjut/horizontal.svg",
+      "viewBox": [
+        0,
+        0,
+        823,
+        256
+      ],
+      "bounds": [
+        40,
+        40,
+        742.7680053710938,
+        176
+      ],
+      "clipped": false
+    },
+    {
+      "file": "04-lembar-lanjut/mono-black.svg",
+      "viewBox": [
+        0,
+        0,
+        256,
+        256
+      ],
+      "bounds": [
+        40,
+        40,
+        176,
+        176
+      ],
+      "clipped": false
+    },
+    {
+      "file": "04-lembar-lanjut/mono-white.svg",
+      "viewBox": [
+        0,
+        0,
+        256,
+        256
+      ],
+      "bounds": [
+        40,
+        40,
+        176,
+        176
+      ],
+      "clipped": false
+    },
+    {
+      "file": "04-lembar-lanjut/mono.svg",
+      "viewBox": [
+        0,
+        0,
+        256,
+        256
+      ],
+      "bounds": [
+        40,
+        40,
+        176,
+        176
+      ],
+      "clipped": false
+    },
+    {
+      "file": "04-lembar-lanjut/symbol-small.svg",
+      "viewBox": [
+        0,
+        0,
+        256,
+        256
+      ],
+      "bounds": [
+        40,
+        40,
+        176,
+        176
+      ],
+      "clipped": false
+    },
+    {
+      "file": "04-lembar-lanjut/symbol.svg",
+      "viewBox": [
+        0,
+        0,
+        256,
+        256
+      ],
+      "bounds": [
+        40,
+        40,
+        176,
+        176
+      ],
+      "clipped": false
+    },
+    {
+      "file": "04-lembar-lanjut/wordmark.svg",
+      "viewBox": [
+        0,
+        0,
+        499,
+        256
+      ],
+      "bounds": [
+        0,
+        60.660003662109375,
+        490.76800537109375,
+        134.6800079345703
+      ],
+      "clipped": false
+    },
+    {
+      "file": "05-jadi-terbuka/app-icon.svg",
+      "viewBox": [
+        0,
+        0,
+        256,
+        256
+      ],
+      "bounds": [
+        0,
+        0,
+        256,
+        256
+      ],
+      "clipped": false
+    },
+    {
+      "file": "05-jadi-terbuka/horizontal-black.svg",
+      "viewBox": [
+        0,
+        0,
+        864,
+        256
+      ],
+      "bounds": [
+        44,
+        47,
+        772.0262451171875,
+        162.40000915527344
+      ],
+      "clipped": false
+    },
+    {
+      "file": "05-jadi-terbuka/horizontal-white.svg",
+      "viewBox": [
+        0,
+        0,
+        864,
+        256
+      ],
+      "bounds": [
+        44,
+        47,
+        772.0262451171875,
+        162.40000915527344
+      ],
+      "clipped": false
+    },
+    {
+      "file": "05-jadi-terbuka/horizontal.svg",
+      "viewBox": [
+        0,
+        0,
+        864,
+        256
+      ],
+      "bounds": [
+        44,
+        47,
+        772.0262451171875,
+        162.40000915527344
+      ],
+      "clipped": false
+    },
+    {
+      "file": "05-jadi-terbuka/mono-black.svg",
+      "viewBox": [
+        0,
+        0,
+        256,
+        256
+      ],
+      "bounds": [
+        44,
+        47,
+        168.20001220703125,
+        162.40000915527344
+      ],
+      "clipped": false
+    },
+    {
+      "file": "05-jadi-terbuka/mono-white.svg",
+      "viewBox": [
+        0,
+        0,
+        256,
+        256
+      ],
+      "bounds": [
+        44,
+        47,
+        168.20001220703125,
+        162.40000915527344
+      ],
+      "clipped": false
+    },
+    {
+      "file": "05-jadi-terbuka/mono.svg",
+      "viewBox": [
+        0,
+        0,
+        256,
+        256
+      ],
+      "bounds": [
+        44,
+        47,
+        168.20001220703125,
+        162.40000915527344
+      ],
+      "clipped": false
+    },
+    {
+      "file": "05-jadi-terbuka/symbol-small.svg",
+      "viewBox": [
+        0,
+        0,
+        256,
+        256
+      ],
+      "bounds": [
+        44,
+        47,
+        168.20001220703125,
+        162.40000915527344
+      ],
+      "clipped": false
+    },
+    {
+      "file": "05-jadi-terbuka/symbol.svg",
+      "viewBox": [
+        0,
+        0,
+        256,
+        256
+      ],
+      "bounds": [
+        44,
+        47,
+        168.20001220703125,
+        162.40000915527344
+      ],
+      "clipped": false
+    },
+    {
+      "file": "05-jadi-terbuka/wordmark.svg",
+      "viewBox": [
+        0,
+        0,
+        540,
+        256
+      ],
+      "bounds": [
+        3.8480000495910645,
+        61.215999603271484,
+        520.17822265625,
+        134.67999267578125
+      ],
+      "clipped": false
+    }
+  ],
+  "issues": [],
+  "narrow": {
+    "viewport": 320,
+    "scrollWidth": 320,
+    "fontLoaded": true,
+    "images": 56,
+    "brokenImages": [],
+    "sizeTests": [
+      {
+        "asset": "01-jejak-jadi/symbol-small.svg",
+        "expected": 16,
+        "width": 16,
+        "height": 16
+      },
+      {
+        "asset": "01-jejak-jadi/symbol.svg",
+        "expected": 32,
+        "width": 32,
+        "height": 32
+      },
+      {
+        "asset": "01-jejak-jadi/symbol.svg",
+        "expected": 64,
+        "width": 64,
+        "height": 64
+      },
+      {
+        "asset": "01-jejak-jadi/symbol.svg",
+        "expected": 256,
+        "width": 256,
+        "height": 256
+      },
+      {
+        "asset": "02-temu-hasil/symbol-small.svg",
+        "expected": 16,
+        "width": 16,
+        "height": 16
+      },
+      {
+        "asset": "02-temu-hasil/symbol.svg",
+        "expected": 32,
+        "width": 32,
+        "height": 32
+      },
+      {
+        "asset": "02-temu-hasil/symbol.svg",
+        "expected": 64,
+        "width": 64,
+        "height": 64
+      },
+      {
+        "asset": "02-temu-hasil/symbol.svg",
+        "expected": 256,
+        "width": 256,
+        "height": 256
+      },
+      {
+        "asset": "03-keping-jadi/symbol-small.svg",
+        "expected": 16,
+        "width": 16,
+        "height": 16
+      },
+      {
+        "asset": "03-keping-jadi/symbol.svg",
+        "expected": 32,
+        "width": 32,
+        "height": 32
+      },
+      {
+        "asset": "03-keping-jadi/symbol.svg",
+        "expected": 64,
+        "width": 64,
+        "height": 64
+      },
+      {
+        "asset": "03-keping-jadi/symbol.svg",
+        "expected": 256,
+        "width": 256,
+        "height": 256
+      },
+      {
+        "asset": "04-lembar-lanjut/symbol-small.svg",
+        "expected": 16,
+        "width": 16,
+        "height": 16
+      },
+      {
+        "asset": "04-lembar-lanjut/symbol.svg",
+        "expected": 32,
+        "width": 32,
+        "height": 32
+      },
+      {
+        "asset": "04-lembar-lanjut/symbol.svg",
+        "expected": 64,
+        "width": 64,
+        "height": 64
+      },
+      {
+        "asset": "04-lembar-lanjut/symbol.svg",
+        "expected": 256,
+        "width": 256,
+        "height": 256
+      },
+      {
+        "asset": "05-jadi-terbuka/symbol-small.svg",
+        "expected": 16,
+        "width": 16,
+        "height": 16
+      },
+      {
+        "asset": "05-jadi-terbuka/symbol.svg",
+        "expected": 32,
+        "width": 32,
+        "height": 32
+      },
+      {
+        "asset": "05-jadi-terbuka/symbol.svg",
+        "expected": 64,
+        "width": 64,
+        "height": 64
+      },
+      {
+        "asset": "05-jadi-terbuka/symbol.svg",
+        "expected": 256,
+        "width": 256,
+        "height": 256
+      }
+    ],
+    "headerLogos": [
+      {
+        "width": 127.90625,
+        "height": 40
+      },
+      {
+        "width": 127.90625,
+        "height": 40
+      },
+      {
+        "width": 127.90625,
+        "height": 40
+      },
+      {
+        "width": 127.90625,
+        "height": 40
+      },
+      {
+        "width": 127.90625,
+        "height": 40
+      }
+    ]
+  }
+}

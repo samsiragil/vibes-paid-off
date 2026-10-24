@@ -1,0 +1,308 @@
+{
+  "desktop": {
+    "viewport": 1440,
+    "scrollWidth": 1440,
+    "fontLoaded": true,
+    "images": 56,
+    "brokenImages": [],
+    "sizeTests": [
+      {
+        "asset": "01-jejak-jadi/symbol-small.svg",
+        "expected": 16,
+        "width": 16,
+        "height": 16
+      },
+      {
+        "asset": "01-jejak-jadi/symbol.svg",
+        "expected": 32,
+        "width": 32,
+        "height": 32
+      },
+      {
+        "asset": "01-jejak-jadi/symbol.svg",
+        "expected": 64,
+        "width": 64,
+        "height": 64
+      },
+      {
+        "asset": "01-jejak-jadi/symbol.svg",
+        "expected": 256,
+        "width": 256,
+        "height": 256
+      },
+      {
+        "asset": "02-temu-hasil/symbol-small.svg",
+        "expected": 16,
+        "width": 16,
+        "height": 16
+      },
+      {
+        "asset": "02-temu-hasil/symbol.svg",
+        "expected": 32,
+        "width": 32,
+        "height": 32
+      },
+      {
+        "asset": "02-temu-hasil/symbol.svg",
+        "expected": 64,
+        "width": 64,
+        "height": 64
+      },
+      {
+        "asset": "02-temu-hasil/symbol.svg",
+        "expected": 256,
+        "width": 256,
+        "height": 256
+      },
+      {
+        "asset": "03-keping-jadi/symbol-small.svg",
+        "expected": 16,
+        "width": 16,
+        "height": 16
+      },
+      {
+        "asset": "03-keping-jadi/symbol.svg",
+        "expected": 32,
+        "width": 32,
+        "height": 32
+      },
+      {
+        "asset": "03-keping-jadi/symbol.svg",
+        "expected": 64,
+        "width": 64,
+        "height": 64
+      },
+      {
+        "asset": "03-keping-jadi/symbol.svg",
+        "expected": 256,
+        "width": 256,
+        "height": 256
+      },
+      {
+        "asset": "04-lembar-lanjut/symbol-small.svg",
+        "expected": 16,
+        "width": 16,
+        "height": 16
+      },
+      {
+        "asset": "04-lembar-lanjut/symbol.svg",
+        "expected": 32,
+        "width": 32,
+        "height": 32
+      },
+      {
+        "asset": "04-lembar-lanjut/symbol.svg",
+        "expected": 64,
+        "width": 64,
+        "height": 64
+      },
+      {
+        "asset": "04-lembar-lanjut/symbol.svg",
+        "expected": 256,
+        "width": 256,
+        "height": 256
+      },
+      {
+        "asset": "05-jadi-terbuka/symbol-small.svg",
+        "expected": 16,
+        "width": 16,
+        "height": 16
+      },
+      {
+        "asset": "05-jadi-terbuka/symbol.svg",
+        "expected": 32,
+        "width": 32,
+        "height": 32
+      },
+      {
+        "asset": "05-jadi-terbuka/symbol.svg",
+        "expected": 64,
+        "width": 64,
+        "height": 64
+      },
+      {
+        "asset": "05-jadi-terbuka/symbol.svg",
+        "expected": 256,
+        "width": 256,
+        "height": 256
+      }
+    ],
+    "headerLogos": [
+      {
+        "width": 128.59375,
+        "height": 40
+      },
+      {
+        "width": 128.59375,
+        "height": 40
+      },
+      {
+        "width": 128.59375,
+        "height": 40
+      },
+      {
+        "width": 128.59375,
+        "height": 40
+      },
+      {
+        "width": 135,
+        "height": 40
+      }
+    ]
+  },
+  "mobile": {
+    "viewport": 390,
+    "scrollWidth": 390,
+    "fontLoaded": true,
+    "images": 56,
+    "brokenImages": [],
+    "sizeTests": [
+      {
+        "asset": "01-jejak-jadi/symbol-small.svg",
+        "expected": 16,
+        "width": 16,
+        "height": 16
+      },
+      {
+        "asset": "01-jejak-jadi/symbol.svg",
+        "expected": 32,
+        "width": 32,
+        "height": 32
+      },
+      {
+        "asset": "01-jejak-jadi/symbol.svg",
+        "expected": 64,
+        "width": 64,
+        "height": 64
+      },
+      {
+        "asset": "01-jejak-jadi/symbol.svg",
+        "expected": 256,
+        "width": 256,
+        "height": 256
+      },
+      {
+        "asset": "02-temu-hasil/symbol-small.svg",
+        "expected": 16,
+        "width": 16,
+        "height": 16
+      },
+      {
+        "asset": "02-temu-hasil/symbol.svg",
+        "expected": 32,
+        "width": 32,
+        "height": 32
+      },
+      {
+        "asset": "02-temu-hasil/symbol.svg",
+        "expected": 64,
+        "width": 64,
+        "height": 64
+      },
+      {
+        "asset": "02-temu-hasil/symbol.svg",
+        "expected": 256,
+        "width": 256,
+        "height": 256
+      },
+      {
+        "asset": "03-keping-jadi/symbol-small.svg",
+        "expected": 16,
+        "width": 16,
+        "height": 16
+      },
+      {
+        "asset": "03-keping-jadi/symbol.svg",
+        "expected": 32,
+        "width": 32,
+        "height": 32
+      },
+      {
+        "asset": "03-keping-jadi/symbol.svg",
+        "expected": 64,
+        "width": 64,
+        "height": 64
+      },
+      {
+        "asset": "03-keping-jadi/symbol.svg",
+        "expected": 256,
+        "width": 256,
+        "height": 256
+      },
+      {
+        "asset": "04-lembar-lanjut/symbol-small.svg",
+        "expected": 16,
+        "width": 16,
+        "height": 16
+      },
+      {
+        "asset": "04-lembar-lanjut/symbol.svg",
+        "expected": 32,
+        "width": 32,
+        "height": 32
+      },
+      {
+        "asset": "04-lembar-lanjut/symbol.svg",
+        "expected": 64,
+        "width": 64,
+        "height": 64
+      },
+      {
+        "asset": "04-lembar-lanjut/symbol.svg",
+        "expected": 256,
+        "width": 256,
+        "height": 256
+      },
+      {
+        "asset": "05-jadi-terbuka/symbol-small.svg",
+        "expected": 16,
+        "width": 16,
+        "height": 16
+      },
+      {
+        "asset": "05-jadi-terbuka/symbol.svg",
+        "expected": 32,
+        "width": 32,
+        "height": 32
+      },
+      {
+        "asset": "05-jadi-terbuka/symbol.svg",
+        "expected": 64,
+        "width": 64,
+        "height": 64
+      },
+      {
+        "asset": "05-jadi-terbuka/symbol.svg",
+        "expected": 256,
+        "width": 256,
+        "height": 256
+      }
+    ],
+    "headerLogos": [
+      {
+        "width": 128.59375,
+        "height": 40
+      },
+      {
+        "width": 128.59375,
+        "height": 40
+      },
+      {
+        "width": 128.59375,
+        "height": 40
+      },
+      {
+        "width": 128.59375,
+        "height": 40
+      },
+      {
+        "width": 135,
+        "height": 40
+      }
+    ]
+  },
+  "narrowOverflow": false,
+  "svgCount": 50,
+  "clipped": [],
+  "issues": []
+}
