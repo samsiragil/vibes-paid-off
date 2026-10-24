@@ -211,8 +211,8 @@ select tap.emit(is(
 ));
 
 -- Replies: hide, keep, remove.
-select tap.as_user(tap.id('r1'));
-insert into comments (project_id, body) values (tap.id('spammy'), 'Komentar kasar');
+select tap.as_service();
+select post_reply_as(tap.id('r1'), tap.id('spammy'), 'Komentar kasar');
 insert into tap.ids select 'rude', id from comments where body = 'Komentar kasar';
 select tap.as_user(tap.id('r2'));
 select report_content('comment', tap.id('rude'), 'harassment');
@@ -242,8 +242,8 @@ select tap.emit(is(
 ));
 
 -- A reply its author deleted before the admin looked: reports still close.
-select tap.as_user(tap.id('r1'));
-insert into comments (project_id, body) values (tap.id('spammy'), 'Sebentar saja');
+select tap.as_service();
+select post_reply_as(tap.id('r1'), tap.id('spammy'), 'Sebentar saja');
 insert into tap.ids select 'short', id from comments where body = 'Sebentar saja';
 select tap.as_user(tap.id('r2'));
 select report_content('comment', tap.id('short'), 'spam');

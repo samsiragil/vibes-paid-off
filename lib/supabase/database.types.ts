@@ -656,6 +656,14 @@ export type Database = {
           score: number;
         }[];
       };
+      post_reply_as: {
+        Args: { p_body: string; p_project_id: string; p_user_id: string };
+        Returns: {
+          body: string;
+          created_at: string;
+          id: string;
+        }[];
+      };
       prefix_tsquery: { Args: { p_query: string }; Returns: unknown };
       project_scores: {
         Args: { p_from: string; p_now?: string; p_to: string };

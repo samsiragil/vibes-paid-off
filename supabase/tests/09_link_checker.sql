@@ -10,14 +10,6 @@ update projects set link_fail_count = 1 where id = tap.id('toko');
 update projects set link_status = 'offline', link_fail_count = 4 where id = tap.id('mati');
 update projects set link_status = 'archived', link_fail_count = 2 where id = tap.id('arsip');
 
-create function tap.as_service() returns void language plpgsql as $$
-begin
-  perform set_config('request.jwt.claims', '{"role":"service_role"}', true);
-  set local role service_role;
-end;
-$$;
-grant execute on function tap.as_service() to public;
-
 create function tap.check(project uuid, ok boolean) returns jsonb language sql as $$
   select jsonb_build_array(jsonb_build_object('id', project, 'ok', ok));
 $$;

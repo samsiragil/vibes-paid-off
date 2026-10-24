@@ -74,10 +74,12 @@ delete from comments where user_id = tap.id('old1');
 select tap.emit(is(
   (select count(*)::int from comments where user_id = tap.id('old1')), 0, 'reply quota: replies deleted'
 ));
+select tap.as_service();
 select tap.emit(throws_like(
-  $$ insert into comments (project_id, body) values (tap.id('target-2'), 'Lagi') $$, 'rate_limit:comments%',
+  $$ select post_reply_as(tap.id('old1'), tap.id('target-2'), 'Lagi') $$, 'rate_limit:comments%',
   'reply quota: deleting replies does not free the daily slots'
 ));
+select tap.as_user(tap.id('old1'));
 select tap.emit(throws_ok(
   $$ select * from reply_quota_log $$, '42501', null, 'reply quota: the log is not readable by users'
 ));

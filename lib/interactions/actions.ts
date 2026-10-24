@@ -4,6 +4,7 @@ import { revalidateTag, updateTag } from "next/cache";
 import { z } from "zod";
 import { LISTINGS_TAG, makerTag, projectTag, repliesTag } from "@/lib/cache-tags";
 import { getCurrentUser } from "@/lib/auth/current-user";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
 import { verifyTurnstile } from "@/lib/turnstile";
 import { replyBodySchema, reportSchema, type ReplyErrorCode } from "@/lib/validation/interactions";
@@ -128,11 +129,10 @@ export async function postReply(request: {
 
   if (!(await verifyTurnstile(turnstileToken, "reply"))) return { ok: false, error: "captcha" };
 
-  const supabase = await createClient();
-  const { data, error } = await supabase
-    .from("comments")
-    .insert({ project_id: projectId, body: body.data })
-    .select("id, body, created_at")
+  // Users cannot insert replies themselves (that would skip Turnstile); the secret-key client posts
+  // it as the signed-in user, and the database still applies the username rule and the quota.
+  const { data, error } = await createAdminClient()
+    .rpc("post_reply_as", { p_user_id: user.id, p_project_id: projectId, p_body: body.data })
     .single();
 
   if (error) {
