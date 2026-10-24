@@ -250,6 +250,7 @@
       "unsupported_type": "Format belum didukung. Pakai JPG, PNG, atau WebP.",
       "not_found": "Upload belum sampai ke server. Coba lagi.",
       "invalid_image": "Gambar tidak bisa dibaca. Coba file lain.",
+      "rate_limit": "Terlalu banyak upload dalam waktu singkat. Tunggu sebentar, lalu coba lagi.",
       "unavailable": "Upload gambar sedang tidak tersedia. Coba lagi nanti.",
       "failed": "Gagal menyimpan gambar. Coba lagi, ya."
     }

@@ -627,6 +627,7 @@ export type Database = {
           isSetofReturn: false;
         };
       };
+      consume_media_quota: { Args: { p_kind: string }; Returns: undefined };
       eligible_upvotes_for: {
         Args: { p_now?: string; p_project_id: string };
         Returns: number;
