@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Design exploration scripts and vendored tools, not app code.
+    "logo-exploration/**",
   ]),
 ]);
 
