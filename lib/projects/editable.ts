@@ -29,7 +29,7 @@ export async function getEditableProject(
   const { data: row } = await supabase
     .from("projects")
     .select(
-      "id, slug, owner_id, status, reject_code, reject_reason, title, tagline, description, key_prompt, build_effort, moment_wow, moment_hardest, lessons, live_url, repo_url, video_url, category, content_lang, session_count",
+      "id, slug, owner_id, status, reject_code, reject_reason, title, tagline, description, key_prompt, build_effort, moment_wow, moment_hardest, lessons, live_url, repo_url, repo_private, video_url, category, content_lang, session_count",
     )
     .eq("slug", slug)
     .maybeSingle();
@@ -59,8 +59,9 @@ export async function getEditableProject(
       title: row.title,
       tagline: row.tagline,
       description: row.description,
-      liveUrl: row.live_url,
+      liveUrl: row.live_url ?? "",
       repoUrl: row.repo_url ?? "",
+      repoPrivate: row.repo_private,
       videoUrl: row.video_url ?? "",
       category: row.category,
       contentLang: row.content_lang as ContentLang,

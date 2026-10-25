@@ -159,7 +159,26 @@ select tap.emit(is(
   (select title from projects where id = tap.id('a1')), 'Kasir Warung Bu Tini', 'other user: project unchanged'
 ));
 
+-- No live link, private repo.
+select tap.as_user(tap.id('alice'));
+select upsert_project(p_project_id => tap.id('a1'), p_slug_base => 'x', p_project => tap.payload('Kasir Warung Bu Tini') || jsonb_build_object(
+  'live_url', '',
+  'repo_url', 'https://github.com/alice/kasir',
+  'repo_private', true
+));
+select tap.emit(results_eq(
+  $$ select live_url, repo_url, repo_private from projects where id = tap.id('a1') $$,
+  $$ values (null::text, 'https://github.com/alice/kasir', true) $$,
+  'owner: live link is optional, a private repo is kept with its flag'
+));
+select upsert_project(p_project_id => tap.id('a1'), p_slug_base => 'x', p_project => tap.payload('Kasir Warung Bu Tini'));
+select tap.emit(is(
+  (select repo_private from projects where id = tap.id('a1')), false,
+  'owner: repo_private defaults to false when the payload leaves it out'
+));
+
 -- Rejected project goes back to review after an edit (Q11).
+select tap.as_postgres();
 update projects set status = 'rejected', reject_reason = 'Kurang jelas' where id = tap.id('a1');
 select tap.as_user(tap.id('alice'));
 select upsert_project(p_project_id => tap.id('a1'), p_slug_base => 'x', p_project => tap.payload('Kasir Warung v2'));

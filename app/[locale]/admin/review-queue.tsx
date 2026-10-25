@@ -70,7 +70,7 @@ export async function QueueCard({ item, now }: { item: QueueItem; now: number })
   const submitted = new Date(item.submittedAt);
   const hoursLeft = Math.ceil((submitted.getTime() + REVIEW_WINDOW_HOURS * HOUR - now) / HOUR);
   const overdue = hoursLeft <= 0;
-  const host = item.liveUrl.replace(/^https:\/\//, "").replace(/\/$/, "");
+  const host = (url: string) => url.replace(/^https:\/\//, "").replace(/\/$/, "");
 
   return (
     <article
@@ -144,10 +144,29 @@ export async function QueueCard({ item, now }: { item: QueueItem; now: number })
           ]
             .filter(Boolean)
             .join(" · ")}{" "}
-          ·{" "}
-          <ExternalLink href={item.liveUrl} className="break-all text-accent-text hover:underline">
-            {host}
-          </ExternalLink>
+          {item.liveUrl ? (
+            <>
+              ·{" "}
+              <ExternalLink
+                href={item.liveUrl}
+                className="break-all text-accent-text hover:underline"
+              >
+                {host(item.liveUrl)}
+              </ExternalLink>{" "}
+            </>
+          ) : null}
+          {item.repoUrl ? (
+            <>
+              ·{" "}
+              <ExternalLink
+                href={item.repoUrl}
+                className="break-all text-accent-text hover:underline"
+              >
+                {host(item.repoUrl)}
+              </ExternalLink>
+              {item.repoPrivate ? ` (${t("repoPrivate")})` : null}
+            </>
+          ) : null}
         </p>
       </div>
 

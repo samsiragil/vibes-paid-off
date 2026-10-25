@@ -323,12 +323,62 @@
     "draftDiscard": "Mulai dari awal",
     "optional": "(opsional)",
     "steps": {
-      "link": "Mulai dari <strong>link live-nya.</strong> Judul, tagline, dan screenshot kami coba isi otomatis dari halamanmu.",
-      "prompt": "Sekarang yang paling penting: <strong>apa prompt kuncinya?</strong> Satu kalimat yang paling “ini dia”. Kalimat ini jadi pembuka kartumu.",
-      "effort": "<strong>Kira-kira berapa lama sampai jadi?</strong> Nggak perlu tepat.",
-      "tools": "<strong>Pakai tools apa?</strong> Pilih semua yang kamu pakai, dari agen AI sampai hosting.",
-      "story": "<strong>Mau sekalian cerita?</strong> Pilih momen yang paling seru, nggak harus semua. Boleh juga nanti, lewat Edit proyek.",
+      "repo": {
+        "title": "Repo GitHub-nya di mana?",
+        "note": "Mulai dari yang paling gampang. Publik atau privat, dua-duanya boleh."
+      },
+      "intro": {
+        "title": "Kenalin proyekmu",
+        "note": "Nama, satu kalimat manfaatnya, dan tangkapan layar kalau ada."
+      },
+      "prompt": {
+        "title": "Apa prompt kuncinya?",
+        "note": "Satu kalimat yang paling “ini dia”. Kalimat ini jadi pembuka kartumu."
+      },
+      "build": {
+        "title": "Berapa lama sampai jadi, dan pakai apa aja?",
+        "note": "Kira-kira saja, nggak perlu tepat."
+      },
+      "story": {
+        "title": "Mau sekalian cerita?",
+        "note": "Pilih momen yang paling seru, nggak harus semua. Boleh juga nanti, lewat Edit proyek."
+      },
+      "review": {
+        "title": "Kartumu siap tayang",
+        "note": "Begini tampilnya di beranda, jelajah, dan profilmu."
+      },
       "rules": "Sebelum kirim, ingat <link>aturan komunitas</link> ya:"
+    },
+    "stepper": {
+      "label": "Langkah {current} dari {total}",
+      "nav": "Langkah form",
+      "names": {
+        "repo": "Repo",
+        "intro": "Kenalan",
+        "prompt": "Prompt",
+        "build": "Proses",
+        "story": "Cerita",
+        "review": "Tayang"
+      },
+      "done": "selesai"
+    },
+    "nav": {
+      "back": "Kembali",
+      "next": "Lanjut",
+      "checking": "Ngecek repo…",
+      "last": "Ke langkah terakhir",
+      "skip": "Lewati dulu",
+      "autosave": "Jawabanmu tersimpan otomatis di perangkat ini.",
+      "peek": "Intip kartumu"
+    },
+    "repoCheck": {
+      "question": "GitHub nggak nemu repo ini. <strong>Repo-nya privat?</strong>",
+      "questionNote": "Repo privat memang nggak kelihatan dari luar, jadi wajar kalau nggak ketemu. Kalau bukan privat, mungkin ada salah ketik di link-nya.",
+      "yes": "Iya, privat",
+      "recheck": "Cek link lagi",
+      "privateOk": "Aman. Kodenya tetap rahasia dapurmu, yang tampil di proyekmu cuma label <strong>Repo privat</strong>.",
+      "undo": "Ternyata bukan privat",
+      "noOwner": "Akun GitHub “{owner}” nggak ketemu. Cek ejaannya, ya."
     },
     "rules": {
       "own": "Proyek harus buatanmu sendiri atau kamu terlibat langsung.",
@@ -346,7 +396,8 @@
     "descriptionPlaceholder": "Ceritakan singkat: buat siapa, masalah apa yang diselesaikan.",
     "liveUrl": "Link live",
     "liveUrlPlaceholder": "https://kasirwarung.vercel.app",
-    "repoUrl": "Link repo",
+    "liveUrlHint": "Udah online? Tempel biar orang bisa langsung coba.",
+    "repoUrl": "Link repo GitHub",
     "repoUrlPlaceholder": "https://github.com/username/kasir",
     "videoUrl": "Video demo",
     "videoUrlHint": "(YouTube atau Loom, opsional)",
@@ -391,6 +442,7 @@
       "required": "Wajib diisi.",
       "too_long": "Kepanjangan, coba dipersingkat.",
       "invalid_url": "Pakai link lengkap yang diawali https://",
+      "invalid_github": "Pakai link repo GitHub, misalnya https://github.com/username/proyek",
       "invalid_video_url": "Hanya link YouTube atau Loom.",
       "ai_tool_required": "Pilih minimal satu tools AI.",
       "too_many": "Kebanyakan. Kurangi sedikit, ya.",
@@ -422,15 +474,14 @@
     "extrasHint": "deskripsi dan video demo, opsional",
     "effortLegend": "Lama pembuatan",
     "autofill": {
-      "fetch": "Ambil info",
-      "fetching": "Mengambil info…",
-      "filled": "Terisi dari halamanmu. Cek lagi, ya.",
-      "nothing": "Halamannya belum bisa dibaca otomatis. Isi manual saja, ya.",
-      "repo": "Dari repo: {commits, plural, other {# commit}} dalam {days, plural, other {# hari aktif}}.",
-      "repoFailed": "Repo-nya belum bisa dibaca (privat, atau link-nya salah?).",
-      "suggested": "saran dari repo",
+      "found": "Ketemu! {commits, plural, other {# commit}} dalam {days, plural, other {# hari aktif}}.",
+      "filled": "Isian yang masih kosong sudah kami isi dari repo dan halamanmu. Cek lagi, ya.",
+      "privateRepo": "Karena repo-nya privat, kami cuma bisa menebak judul dari namanya. Sisanya ceritain sendiri, ya.",
+      "nothing": "Halamanmu belum bisa dibaca otomatis. Isi manual saja, ya.",
+      "failed": "Repo-nya belum bisa dicek sekarang. Nggak apa-apa, lanjut isi manual.",
       "imageFailed": "Screenshot dari halamanmu belum bisa diambil. Unggah manual, ya.",
-      "failed": "Gagal mengambil info. Coba lagi, atau isi manual.",
+      "filledTag": "terisi otomatis",
+      "suggested": "saran dari repo",
       "about": {
         "toggle": "Apa saja yang diambil Jadinya?",
         "web": "Dari halaman web",
@@ -495,7 +546,8 @@
       "category": "Kategori",
       "repo": "Repo",
       "linkStatus": "Status link",
-      "linkChecked": "{status} · dicek {date}"
+      "linkChecked": "{status} · dicek {date}",
+      "repoPrivate": "Repo privat"
     },
     "gallery": {
       "imageAlt": "Screenshot {position} dari {title}",
@@ -776,7 +828,8 @@
         "note_required": "Tulis catatan untuk alasan lain.",
         "invalid": "Pilih alasan dulu.",
         "failed": "Gagal menyimpan. Coba lagi, ya."
-      }
+      },
+      "repoPrivate": "repo privat"
     },
     "reports": {
       "title": "Laporan",

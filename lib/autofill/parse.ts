@@ -113,6 +113,12 @@ export function parseGithubRepo(url: string) {
   return { owner, repo };
 }
 
+/** A title from a repo name, for repos without a live page: "kasir-warung_v2" → "Kasir Warung V2". */
+export function repoTitle(repo: string) {
+  const words = repo.split(/[-_.\s]+/).filter(Boolean);
+  return words.map((word) => word.charAt(0).toUpperCase() + word.slice(1)).join(" ") || null;
+}
+
 /**
  * The README's first real paragraph as plain text: headings, badges, images, HTML and code are
  * skipped, Markdown links keep their text.

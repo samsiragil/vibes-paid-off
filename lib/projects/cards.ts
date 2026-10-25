@@ -21,6 +21,7 @@ export type ProjectCardData = {
   upvoteCount: number;
   commentCount: number;
   linkStatus: LinkStatus;
+  hasLiveLink: boolean;
   publishedAt: string | null;
   coverKey: string | null;
   /** AI tools first (§2.8); suggested tools count as non-AI. */
@@ -31,7 +32,7 @@ export type ProjectCardData = {
 /** Columns for `.select()` on projects that `toProjectCard` maps. */
 export const PROJECT_CARD_SELECT = `
   id, slug, title, tagline, key_prompt, category, content_lang, build_effort, has_story,
-  upvote_count, comment_count, link_status, published_at,
+  upvote_count, comment_count, link_status, live_url, published_at,
   owner:profiles!projects_owner_id_fkey (username, display_name, avatar_url),
   project_media (r2_key, sort_order),
   project_tools (tools (name, kind)),
@@ -51,6 +52,7 @@ type CardRow = {
   upvote_count: number;
   comment_count: number;
   link_status: LinkStatus;
+  live_url: string | null;
   published_at: string | null;
   owner: { username: string | null; display_name: string; avatar_url: string | null } | null;
   project_media: { r2_key: string; sort_order: number }[];
@@ -80,6 +82,7 @@ export function toProjectCard(row: CardRow): ProjectCardData {
     upvoteCount: row.upvote_count,
     commentCount: row.comment_count,
     linkStatus: row.link_status,
+    hasLiveLink: row.live_url !== null,
     publishedAt: row.published_at,
     coverKey: cover?.r2_key ?? null,
     tools: [

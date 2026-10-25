@@ -13,6 +13,8 @@ export type ProjectFormValues = {
   description: string;
   liveUrl: string;
   repoUrl: string;
+  /** The maker confirmed a repo GitHub could not find is private; cleared when the link changes. */
+  repoPrivate: boolean;
   videoUrl: string;
   category: string;
   contentLang: ContentLang;
@@ -37,6 +39,7 @@ export function emptyFormValues(contentLang: ContentLang): ProjectFormValues {
     description: "",
     liveUrl: "",
     repoUrl: "",
+    repoPrivate: false,
     videoUrl: "",
     category: "",
     contentLang,
@@ -60,6 +63,7 @@ export function toProjectInput(
     description: values.description,
     liveUrl: values.liveUrl,
     repoUrl: values.repoUrl,
+    repoPrivate: values.repoPrivate,
     videoUrl: values.videoUrl,
     category: values.category,
     contentLang: values.contentLang,
@@ -84,7 +88,8 @@ export function fromProjectInput(project: ProjectInput): ProjectFormValues {
 
 const draftKey = "vpo:submit-draft";
 // 2: build_effort and story moments replaced build sessions; older drafts are dropped.
-const draftVersion = 2;
+// 3: repoPrivate. A version 2 draft is kept, with the repo taken as not private.
+const draftVersion = 3;
 
 type StoredDraft = { v: number; savedAt: number; values: ProjectFormValues };
 
@@ -93,10 +98,15 @@ export function readDraft(): { savedAt: number; values: ProjectFormValues } | nu
     const raw = window.localStorage.getItem(draftKey);
     if (!raw) return null;
     const draft = JSON.parse(raw) as StoredDraft;
-    if (draft.v !== draftVersion || !draft.values || !Array.isArray(draft.values.toolIds)) {
+    if (
+      (draft.v !== draftVersion && draft.v !== 2) ||
+      !draft.values ||
+      !Array.isArray(draft.values.toolIds)
+    ) {
       return null;
     }
-    return { savedAt: draft.savedAt, values: draft.values };
+    const values = { ...draft.values, repoPrivate: draft.values.repoPrivate === true };
+    return { savedAt: draft.savedAt, values };
   } catch {
     return null;
   }
@@ -127,6 +137,7 @@ export function hasContent(values: ProjectFormValues) {
     values.tagline.trim() ||
     values.description.trim() ||
     values.liveUrl.trim() ||
+    values.repoUrl.trim() ||
     values.buildEffort ||
     values.toolIds.length ||
     values.suggestions.length ||

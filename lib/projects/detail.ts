@@ -57,8 +57,10 @@ export type ProjectDetail = {
   /** "Kalau mulai ulang", the third story moment. */
   lessons: string | null;
   hasStory: boolean;
-  liveUrl: string;
+  liveUrl: string | null;
   repoUrl: string | null;
+  /** Shown as "Repo privat", without the link (it would 404 for visitors). */
+  repoPrivate: boolean;
   videoUrl: string | null;
   category: string;
   contentLang: ContentLang;
@@ -85,7 +87,7 @@ const OTHER_PROJECTS = 3;
 
 const DETAIL_SELECT = `
   id, slug, owner_id, title, tagline, description, key_prompt, build_effort, moment_wow,
-  moment_hardest, lessons, has_story, live_url, repo_url, video_url, category, content_lang, status,
+  moment_hardest, lessons, has_story, live_url, repo_url, repo_private, video_url, category, content_lang, status,
   reject_code, reject_reason, link_status, last_checked_at, upvote_count, published_at, created_at,
   owner:profiles!projects_owner_id_fkey (id, username, display_name, avatar_url, bio, tip_url, is_trusted),
   project_sessions (id, sort_order, label, duration_hours, prompt, result, challenge, solution),
@@ -150,6 +152,7 @@ async function loadProject(
     hasStory: row.has_story,
     liveUrl: row.live_url,
     repoUrl: row.repo_url,
+    repoPrivate: row.repo_private,
     videoUrl: row.video_url,
     category: row.category,
     contentLang: row.content_lang,

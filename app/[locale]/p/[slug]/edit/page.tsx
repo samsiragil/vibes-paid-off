@@ -25,8 +25,9 @@ export default async function EditProjectPage({ params }: PageProps<"/[locale]/p
 
   return (
     <PageTransition>
-      <main className="mx-auto w-full max-w-[1120px] px-4 pt-10 sm:px-6 sm:pt-12">
-        <h1 className="text-[30px] leading-9 font-bold break-words sm:text-[40px] sm:leading-11">
+      {/* group/page: the form marks itself data-compact past step 1, and the title shrinks. */}
+      <main className="group/page mx-auto w-full max-w-[1120px] px-4 pt-10 sm:px-6 sm:pt-12">
+        <h1 className="text-[30px] leading-9 font-bold break-words transition-[font-size,line-height] group-has-[[data-compact]]/page:text-xl group-has-[[data-compact]]/page:leading-7 motion-reduce:transition-none sm:text-[40px] sm:leading-11">
           {t("editTitleLead")} {t("editTitleTail")}
         </h1>
         <Reveal fallback={<FormSkeleton />}>
@@ -71,7 +72,9 @@ async function EditContent({ params }: { params: PageProps<"/[locale]/p/[slug]/e
 
   return (
     <>
-      <p className="mt-3 max-w-[68ch] text-[17px] leading-7 text-ink-2">{t("editLede")}</p>
+      <p className="mt-3 max-w-[68ch] text-[17px] leading-7 text-ink-2 group-has-[[data-compact]]/page:hidden">
+        {t("editLede")}
+      </p>
       {statusNotice ? (
         <SystemMessage tone="soft" className="mt-6 max-w-[760px]">
           {statusNotice}

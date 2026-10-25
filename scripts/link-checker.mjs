@@ -77,6 +77,7 @@ async function loadProjects() {
       .select("id, slug, live_url, link_status, link_fail_count")
       .eq("status", "published")
       .neq("link_status", "archived")
+      .not("live_url", "is", null)
       .order("id")
       .range(from, from + PAGE_SIZE - 1);
     if (slugs.length > 0) query = query.in("slug", slugs);

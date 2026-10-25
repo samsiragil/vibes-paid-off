@@ -52,7 +52,9 @@ export type QueueItem = {
   title: string;
   tagline: string;
   keyPrompt: string;
-  liveUrl: string;
+  liveUrl: string | null;
+  repoUrl: string | null;
+  repoPrivate: boolean;
   category: string;
   buildEffort: BuildEffort;
   submittedAt: string;
@@ -70,7 +72,7 @@ export async function getReviewQueue(): Promise<{ items: QueueItem[]; now: numbe
   const { data, error } = await supabase
     .from("projects")
     .select(
-      `id, slug, title, tagline, key_prompt, live_url, category, build_effort,
+      `id, slug, title, tagline, key_prompt, live_url, repo_url, repo_private, category, build_effort,
        submitted_at, created_at,
        owner:profiles!projects_owner_id_fkey (id, username, display_name, avatar_url, is_trusted),
        project_media (r2_key, sort_order),
@@ -94,6 +96,8 @@ export async function getReviewQueue(): Promise<{ items: QueueItem[]; now: numbe
       tagline: row.tagline,
       keyPrompt: row.key_prompt,
       liveUrl: row.live_url,
+      repoUrl: row.repo_url,
+      repoPrivate: row.repo_private,
       category: row.category,
       buildEffort: row.build_effort,
       submittedAt: row.submitted_at,

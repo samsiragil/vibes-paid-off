@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { parseGithubRepo } from "@/lib/autofill/parse";
 import { BUILD_EFFORTS } from "@/lib/projects/types";
 
 // Project rules shared by the submit/edit form (browser) and the saveProject action (server).
@@ -23,6 +24,7 @@ export type ProjectErrorCode =
   | "required"
   | "too_long"
   | "invalid_url"
+  | "invalid_github"
   | "invalid_video_url"
   | "ai_tool_required"
   | "too_many"
@@ -52,6 +54,12 @@ const optionalHttpsUrl = z
   .max(PROJECT_LIMITS.url, error("too_long"))
   .refine((value) => value === "" || httpsUrlPattern.test(value), error("invalid_url"));
 
+/** The repo is required and must be a github.com repo, public or private. */
+const githubRepoUrl = httpsUrl.refine(
+  (value) => parseGithubRepo(value) !== null,
+  error("invalid_github"),
+);
+
 const optionalVideoUrl = optionalHttpsUrl.refine(
   (value) => value === "" || videoUrlPattern.test(value),
   error("invalid_video_url"),
@@ -67,8 +75,10 @@ export const projectSchema = z.object({
   title: requiredText(PROJECT_LIMITS.title),
   tagline: requiredText(PROJECT_LIMITS.tagline),
   description: optionalText(PROJECT_LIMITS.description),
-  liveUrl: httpsUrl,
-  repoUrl: optionalHttpsUrl,
+  liveUrl: optionalHttpsUrl,
+  repoUrl: githubRepoUrl,
+  /** The maker confirmed the repo is private when GitHub could not find it. */
+  repoPrivate: z.boolean(),
   videoUrl: optionalVideoUrl,
   category: z.string().regex(slugPattern, error("required")),
   contentLang: z.enum(["id", "en"], error("required")),
@@ -89,6 +99,7 @@ const knownCodes = new Set<string>([
   "required",
   "too_long",
   "invalid_url",
+  "invalid_github",
   "invalid_video_url",
   "ai_tool_required",
   "too_many",
@@ -118,6 +129,7 @@ export function toUpsertPayload(project: ProjectInput) {
     lessons: project.lessons,
     live_url: project.liveUrl,
     repo_url: project.repoUrl,
+    repo_private: project.repoPrivate,
     video_url: project.videoUrl,
     category: project.category,
     content_lang: project.contentLang,

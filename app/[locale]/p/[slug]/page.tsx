@@ -130,7 +130,7 @@ async function ProjectJsonLd({ project }: { project: ProjectDetail }) {
         keywords: project.tools.map((tool) => tool.name).join(", "),
         image: project.media.map((image) => mediaUrl(image.key)),
         datePublished: project.publishedAt ?? undefined,
-        sameAs: project.liveUrl,
+        sameAs: project.liveUrl ?? undefined,
         author: {
           "@type": "Person",
           name: project.maker.displayName,

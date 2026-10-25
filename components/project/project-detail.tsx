@@ -9,6 +9,7 @@ import { ShareButton } from "@/components/ui/copy-link";
 import { ExternalLink } from "@/components/ui/external-link";
 import { WorthItCount } from "@/components/interactions/project-interactions";
 import type { ProjectDetail } from "@/lib/projects/detail";
+import { shownLinkStatus } from "@/lib/projects/types";
 import { BuildStory } from "./build-timeline";
 import { LinkStatusBadge } from "./link-status-badge";
 import { MediaGallery } from "./media-gallery";
@@ -52,6 +53,8 @@ export async function ProjectDetailView({
   const maker = project.maker;
   const category = tCategories(project.category);
   const timeLabel = tCard("effortAfter", { effort: project.buildEffort });
+  const liveUrl = project.liveUrl;
+  const linkStatus = shownLinkStatus(project.linkStatus, liveUrl !== null);
   const checkedDate = project.lastCheckedAt
     ? format.dateTime(new Date(project.lastCheckedAt), { dateStyle: "medium" })
     : null;
@@ -110,7 +113,7 @@ export async function ProjectDetailView({
         </h1>
         <p className="max-w-[68ch] text-lg leading-7 text-ink-2">{project.tagline}</p>
         <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-          <LinkStatusBadge status={project.linkStatus} />
+          {linkStatus ? <LinkStatusBadge status={linkStatus} /> : null}
           <Badge variant="lang">
             <abbr title={t("contentLang", { lang: project.contentLang })} className="no-underline">
               {project.contentLang.toUpperCase()}
@@ -120,9 +123,9 @@ export async function ProjectDetailView({
         </div>
       </header>
 
-      {project.linkStatus !== "live" ? (
+      {linkStatus && linkStatus !== "live" ? (
         <SystemMessage tone="soft" className="mb-8 max-w-[760px]">
-          {project.linkStatus === "offline" ? t("offlineNotice") : t("archivedNotice")}
+          {linkStatus === "offline" ? t("offlineNotice") : t("archivedNotice")}
         </SystemMessage>
       ) : null}
 
@@ -144,17 +147,17 @@ export async function ProjectDetailView({
           </div>
 
           <div className="flex flex-wrap items-center gap-3 pt-2 sm:pl-[72px]">
-            {project.linkStatus === "live" ? (
+            {liveUrl && linkStatus === "live" ? (
               <ExternalLink
-                href={project.liveUrl}
+                href={liveUrl}
                 className={buttonStyles({ variant: "primary", size: "lg" })}
               >
                 {t("tryLive")} <span aria-hidden="true">↗</span>
                 <span className="sr-only">{t("newTab")}</span>
               </ExternalLink>
-            ) : project.linkStatus === "offline" ? (
+            ) : liveUrl && linkStatus === "offline" ? (
               <ExternalLink
-                href={project.liveUrl}
+                href={liveUrl}
                 className={buttonStyles({ variant: "outline", size: "lg" })}
               >
                 {t("tryLiveOffline")} <span aria-hidden="true">↗</span>
@@ -247,24 +250,29 @@ export async function ProjectDetailView({
               <>
                 <MetaTerm>{t("meta.repo")}</MetaTerm>
                 <dd className="min-w-0">
-                  <ExternalLink
-                    href={project.repoUrl}
-                    className="block truncate text-accent-text underline-offset-3 hover:underline"
-                  >
-                    {shortUrl(project.repoUrl)}
-                  </ExternalLink>
+                  {project.repoPrivate ? (
+                    t("meta.repoPrivate")
+                  ) : (
+                    <ExternalLink
+                      href={project.repoUrl}
+                      className="block truncate text-accent-text underline-offset-3 hover:underline"
+                    >
+                      {shortUrl(project.repoUrl)}
+                    </ExternalLink>
+                  )}
                 </dd>
               </>
             ) : null}
-            <MetaTerm>{t("meta.linkStatus")}</MetaTerm>
-            <dd>
-              {checkedDate
-                ? t("meta.linkChecked", {
-                    status: tLinkStatus(project.linkStatus),
-                    date: checkedDate,
-                  })
-                : tLinkStatus(project.linkStatus)}
-            </dd>
+            {linkStatus ? (
+              <>
+                <MetaTerm>{t("meta.linkStatus")}</MetaTerm>
+                <dd>
+                  {checkedDate
+                    ? t("meta.linkChecked", { status: tLinkStatus(linkStatus), date: checkedDate })
+                    : tLinkStatus(linkStatus)}
+                </dd>
+              </>
+            ) : null}
           </dl>
 
           {project.others.length > 0 ? (

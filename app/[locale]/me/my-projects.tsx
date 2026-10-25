@@ -8,7 +8,7 @@ import { buttonStyles } from "@/components/ui/button";
 import { MediaImage } from "@/components/ui/media-image";
 import type { MyProject } from "@/lib/profiles/me";
 import { rejectReasonText } from "@/lib/projects/reject-reason";
-import type { ProjectStatus } from "@/lib/projects/types";
+import { shownLinkStatus, type ProjectStatus } from "@/lib/projects/types";
 import { ArchiveButton } from "./archive-button";
 import { DeleteButton } from "./delete-button";
 import { DismissibleNudge } from "./story-nudge";
@@ -157,7 +157,9 @@ export async function MyProjects({
             <div className="flex flex-wrap items-center gap-2 lg:contents">
               <StatusBadge status={project.status} label={t(`status.${project.status}`)} />
               <span className="lg:justify-self-start">
-                <LinkStatusBadge status={project.linkStatus} />
+                {shownLinkStatus(project.linkStatus, project.hasLiveLink) ? (
+                  <LinkStatusBadge status={project.linkStatus} />
+                ) : null}
               </span>
               <span className="text-sm tabular-nums max-lg:ml-2">
                 <span className="text-muted lg:sr-only">{t("table.worthIt")} </span>

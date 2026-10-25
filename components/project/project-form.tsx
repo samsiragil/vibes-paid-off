@@ -15,7 +15,6 @@ import {
 import { Label } from "@/components/ui/badge";
 import { SystemMessage } from "@/components/ui/bubble";
 import { Button, buttonStyles } from "@/components/ui/button";
-import { Field, Input, Select, Textarea } from "@/components/ui/field";
 import { Link, useRouter } from "@/i18n/navigation";
 import { autofillFromLinks, type AutofillSuggestion } from "@/lib/autofill/actions";
 import { cn } from "@/lib/cn";
@@ -23,6 +22,13 @@ import { donateUrl } from "@/lib/donate";
 import type { ProjectMedia } from "@/lib/media/limits";
 import { scrollBehavior } from "@/lib/motion";
 import { saveProject, type SaveProjectError } from "@/lib/projects/actions";
+import {
+  errorsOnStep,
+  firstStepWithError,
+  FORM_STEPS,
+  stepIndex,
+  type FormStep,
+} from "@/lib/projects/form-steps";
 import {
   clearDraft,
   emptyFormValues,
@@ -40,22 +46,23 @@ import {
   type CatalogTool,
   type ContentLang,
   type ProjectStatus,
-  type StoryMoment,
 } from "@/lib/projects/types";
 import {
-  httpsUrlPattern,
-  PROJECT_LIMITS,
   projectFieldErrors,
   projectSchema,
   type ProjectFieldErrors,
   type ProjectInput,
 } from "@/lib/validation/project";
-import { EffortPicker } from "./effort-picker";
+import { fieldId, Stepper } from "./form/parts";
+import { StepBuild } from "./form/step-build";
+import { StepIntro } from "./form/step-intro";
+import { StepPrompt } from "./form/step-prompt";
+import { StepRepo, type RepoCheck } from "./form/step-repo";
+import { StepReview } from "./form/step-review";
+import { momentKeys, StepStory } from "./form/step-story";
 import { FormSkeleton } from "./form-skeleton";
-import { MediaUploader, type MediaUploaderHandle } from "./media-uploader";
+import type { MediaUploaderHandle } from "./media-uploader";
 import { ProjectCardView } from "./project-card";
-import { StoryMoments } from "./story-moments";
-import { ToolPicker } from "./tool-picker";
 import { Turnstile, type TurnstileHandle } from "./turnstile";
 
 export type ProjectFormMode =
@@ -64,21 +71,14 @@ export type ProjectFormMode =
 
 type Success = { status: ProjectStatus; slug: string; mediaFailed: boolean };
 
-/** Story moments and the form values that hold them ("redo" is lessons). */
-const momentKeys = {
-  wow: "momentWow",
-  hardest: "momentHardest",
-  redo: "lessons",
-} as const satisfies Record<StoryMoment, keyof ProjectFormValues>;
+/** What the repo check found, told at the top of step 2. */
+type Found =
+  | { kind: "public"; commits: number; days: number; pageFailed: boolean; imageFailed: boolean }
+  | { kind: "private" }
+  | { kind: "failed" };
 
-type AutofillState =
-  | { status: "idle" }
-  | { status: "loading" }
-  | { status: "done"; suggestion: AutofillSuggestion; imageFailed: boolean }
-  | { status: "error"; error: "unauthorized" | "rate_limit" | "failed" };
-
-/** Ids of the form controls; errors focus the first one in page order. */
-const fieldId = (path: string) => `pf-${path.replaceAll(".", "-")}`;
+/** Fields autofill may fill; each carries "terisi otomatis" until the maker changes it. */
+const autofillKeys = ["title", "tagline", "description"] as const;
 
 type ProjectFormProps = {
   mode: ProjectFormMode;
@@ -96,11 +96,12 @@ type ProjectFormProps = {
 const subscribeNothing = () => () => {};
 
 /**
- * The conversational submit/edit form (VPO-Submit): the site asks in short notes, the maker
- * answers in the fields under each one, with a live card preview beside it. Shared by /submit and
- * /p/[slug]/edit. Four answers publish a project (link, key prompt, rough build time, tools);
- * the build story is optional and can come later. Rendered only after hydration, so the submit
- * draft (localStorage) can seed the initial state without a server/client mismatch.
+ * The conversational submit/edit form (VPO-Submit), one question per step: the site asks in short
+ * notes, the maker answers under each one, and the card preview fills in beside it. Step 1 only
+ * asks for the GitHub repo (the live link is optional) and checks it, so a private repo is a
+ * question rather than an error. Shared by /submit and /p/[slug]/edit, where every step is open
+ * and every step can save. Rendered only after hydration, so the submit draft (localStorage) can
+ * seed the initial state without a server/client mismatch.
  */
 export function ProjectForm(props: ProjectFormProps) {
   const hydrated = useSyncExternalStore(
@@ -130,6 +131,7 @@ function ProjectFormBody({
   const router = useRouter();
   const isCreate = mode.kind === "create";
   const keepsDraft = isCreate && persistDraft;
+  const lastIndex = FORM_STEPS.length - 1;
 
   // Drafts live in localStorage, so this component only renders in the browser (see ProjectForm).
   const [draft] = useState(() => {
@@ -142,6 +144,12 @@ function ProjectFormBody({
       ? fromProjectInput(initialProject)
       : (draft?.values ?? emptyFormValues(locale as ContentLang)),
   );
+  // "Tambah cerita" links to /p/[slug]/edit#cerita: open on the story step.
+  const [step, setStep] = useState<FormStep>(() =>
+    !isCreate && window.location.hash === "#cerita" ? "story" : "repo",
+  );
+  /** Furthest step the maker may jump to with the stepper (edit: all of them). */
+  const [reachable, setReachable] = useState(isCreate ? 0 : lastIndex);
   const [errors, setErrors] = useState<ProjectFieldErrors>({});
   const [formError, setFormError] = useState<SaveProjectError | null>(null);
   const [phase, setPhase] = useState<"saving" | "uploading">("saving");
@@ -152,15 +160,21 @@ function ProjectFormBody({
   const [coverUrl, setCoverUrl] = useState<string | null>(null);
   const [mediaCount, setMediaCount] = useState(initialMedia.length);
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
-  const [autofill, setAutofill] = useState<AutofillState>({ status: "idle" });
+  const [repoCheck, setRepoCheck] = useState<RepoCheck>({ status: "idle" });
+  const [found, setFound] = useState<Found | null>(null);
+  const [autofilled, setAutofilled] = useState<ReadonlySet<string>>(new Set());
   const [suggestedEffort, setSuggestedEffort] = useState<BuildEffort | null>(null);
 
   const uploaderRef = useRef<MediaUploaderHandle>(null);
   const turnstileRef = useRef<TurnstileHandle>(null);
+  const topRef = useRef<HTMLDivElement>(null);
   const focusErrorRef = useRef(false);
+  const focusStepRef = useRef(false);
   const successRef = useRef<HTMLDivElement>(null);
-  /** The live/repo links autofill last ran for, so leaving the field does not repeat it. */
-  const autofilledForRef = useRef<string | null>(null);
+  /** The live/repo links the repo check last ran for, so "Lanjut" does not repeat it. */
+  const checkedForRef = useRef<string | null>(null);
+  /** Links the edit page opened with: those need no check before moving on. */
+  const savedLinks = initialProject ? linkKey(fromProjectInput(initialProject)) : null;
 
   // Keep the draft current while typing.
   useEffect(() => {
@@ -172,27 +186,30 @@ function ProjectFormBody({
     return () => clearTimeout(timer);
   }, [keepsDraft, success, values]);
 
-  // After a failed submit, move focus to the first field with an error.
+  // After a failed step or submit, move focus to the first field with an error on that step.
   useEffect(() => {
     if (!focusErrorRef.current) return;
     focusErrorRef.current = false;
-    const first = document.querySelector<HTMLElement>('form [aria-invalid="true"]');
+    focusStepRef.current = false;
+    const first = document.querySelector<HTMLElement>(
+      `[data-step="${step}"] [aria-invalid="true"]`,
+    );
     first?.focus();
     first?.scrollIntoView({ block: "center", behavior: scrollBehavior() });
-  }, [errors]);
+  }, [errors, step]);
+
+  // A new step starts at its question, with focus on its heading for screen readers.
+  useEffect(() => {
+    if (!focusStepRef.current) return;
+    focusStepRef.current = false;
+    topRef.current?.scrollIntoView({ block: "start", behavior: scrollBehavior() });
+    document.getElementById(`pf-step-${step}`)?.focus({ preventScroll: true });
+  }, [step]);
 
   useEffect(() => {
     if (!success) return;
     successRef.current?.scrollIntoView({ block: "center", behavior: scrollBehavior() });
   }, [success]);
-
-  // "Tambah cerita" links to /p/[slug]/edit#cerita; the form renders after hydration, so the
-  // browser's own jump to the anchor happened before the section existed.
-  useEffect(() => {
-    if (window.location.hash === "#cerita") {
-      document.getElementById("cerita")?.scrollIntoView({ block: "start" });
-    }
-  }, []);
 
   const toolById = useMemo(() => new Map(tools.map((tool) => [tool.id, tool])), [tools]);
 
@@ -203,12 +220,21 @@ function ProjectFormBody({
   }
 
   function update<K extends keyof ProjectFormValues>(key: K, value: ProjectFormValues[K]) {
-    setValues((previous) => ({ ...previous, [key]: value }));
+    setValues((previous) => ({
+      ...previous,
+      [key]: value,
+      // A new repo link needs a new answer to "is it private?".
+      ...(key === "repoUrl" ? { repoPrivate: false } : {}),
+    }));
     if (errors[key]) clearErrors([key]);
+    if (key === "repoUrl" || key === "liveUrl") setRepoCheck({ status: "idle" });
+    if (autofilled.has(key)) {
+      setAutofilled((previous) => new Set([...previous].filter((filled) => filled !== key)));
+    }
     setSavedStatus(null);
   }
 
-  function updateWith<K extends "toolIds" | "suggestions">(
+  function updateList<K extends "toolIds" | "suggestions">(
     key: K,
     change: (previous: ProjectFormValues[K]) => ProjectFormValues[K],
   ) {
@@ -242,29 +268,109 @@ function ProjectFormBody({
     return { parsed, fieldErrors };
   }
 
-  function showErrors(fieldErrors: ProjectFieldErrors, error: SaveProjectError) {
+  function goTo(next: FormStep) {
+    focusStepRef.current = true;
+    setStep(next);
+    setReachable((previous) => Math.max(previous, stepIndex(next)));
+    setFormError(null);
+  }
+
+  /** Shows the errors and opens the step of the first one. */
+  function showErrors(fieldErrors: ProjectFieldErrors, error: SaveProjectError | null) {
+    const first = firstStepWithError(fieldErrors);
+    if (first && first !== step) setStep(first);
     focusErrorRef.current = Object.keys(fieldErrors).length > 0;
     setErrors(fieldErrors);
     setFormError(error);
   }
 
-  /**
-   * Fills the form from the live page and repo. Only empty fields are filled, so whatever the
-   * maker typed stays; the screenshot is added only while there is none.
-   */
-  async function runAutofill() {
-    const liveUrl = values.liveUrl.trim();
-    const repoUrl = values.repoUrl.trim();
-    if (!httpsUrlPattern.test(liveUrl) || autofill.status === "loading") return;
-    autofilledForRef.current = `${liveUrl} ${repoUrl}`;
-    setAutofill({ status: "loading" });
-
-    const result = await autofillFromLinks({ liveUrl, repoUrl });
-    if (!result.ok) {
-      setAutofill({ status: "error", error: result.error === "invalid" ? "failed" : result.error });
+  /** "Lanjut": checks only this step's answers, so the questions ahead do not complain yet. */
+  function next() {
+    const own = errorsOnStep(validate().fieldErrors, step);
+    if (Object.keys(own).length > 0) {
+      showErrors(own, null);
       return;
     }
+    setErrors({});
+    if (step === "repo") {
+      void checkRepo();
+      return;
+    }
+    goTo(FORM_STEPS[Math.min(stepIndex(step) + 1, lastIndex)]);
+  }
+
+  function back() {
+    setErrors({});
+    goTo(FORM_STEPS[Math.max(stepIndex(step) - 1, 0)]);
+  }
+
+  /**
+   * Reads the repo (and the live page, when given) once per pair of links and fills the empty
+   * fields. A repo GitHub cannot find stays on this step to ask whether it is private; anything
+   * else moves on, a failed check included (it is only a convenience).
+   */
+  async function checkRepo() {
+    const key = linkKey(values);
+    if (key === savedLinks || key === checkedForRef.current) {
+      const waiting =
+        (repoCheck.status === "not_found" && !values.repoPrivate) ||
+        repoCheck.status === "no_owner";
+      if (!waiting) goTo("intro");
+      return;
+    }
+    if (repoCheck.status === "checking") return;
+    checkedForRef.current = key;
+    setRepoCheck({ status: "checking" });
+
+    const result = await autofillFromLinks({
+      liveUrl: values.liveUrl.trim(),
+      repoUrl: values.repoUrl.trim(),
+    });
+    if (!result.ok) {
+      setRepoCheck({ status: "failed" });
+      setFound({ kind: "failed" });
+      goTo("intro");
+      return;
+    }
+
     const { suggestion } = result;
+    fillFrom(suggestion);
+    switch (suggestion.repoState) {
+      case "not_found":
+        setRepoCheck({ status: "not_found" });
+        return;
+      case "no_owner":
+        setRepoCheck({ status: "no_owner", owner: repoOwner(values.repoUrl) });
+        requestAnimationFrame(() => document.getElementById(fieldId("repoUrl"))?.focus());
+        return;
+      case "failed":
+        setRepoCheck({ status: "failed" });
+        setFound({ kind: "failed" });
+        goTo("intro");
+        return;
+      case "public": {
+        setRepoCheck({ status: "public" });
+        const stats = suggestion.repo ?? { commits: 0, activeDays: 0 };
+        const shown = {
+          kind: "public",
+          commits: stats.commits,
+          days: stats.activeDays,
+          pageFailed: suggestion.pageFailed,
+          imageFailed: false,
+        } as const;
+        setFound(shown);
+        goTo("intro");
+        if (suggestion.imageUrl && mediaCount === 0) {
+          const added = await addAutofillImage(suggestion.imageUrl);
+          if (!added) setFound({ ...shown, imageFailed: true });
+        }
+      }
+    }
+  }
+
+  /** Only empty fields are filled, so whatever the maker typed stays. */
+  function fillFrom(suggestion: AutofillSuggestion) {
+    const filled = autofillKeys.filter((key) => !values[key].trim() && suggestion[key]);
     setValues((previous) => ({
       ...previous,
       title: previous.title.trim() ? previous.title : (suggestion.title ?? previous.title),
@@ -279,15 +385,9 @@ function ProjectFormBody({
         isCreate && suggestion.contentLang ? suggestion.contentLang : previous.contentLang,
       buildEffort: previous.buildEffort || (suggestion.effort ?? ""),
     }));
-    clearErrors(["title", "tagline", "description", "buildEffort"]);
+    setAutofilled((previous) => new Set([...previous, ...filled]));
     setSuggestedEffort(suggestion.effort);
     setSavedStatus(null);
-
-    let imageFailed = false;
-    if (suggestion.imageUrl && mediaCount === 0) {
-      imageFailed = !(await addAutofillImage(suggestion.imageUrl));
-    }
-    setAutofill({ status: "done", suggestion, imageFailed });
   }
 
   async function addAutofillImage(url: string) {
@@ -309,18 +409,31 @@ function ProjectFormBody({
     }
   }
 
-  /** Leaving a link field runs autofill once per link pair, while title and tagline are empty. */
-  function autofillOnBlur() {
-    if (autofilledForRef.current === `${values.liveUrl.trim()} ${values.repoUrl.trim()}`) return;
-    if (values.title.trim() || values.tagline.trim()) return;
-    void runAutofill();
+  function confirmPrivate() {
+    setValues((previous) => ({ ...previous, repoPrivate: true }));
+    setFound({ kind: "private" });
+    setSavedStatus(null);
+  }
+
+  function undoPrivate() {
+    setValues((previous) => ({ ...previous, repoPrivate: false }));
+    setFound(null);
+    requestAnimationFrame(() => document.getElementById(fieldId("repoUrl"))?.focus());
   }
 
   function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (isPending) return;
-    setSavedStatus(null);
+    // On a new project, Enter in a field means "Lanjut" until the last step.
+    if (isCreate && step !== "review") {
+      next();
+      return;
+    }
+    save();
+  }
 
+  function save() {
+    setSavedStatus(null);
     const { parsed, fieldErrors } = validate();
     if (!parsed.success || Object.keys(fieldErrors).length > 0) {
       showErrors(fieldErrors, "invalid");
@@ -363,15 +476,23 @@ function ProjectFormBody({
     });
   }
 
+  function resetChecks() {
+    setRepoCheck({ status: "idle" });
+    setFound(null);
+    setAutofilled(new Set());
+    setSuggestedEffort(null);
+    checkedForRef.current = null;
+  }
+
   function startOver() {
     if (keepsDraft) clearDraft();
     setValues(emptyFormValues(values.contentLang));
     setErrors({});
     setFormError(null);
     setRestoredAt(null);
-    setAutofill({ status: "idle" });
-    setSuggestedEffort(null);
-    autofilledForRef.current = null;
+    setStep("repo");
+    setReachable(0);
+    resetChecks();
   }
 
   // Live preview -------------------------------------------------------------------
@@ -404,27 +525,64 @@ function ProjectFormBody({
           setValues(emptyFormValues(values.contentLang));
           setSuccess(null);
           setRestoredAt(null);
-          setAutofill({ status: "idle" });
-          setSuggestedEffort(null);
-          autofilledForRef.current = null;
+          setStep("repo");
+          setReachable(0);
+          resetChecks();
           window.scrollTo({ top: 0 });
         }}
       />
     );
   }
 
+  const preview = (
+    <ProjectCardView
+      makerName={maker.name}
+      makerAvatarUrl={maker.avatarUrl}
+      category={values.category ? tCategories(values.category) : undefined}
+      prompt={values.keyPrompt.trim() || t("preview.prompt")}
+      timeLabel={timeLabel}
+      story={hasStory ? tCard("story") : undefined}
+      imageUrl={coverUrl}
+      title={values.title.trim() || t("preview.title")}
+      tools={toolsLabel}
+      worthIt={tCard("worthIt", { count: 0 })}
+      muted={!values.keyPrompt.trim() && !values.title.trim()}
+    />
+  );
+
+  const stepProps = { values, fieldError, errorProps, update };
   const submitLabel = isCreate ? (mode.isTrusted ? t("submitTrusted") : t("submit")) : t("save");
   const pendingLabel =
     phase === "uploading" ? t("uploading") : isCreate ? t("sending") : t("saving");
-  const canAutofill = httpsUrlPattern.test(values.liveUrl.trim());
-  const extrasOpen = Boolean(
-    values.description.trim() || values.videoUrl.trim() || errors.description || errors.videoUrl,
-  );
+  const checking = repoCheck.status === "checking";
+  const storyEmpty = Object.values(momentKeys).every((key) => values[key].trim() === "");
+  const nextLabel = checking
+    ? t("nav.checking")
+    : step === "story"
+      ? storyEmpty
+        ? t("nav.skip")
+        : t("nav.last")
+      : t("nav.next");
+  const onReview = step === "review";
 
   return (
-    <div className="flex flex-col gap-10 pt-10 lg:flex-row lg:items-start lg:gap-14">
-      <form noValidate onSubmit={onSubmit} className="flex min-w-0 flex-1 flex-col gap-4">
-        {restoredAt ? (
+    <div
+      ref={topRef}
+      // Past step 1 the page title and lede step back (see the submit and edit pages).
+      data-compact={step === "repo" ? undefined : ""}
+      className="flex scroll-mt-6 flex-col gap-10 pt-8 lg:flex-row lg:items-start lg:gap-14"
+    >
+      <form noValidate onSubmit={onSubmit} className="flex min-w-0 flex-1 flex-col gap-6">
+        <Stepper
+          current={step}
+          reachable={reachable}
+          onSelect={(target) => {
+            setErrors({});
+            goTo(target);
+          }}
+        />
+
+        {restoredAt && step === "repo" ? (
           <SystemMessage tone="soft">
             <span className="flex flex-wrap items-center gap-x-3 gap-y-2">
               {t("draftRestored", { time: format.relativeTime(restoredAt) })}
@@ -439,289 +597,61 @@ function ProjectFormBody({
           </SystemMessage>
         ) : null}
 
-        {/* 1. Link: autofill fills title, tagline and the first screenshot. */}
-        <Question>{t.rich("steps.link", { strong })}</Question>
-        <Answer>
-          <div className="grid gap-3.5 sm:grid-cols-2 sm:gap-3">
-            <Field id={fieldId("liveUrl")} label={t("liveUrl")} error={fieldError("liveUrl")}>
-              <Input
-                {...errorProps("liveUrl")}
-                type="url"
-                inputMode="url"
-                autoComplete="url"
-                value={values.liveUrl}
-                placeholder={t("liveUrlPlaceholder")}
-                onChange={(event) => update("liveUrl", event.target.value)}
-                onBlur={autofillOnBlur}
-              />
-            </Field>
-            <Field
-              id={fieldId("repoUrl")}
-              label={<Optional label={t("repoUrl")} note={t("optional")} />}
-              error={fieldError("repoUrl")}
-            >
-              <Input
-                {...errorProps("repoUrl")}
-                type="url"
-                inputMode="url"
-                value={values.repoUrl}
-                placeholder={t("repoUrlPlaceholder")}
-                onChange={(event) => update("repoUrl", event.target.value)}
-                onBlur={autofillOnBlur}
-              />
-            </Field>
-          </div>
-          <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-            <Button
-              variant="outline"
-              size="sm"
-              disabled={!canAutofill || autofill.status === "loading"}
-              onClick={() => void runAutofill()}
-            >
-              {autofill.status === "loading" ? t("autofill.fetching") : t("autofill.fetch")}
-            </Button>
-            <AutofillStatus state={autofill} />
-          </div>
-          <AutofillAbout />
-
-          <Field id={fieldId("title")} label={t("title")} error={fieldError("title")}>
-            <Input
-              {...errorProps("title")}
-              value={values.title}
-              maxLength={PROJECT_LIMITS.title}
-              placeholder={t("titlePlaceholder")}
-              onChange={(event) => update("title", event.target.value)}
-            />
-          </Field>
-          <Field
-            id={fieldId("tagline")}
-            label={t("tagline")}
-            error={fieldError("tagline")}
-            counter={`${values.tagline.length}/${PROJECT_LIMITS.tagline}`}
-          >
-            <Input
-              {...errorProps("tagline")}
-              value={values.tagline}
-              maxLength={PROJECT_LIMITS.tagline}
-              placeholder={t("taglinePlaceholder")}
-              onChange={(event) => update("tagline", event.target.value)}
-            />
-          </Field>
-          <div className="flex flex-col gap-2">
-            <p className="text-[13px] leading-4 font-semibold text-ink">{t("screenshots")}</p>
-            <MediaUploader
-              ref={uploaderRef}
-              projectId={isCreate ? undefined : mode.projectId}
-              initialMedia={initialMedia}
-              onChange={(change) => {
-                setCoverUrl(change.previews[0]?.url ?? null);
-                setMediaCount(change.previews.length);
-              }}
-            />
-          </div>
-        </Answer>
-
-        {/* 2. Key prompt. */}
-        <Question>{t.rich("steps.prompt", { strong })}</Question>
-        <Answer>
-          {/* The page's main field: a ruled note with the margin line (README §6). */}
-          <div
-            className={cn(
-              "relative overflow-hidden rounded-md border-[1.5px] bg-surface transition-colors focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-accent",
-              errors.keyPrompt ? "border-danger" : "border-border-strong hover:border-ink",
-            )}
-          >
-            <span
-              aria-hidden="true"
-              className="pointer-events-none absolute inset-y-0 left-3 w-[1.5px] bg-margin sm:left-6"
-            />
-            <label htmlFor={fieldId("keyPrompt")} className="sr-only">
-              {t("keyPrompt")}
-            </label>
-            <textarea
-              {...errorProps("keyPrompt")}
-              rows={4}
-              value={values.keyPrompt}
-              maxLength={PROJECT_LIMITS.keyPrompt}
-              placeholder={t("keyPromptPlaceholder")}
-              onChange={(event) => update("keyPrompt", event.target.value)}
-              className="block w-full resize-y bg-transparent ruled [background-attachment:local] pt-0 pr-4 pb-0 pl-7 text-lg/8 text-ink placeholder:text-muted focus:outline-none sm:pl-10"
-            />
-          </div>
-          <div className="flex items-baseline justify-between gap-3">
-            {fieldError("keyPrompt") ? (
-              <p id={`${fieldId("keyPrompt")}-error`} className="text-sm text-danger">
-                {fieldError("keyPrompt")}
-              </p>
-            ) : (
-              <span />
-            )}
-            <span className="text-[13px] text-muted tabular-nums">
-              {values.keyPrompt.length}/{PROJECT_LIMITS.keyPrompt}
-            </span>
-          </div>
-        </Answer>
-
-        {/* 3. Rough build time. */}
-        <Question>{t.rich("steps.effort", { strong })}</Question>
-        <Answer>
-          <EffortPicker
-            id={fieldId("buildEffort")}
-            value={values.buildEffort}
-            suggested={suggestedEffort}
-            error={fieldError("buildEffort")}
-            onChange={(effort) => update("buildEffort", effort)}
+        {/* Every step stays mounted (hidden), so picked screenshots and open moments survive. */}
+        <StepSection step="repo" current={step}>
+          <StepRepo
+            {...stepProps}
+            check={repoCheck}
+            onConfirmPrivate={confirmPrivate}
+            onUndoPrivate={undoPrivate}
           />
-        </Answer>
-
-        {/* 4. Tools, category and language. */}
-        <Question>{t.rich("steps.tools", { strong })}</Question>
-        <Answer>
-          <ToolPicker
-            id={fieldId("toolIds")}
+        </StepSection>
+        <StepSection step="intro" current={step}>
+          <StepIntro
+            {...stepProps}
+            found={found ? <FoundMessage found={found} /> : null}
+            autofilled={autofilled}
+            uploaderRef={uploaderRef}
+            projectId={isCreate ? undefined : mode.projectId}
+            initialMedia={initialMedia}
+            onMediaChange={(previews) => {
+              setCoverUrl(previews[0]?.url ?? null);
+              setMediaCount(previews.length);
+            }}
+          />
+        </StepSection>
+        <StepSection step="prompt" current={step}>
+          <StepPrompt {...stepProps} />
+        </StepSection>
+        <StepSection step="build" current={step}>
+          <StepBuild
+            {...stepProps}
+            updateList={updateList}
+            suggestedEffort={suggestedEffort}
             tools={tools}
             quickPickIds={quickPickIds}
-            selectedIds={values.toolIds}
-            suggestions={values.suggestions}
-            error={fieldError("toolIds") ?? fieldError("suggestions")}
-            onSelectedChange={(change) => updateWith("toolIds", change)}
-            onSuggestionsChange={(change) => updateWith("suggestions", change)}
+            categories={categories}
           />
-          <div className="grid gap-3.5 sm:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] sm:gap-3">
-            <Field id={fieldId("category")} label={t("category")} error={fieldError("category")}>
-              <Select
-                {...errorProps("category")}
-                value={values.category}
-                onChange={(event) => update("category", event.target.value)}
-              >
-                <option value="" disabled>
-                  {t("categoryPlaceholder")}
-                </option>
-                {categories.map((slug) => (
-                  <option key={slug} value={slug}>
-                    {tCategories(slug)}
-                  </option>
-                ))}
-              </Select>
-            </Field>
-            <fieldset className="flex flex-col gap-2">
-              <legend className="mb-2 text-[13px] leading-4 font-semibold text-ink">
-                {t("contentLang")}
-              </legend>
-              <div className="flex h-11 items-center gap-5 text-base">
-                {(["id", "en"] as const).map((lang) => (
-                  <label key={lang} className="flex cursor-pointer items-center gap-2">
-                    <input
-                      type="radio"
-                      name="contentLang"
-                      value={lang}
-                      checked={values.contentLang === lang}
-                      onChange={() => update("contentLang", lang)}
-                      className="size-4 accent-(--accent)"
-                    />
-                    {lang.toUpperCase()}
-                  </label>
-                ))}
-              </div>
-            </fieldset>
-          </div>
+        </StepSection>
+        <StepSection step="story" current={step}>
+          <StepStory {...stepProps} legacySessions={legacySessions} />
+        </StepSection>
+        <StepSection step="review" current={step}>
+          <StepReview preview={preview} showRules={isCreate} />
+        </StepSection>
 
-          <details
-            open={extrasOpen}
-            className="group motion-details rounded border border-border bg-surface px-4 py-2"
-          >
+        {/* Peek at the card on small screens; on wide ones it sits beside the form. */}
+        {!onReview && step !== "repo" ? (
+          <details className="group motion-details rounded border border-border bg-surface px-4 py-2 lg:hidden">
             <summary className="flex min-h-9 cursor-pointer list-none items-center gap-2 text-base font-semibold text-ink [&::-webkit-details-marker]:hidden">
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.75"
-                aria-hidden="true"
-                className="transition-transform group-open:rotate-90"
-              >
-                <path d="M9 6l6 6-6 6" />
-              </svg>
-              {t("extras")} <span className="font-normal text-muted">{t("extrasHint")}</span>
+              {t("nav.peek")}
             </summary>
-            <div className="mt-3 flex flex-col gap-4 pb-2">
-              <Field
-                id={fieldId("description")}
-                label={<Optional label={t("description")} note={t("optional")} />}
-                error={fieldError("description")}
-              >
-                <Textarea
-                  {...errorProps("description")}
-                  rows={3}
-                  value={values.description}
-                  maxLength={PROJECT_LIMITS.description}
-                  placeholder={t("descriptionPlaceholder")}
-                  onChange={(event) => update("description", event.target.value)}
-                />
-              </Field>
-              <Field
-                id={fieldId("videoUrl")}
-                label={<Optional label={t("videoUrl")} note={t("videoUrlHint")} />}
-                error={fieldError("videoUrl")}
-              >
-                <Input
-                  {...errorProps("videoUrl")}
-                  type="url"
-                  inputMode="url"
-                  value={values.videoUrl}
-                  placeholder={t("videoUrlPlaceholder")}
-                  onChange={(event) => update("videoUrl", event.target.value)}
-                />
-              </Field>
-            </div>
+            <div className="pt-2 pb-2">{preview}</div>
           </details>
-        </Answer>
-
-        {/* Optional: the build story, now or later from the edit page. */}
-        <div id="cerita" className="scroll-mt-6">
-          <Question>{t.rich("steps.story", { strong })}</Question>
-        </div>
-        <Answer>
-          <StoryMoments
-            idFor={(moment) => fieldId(momentKeys[moment])}
-            values={{
-              wow: values.momentWow,
-              hardest: values.momentHardest,
-              redo: values.lessons,
-            }}
-            fieldError={(moment) => fieldError(momentKeys[moment])}
-            onChange={(moment, value) => update(momentKeys[moment], value)}
-          />
-          {legacySessions > 0 ? (
-            <p className="text-[13px] leading-normal text-muted">
-              {t("moments.legacy", { count: legacySessions })}
-            </p>
-          ) : null}
-        </Answer>
-
-        {isCreate ? (
-          <Question>
-            {t.rich("steps.rules", {
-              link: (chunks) => (
-                <Link
-                  href="/rules"
-                  className="font-semibold text-accent-text underline underline-offset-3"
-                >
-                  {chunks}
-                </Link>
-              ),
-            })}
-            <ul className="list-disc pl-5 text-ink-2">
-              {(["own", "illegal", "privacy", "respect"] as const).map((rule) => (
-                <li key={rule}>{t(`rules.${rule}`)}</li>
-              ))}
-            </ul>
-          </Question>
         ) : null}
 
-        <div className="mt-2 flex flex-col items-stretch gap-3 sm:items-end">
-          {isCreate && turnstileSiteKey ? (
+        <div className="flex flex-col gap-3 border-t border-border pt-5">
+          {onReview && isCreate && turnstileSiteKey ? (
             <div className="flex flex-col gap-1.5 sm:items-end">
               <span className="sr-only">{t("turnstile")}</span>
               <Turnstile
@@ -737,7 +667,7 @@ function ProjectFormBody({
           {formError ? (
             <div
               role="alert"
-              className="rounded border border-danger bg-surface px-4 py-3 text-base text-danger sm:max-w-[80%]"
+              className="rounded border border-danger bg-surface px-4 py-3 text-base text-danger sm:ml-auto sm:max-w-[80%]"
             >
               {t(`formErrors.${formError}`)}
               {formError === "unauthorized" ? (
@@ -762,138 +692,128 @@ function ProjectFormBody({
             </SystemMessage>
           ) : null}
 
-          <Button
-            type="submit"
-            variant="accent"
-            size="lg"
-            disabled={isPending}
-            className="sm:self-end"
-          >
-            {isPending ? pendingLabel : `${submitLabel} ↑`}
-          </Button>
+          <div className="flex flex-wrap items-center gap-3">
+            {step !== "repo" ? (
+              <Button variant="ghost" onClick={back} disabled={isPending}>
+                ← {t("nav.back")}
+              </Button>
+            ) : null}
+            <div className="ml-auto flex flex-wrap items-center justify-end gap-3">
+              {/* The submit button is what Enter presses: "Lanjut" on a new project, save on edit. */}
+              {!isCreate ? (
+                <Button
+                  type="submit"
+                  variant={onReview ? "accent" : "outline"}
+                  size={onReview ? "lg" : "md"}
+                  disabled={isPending}
+                >
+                  {isPending ? pendingLabel : submitLabel}
+                </Button>
+              ) : null}
+              {onReview ? (
+                isCreate ? (
+                  <Button type="submit" variant="accent" size="lg" disabled={isPending}>
+                    {isPending ? pendingLabel : `${submitLabel} ↑`}
+                  </Button>
+                ) : null
+              ) : (
+                <Button
+                  type={isCreate ? "submit" : "button"}
+                  variant={isCreate ? "accent" : "primary"}
+                  size={isCreate ? "lg" : "md"}
+                  disabled={checking}
+                  onClick={isCreate ? undefined : next}
+                >
+                  {nextLabel} {checking ? null : <span aria-hidden="true">→</span>}
+                </Button>
+              )}
+            </div>
+          </div>
+          {keepsDraft ? (
+            <p className="text-[13px] leading-5 text-muted sm:text-right">{t("nav.autosave")}</p>
+          ) : null}
         </div>
       </form>
 
-      <aside className="flex shrink-0 flex-col gap-3 lg:sticky lg:top-6 lg:w-[360px]">
-        <Label>{t("preview.label")}</Label>
-        <ProjectCardView
-          makerName={maker.name}
-          makerAvatarUrl={maker.avatarUrl}
-          category={values.category ? tCategories(values.category) : undefined}
-          prompt={values.keyPrompt.trim() || t("preview.prompt")}
-          timeLabel={timeLabel}
-          story={hasStory ? tCard("story") : undefined}
-          imageUrl={coverUrl}
-          title={values.title.trim() || t("preview.title")}
-          tools={toolsLabel}
-          worthIt={tCard("worthIt", { count: 0 })}
-          muted={!values.keyPrompt.trim() && !values.title.trim()}
-        />
-        <p className="text-[13px] leading-normal text-ink-2">{t("preview.note")}</p>
-      </aside>
+      {onReview ? null : (
+        <aside className="hidden shrink-0 flex-col gap-3 lg:sticky lg:top-6 lg:flex lg:w-[360px]">
+          <Label>{t("preview.label")}</Label>
+          <div key={step} className="motion-fade-in">
+            {preview}
+          </div>
+          <p className="text-[13px] leading-normal text-ink-2">{t("preview.note")}</p>
+        </aside>
+      )}
     </div>
   );
 }
 
-function strong(chunks: ReactNode) {
-  return <strong className="font-semibold">{chunks}</strong>;
+/** "live repo", the pair of links one repo check is for. */
+function linkKey(values: Pick<ProjectFormValues, "liveUrl" | "repoUrl">) {
+  return `${values.liveUrl.trim()} ${values.repoUrl.trim()}`;
 }
 
-/** What autofill found (or why it found nothing), next to the "Ambil info" button. */
-function AutofillStatus({ state }: { state: AutofillState }) {
-  const t = useTranslations("projectForm");
-  const tMedia = useTranslations("media.errors");
-  if (state.status === "idle" || state.status === "loading") return null;
-
-  const lines: string[] = [];
-  if (state.status === "error") {
-    lines.push(
-      state.error === "unauthorized"
-        ? t("formErrors.unauthorized")
-        : state.error === "rate_limit"
-          ? tMedia("rate_limit")
-          : t("autofill.failed"),
-    );
-  } else {
-    const { suggestion } = state;
-    lines.push(suggestion.pageFailed ? t("autofill.nothing") : t("autofill.filled"));
-    if (suggestion.repo)
-      lines.push(
-        t("autofill.repo", {
-          commits: suggestion.repo.commits,
-          days: suggestion.repo.activeDays,
-        }),
-      );
-    if (suggestion.repoFailed) lines.push(t("autofill.repoFailed"));
-    if (state.imageFailed) lines.push(t("autofill.imageFailed"));
+function repoOwner(repoUrl: string) {
+  try {
+    return new URL(repoUrl.trim()).pathname.split("/").filter(Boolean)[0] ?? "";
+  } catch {
+    return "";
   }
+}
 
+/** One step's question and answers; only the current one shows. */
+function StepSection({
+  step,
+  current,
+  children,
+}: {
+  step: FormStep;
+  current: FormStep;
+  children: ReactNode;
+}) {
+  const active = step === current;
   return (
-    <p role="status" className="min-w-0 flex-1 text-sm leading-5 text-ink-2">
-      {lines.join(" ")}
-    </p>
+    <section
+      data-step={step}
+      hidden={!active}
+      aria-labelledby={`pf-step-${step}`}
+      className={cn("flex flex-col gap-5", active && "motion-fade-in")}
+    >
+      {children}
+    </section>
   );
 }
 
-/** What "Ambil info" reads from the live page and the repo, folded under the button. */
-function AutofillAbout() {
-  const t = useTranslations("projectForm.autofill.about");
-  const sources = [
-    { heading: t("web"), items: [t("webTitle"), t("webTagline"), t("webImage"), t("webLang")] },
-    { heading: t("repo"), items: [t("repoDescription"), t("repoReadme"), t("repoCommits")] },
-  ];
-
+/** The small reward for step 1, opening step 2: what the repo check found, in plain words. */
+function FoundMessage({ found }: { found: Found }) {
+  const t = useTranslations("projectForm.autofill");
+  if (found.kind === "failed") {
+    return (
+      <SystemMessage tone="soft">
+        <span role="status">{t("failed")}</span>
+      </SystemMessage>
+    );
+  }
+  if (found.kind === "private") {
+    return (
+      <SystemMessage tone="soft">
+        <span role="status">{t("privateRepo")}</span>
+      </SystemMessage>
+    );
+  }
   return (
-    <details className="group -mt-1.5 motion-details text-sm leading-5 text-ink-2">
-      <summary className="inline-flex min-h-6 cursor-pointer list-none items-center gap-1.5 underline-offset-3 hover:underline [&::-webkit-details-marker]:hidden">
-        <svg
-          width="14"
-          height="14"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.75"
-          aria-hidden="true"
-          className="transition-transform group-open:rotate-90"
-        >
-          <path d="M9 6l6 6-6 6" />
-        </svg>
-        {t("toggle")}
-      </summary>
-      <div className="mt-2 flex flex-col gap-3 rounded border border-border bg-surface px-4 py-3">
-        <div className="grid gap-3 sm:grid-cols-2">
-          {sources.map((source) => (
-            <div key={source.heading}>
-              <p className="font-semibold text-ink">{source.heading}</p>
-              <ul className="mt-1 list-disc space-y-0.5 pl-4">
-                {source.items.map((item) => (
-                  <li key={item}>{item}</li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-        <p className="text-muted">{t("note")}</p>
-      </div>
-    </details>
-  );
-}
-
-/** The site's question, as a short note from the site (system avatar + ruled note). */
-function Question({ children }: { children: ReactNode }) {
-  return <SystemMessage className="mt-6">{children}</SystemMessage>;
-}
-
-/** The maker's answer: the inputs, written under the question (indented past the avatar). */
-function Answer({ className, children }: { className?: string; children: ReactNode }) {
-  return <div className={cn("flex w-full flex-col gap-4 sm:pl-12", className)}>{children}</div>;
-}
-
-function Optional({ label, note }: { label: string; note: string }) {
-  return (
-    <>
-      {label} <span className="font-normal text-muted">{note}</span>
-    </>
+    <SystemMessage>
+      <span role="status" className="flex flex-col py-1">
+        {found.commits > 0 ? (
+          <span className="font-hand text-[22px] leading-8 text-ink">
+            {t("found", { commits: found.commits, days: found.days })}
+          </span>
+        ) : null}
+        <span>{t("filled")}</span>
+        {found.pageFailed ? <span className="text-ink-2">{t("nothing")}</span> : null}
+        {found.imageFailed ? <span className="text-ink-2">{t("imageFailed")}</span> : null}
+      </span>
+    </SystemMessage>
   );
 }
 

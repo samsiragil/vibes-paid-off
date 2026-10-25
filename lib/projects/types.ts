@@ -8,6 +8,14 @@ export type ContentLang = Database["public"]["Enums"]["content_lang"];
 export type LinkStatus = Database["public"]["Enums"]["link_status"];
 export type BuildEffort = Database["public"]["Enums"]["build_effort"];
 
+/**
+ * The link status worth showing. A project without a live link has nothing to check, so only
+ * "archived" (the maker's own call) still shows.
+ */
+export function shownLinkStatus(status: LinkStatus, hasLiveLink: boolean): LinkStatus | null {
+  return hasLiveLink || status === "archived" ? status : null;
+}
+
 /** Rough build time, shortest first: the chips on the submit form and "X kemudian" on cards. */
 export const BUILD_EFFORTS = [
   "hours",

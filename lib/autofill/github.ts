@@ -24,6 +24,16 @@ export type RepoInfo = {
   effort: BuildEffortGuess | null;
 };
 
+/**
+ * GitHub answers 404 for a private repo and for one that does not exist, so a 404 under an
+ * account that exists is "not_found" and the form asks the maker whether it is private.
+ */
+export type RepoLookup =
+  | { status: "public"; info: RepoInfo }
+  | { status: "not_found" }
+  | { status: "no_owner" }
+  | { status: "failed" };
+
 function headers(accept = "application/vnd.github+json") {
   const token = process.env.GITHUB_TOKEN;
   return {
@@ -34,12 +44,12 @@ function headers(accept = "application/vnd.github+json") {
   };
 }
 
+function request(path: string, signal: AbortSignal, accept?: string) {
+  return fetch(`${API}${path}`, { headers: headers(accept), signal, cache: "no-store" });
+}
+
 async function get(path: string, signal: AbortSignal, accept?: string) {
-  const response = await fetch(`${API}${path}`, {
-    headers: headers(accept),
-    signal,
-    cache: "no-store",
-  });
+  const response = await request(path, signal, accept);
   if (!response.ok) {
     await response.body?.cancel().catch(() => {});
     return null;
@@ -57,20 +67,35 @@ type CommitRow = { commit?: { author?: { date?: string }; committer?: { date?: s
 
 const commitDate = (row: CommitRow) => row.commit?.author?.date ?? row.commit?.committer?.date;
 
-/** Description, README summary and commit history of a public repo, or null when unreadable. */
-export async function getRepoInfo(repoUrl: string): Promise<RepoInfo | null> {
+/** Whether the account of a repo GitHub could not find exists. */
+async function ownerLookup(owner: string, signal: AbortSignal): Promise<RepoLookup> {
+  const response = await request(`/users/${owner}`, signal);
+  await response.body?.cancel().catch(() => {});
+  if (response.ok) return { status: "not_found" };
+  return response.status === 404 ? { status: "no_owner" } : { status: "failed" };
+}
+
+/**
+ * Description, README summary and commit history of a public repo. A repo GitHub cannot find is
+ * not a failure: it is probably private (see RepoLookup).
+ */
+export async function getRepoInfo(repoUrl: string): Promise<RepoLookup> {
   const repo = parseGithubRepo(repoUrl);
-  if (!repo) return null;
+  if (!repo) return { status: "failed" };
   const base = `/repos/${repo.owner}/${repo.repo}`;
   const signal = AbortSignal.timeout(TIMEOUT_MS);
 
   try {
     const [meta, readme, firstPage] = await Promise.all([
-      get(base, signal),
+      request(base, signal),
       get(`${base}/readme`, signal, "application/vnd.github.raw"),
       get(`${base}/commits?per_page=100`, signal),
     ]);
-    if (!meta || !firstPage) return null;
+    if (!meta.ok) {
+      await meta.body?.cancel().catch(() => {});
+      // 403/429 is the rate limit, not the repo.
+      return meta.status === 404 ? await ownerLookup(repo.owner, signal) : { status: "failed" };
+    }
 
     const { description } = (await meta.json()) as { description: string | null };
     const dates: string[] = [];
@@ -80,9 +105,10 @@ export async function getRepoInfo(repoUrl: string): Promise<RepoInfo | null> {
         if (date) dates.push(date);
       }
     };
-    pushDates((await firstPage.json()) as CommitRow[]);
+    // An empty repo has no commits (409): still public, only without a build time guess.
+    if (firstPage) pushDates((await firstPage.json()) as CommitRow[]);
 
-    const pages = lastPage(firstPage.headers.get("link")) ?? 1;
+    const pages = (firstPage && lastPage(firstPage.headers.get("link"))) ?? 1;
     const more = await Promise.all(
       Array.from({ length: Math.min(pages, MAX_COMMIT_PAGES) - 1 }, (_, index) =>
         get(`${base}/commits?per_page=100&page=${index + 2}`, signal),
@@ -106,7 +132,7 @@ export async function getRepoInfo(repoUrl: string): Promise<RepoInfo | null> {
 
     const readmeText = readme ? (await readme.text()).slice(0, MAX_README_BYTES) : "";
 
-    return {
+    const info: RepoInfo = {
       description: description?.trim() || null,
       summary: readmeText ? readmeSummary(readmeText) : null,
       commits,
@@ -117,7 +143,8 @@ export async function getRepoInfo(repoUrl: string): Promise<RepoInfo | null> {
           ? "longer"
           : estimateEffort({ commits, activeDays: days, spanHours }),
     };
+    return { status: "public", info };
   } catch {
-    return null;
+    return { status: "failed" };
   }
 }

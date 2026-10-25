@@ -3,7 +3,7 @@ import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/cn";
 import { mediaUrl } from "@/lib/media/url";
 import type { ProjectCardData } from "@/lib/projects/cards";
-import { toolsSummary } from "@/lib/projects/types";
+import { shownLinkStatus, toolsSummary } from "@/lib/projects/types";
 import { LinkStatusText } from "./link-status-badge";
 import { ProjectCardView } from "./project-card";
 
@@ -30,6 +30,7 @@ export function ProjectGridCard({
   const t = useTranslations("projectCard");
   const tCategories = useTranslations("categories");
   const summary = toolsSummary(project.tools);
+  const linkStatus = shownLinkStatus(project.linkStatus, project.hasLiveLink);
 
   return (
     <Link href={`/p/${project.slug}`} className={cn("group block rounded", className)}>
@@ -52,7 +53,7 @@ export function ProjectGridCard({
         showMaker={showMaker}
         eager={eager}
         lang={showLang ? project.contentLang.toUpperCase() : undefined}
-        status={<LinkStatusText status={project.linkStatus} />}
+        status={linkStatus ? <LinkStatusText status={linkStatus} /> : undefined}
         className="h-full transition-colors group-hover:border-border-strong"
       />
     </Link>

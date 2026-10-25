@@ -22,6 +22,7 @@ export type MyProject = {
   /** Approved by an admin within the last week (the "Kabar baik" notice on /me). */
   recentlyApproved: boolean;
   linkStatus: LinkStatus;
+  hasLiveLink: boolean;
   lastCheckedAt: string | null;
   upvoteCount: number;
   commentCount: number;
@@ -39,7 +40,7 @@ export async function getMyProjects(userId: string): Promise<MyProject[]> {
   const { data, error } = await supabase
     .from("projects")
     .select(
-      "id, slug, title, key_prompt, status, reject_code, reject_reason, reviewed_at, published_at, link_status, last_checked_at, upvote_count, comment_count, has_story, story_nudge_dismissed_at, project_media (r2_key, sort_order)",
+      "id, slug, title, key_prompt, status, reject_code, reject_reason, reviewed_at, published_at, link_status, live_url, last_checked_at, upvote_count, comment_count, has_story, story_nudge_dismissed_at, project_media (r2_key, sort_order)",
     )
     .eq("owner_id", userId)
     .neq("status", "removed")
@@ -60,6 +61,7 @@ export async function getMyProjects(userId: string): Promise<MyProject[]> {
       row.reviewed_at !== null &&
       now - Date.parse(row.reviewed_at) < RECENT_APPROVAL_MS,
     linkStatus: row.link_status,
+    hasLiveLink: row.live_url !== null,
     lastCheckedAt: row.last_checked_at,
     upvoteCount: row.upvote_count,
     commentCount: row.comment_count,

@@ -323,12 +323,62 @@
     "draftDiscard": "Start over",
     "optional": "(optional)",
     "steps": {
-      "link": "Start with <strong>the live link.</strong> We'll try to fill in the title, tagline, and screenshot from your page.",
-      "prompt": "Now the most important part: <strong>what was the key prompt?</strong> The one line that made it click. It opens your card.",
-      "effort": "<strong>Roughly how long did it take?</strong> No need to be exact.",
-      "tools": "<strong>Which tools did you use?</strong> Pick everything, from AI agents to hosting.",
-      "story": "<strong>Want to tell the story too?</strong> Pick the moments worth telling, not all of them. You can also add them later from Edit project.",
-      "rules": "Before sending, remember the <link>community rules</link>:"
+      "repo": {
+        "title": "Where's the GitHub repo?",
+        "note": "Let's start easy. Public or private, both are fine."
+      },
+      "intro": {
+        "title": "Introduce your project",
+        "note": "A name, one line on what it does, and screenshots if you have them."
+      },
+      "prompt": {
+        "title": "What was the key prompt?",
+        "note": "The one sentence that made it click. It opens your card."
+      },
+      "build": {
+        "title": "How long did it take, and what did you use?",
+        "note": "A rough guess is fine."
+      },
+      "story": {
+        "title": "Want to tell the story?",
+        "note": "Pick the moments worth telling, not all of them. You can also add it later from Edit project."
+      },
+      "review": {
+        "title": "Your card is ready",
+        "note": "This is how it shows on the home page, explore, and your profile."
+      },
+      "rules": "Before you send it, remember the <link>community rules</link>:"
+    },
+    "stepper": {
+      "label": "Step {current} of {total}",
+      "nav": "Form steps",
+      "names": {
+        "repo": "Repo",
+        "intro": "Intro",
+        "prompt": "Prompt",
+        "build": "Build",
+        "story": "Story",
+        "review": "Publish"
+      },
+      "done": "done"
+    },
+    "nav": {
+      "back": "Back",
+      "next": "Next",
+      "checking": "Checking the repo…",
+      "last": "To the last step",
+      "skip": "Skip for now",
+      "autosave": "Your answers are saved on this device as you go.",
+      "peek": "Peek at your card"
+    },
+    "repoCheck": {
+      "question": "GitHub couldn't find this repo. <strong>Is it private?</strong>",
+      "questionNote": "Private repos can't be seen from outside, so that's expected. If it's not private, the link may have a typo.",
+      "yes": "Yes, it's private",
+      "recheck": "Check the link",
+      "privateOk": "All good. Your code stays yours; your project only shows a <strong>Private repo</strong> label.",
+      "undo": "It's not private",
+      "noOwner": "We couldn't find the GitHub account “{owner}”. Check the spelling."
     },
     "rules": {
       "own": "The project is yours, or you were directly involved in making it.",
@@ -346,7 +396,8 @@
     "descriptionPlaceholder": "In short: who is it for, and what problem does it solve?",
     "liveUrl": "Live link",
     "liveUrlPlaceholder": "https://myshopcashier.vercel.app",
-    "repoUrl": "Repo link",
+    "liveUrlHint": "Already online? Paste it so people can try it right away.",
+    "repoUrl": "GitHub repo link",
     "repoUrlPlaceholder": "https://github.com/username/cashier",
     "videoUrl": "Demo video",
     "videoUrlHint": "(YouTube or Loom, optional)",
@@ -391,6 +442,7 @@
       "required": "Required.",
       "too_long": "Too long, please shorten it.",
       "invalid_url": "Use a full link starting with https://",
+      "invalid_github": "Use a GitHub repo link, like https://github.com/username/project",
       "invalid_video_url": "YouTube or Loom links only.",
       "ai_tool_required": "Pick at least one AI tool.",
       "too_many": "Too many. Please remove a few.",
@@ -422,15 +474,14 @@
     "extrasHint": "description and demo video, optional",
     "effortLegend": "Build time",
     "autofill": {
-      "fetch": "Fetch info",
-      "fetching": "Fetching info…",
-      "filled": "Filled in from your page. Give it a quick check.",
-      "nothing": "We couldn't read that page automatically. Fill it in by hand.",
-      "repo": "From the repo: {commits, plural, one {# commit} other {# commits}} over {days, plural, one {# active day} other {# active days}}.",
-      "repoFailed": "We couldn't read the repo (private, or a typo in the link?).",
-      "suggested": "suggested by your repo",
+      "found": "Found it! {commits, plural, one {# commit} other {# commits}} over {days, plural, one {# active day} other {# active days}}.",
+      "filled": "We filled the empty fields from your repo and page. Give them a quick check.",
+      "privateRepo": "The repo is private, so we could only guess the title from its name. Tell us the rest.",
+      "nothing": "We couldn't read your page automatically. Fill it in by hand.",
+      "failed": "We couldn't check the repo right now. No problem, fill it in by hand.",
       "imageFailed": "We couldn't grab a screenshot from your page. Upload one by hand.",
-      "failed": "Couldn't fetch the info. Try again, or fill it in by hand.",
+      "filledTag": "filled in for you",
+      "suggested": "suggested by the repo",
       "about": {
         "toggle": "What does Jadinya fetch?",
         "web": "From your web page",
@@ -495,7 +546,8 @@
       "category": "Category",
       "repo": "Repo",
       "linkStatus": "Link status",
-      "linkChecked": "{status} · checked {date}"
+      "linkChecked": "{status} · checked {date}",
+      "repoPrivate": "Private repo"
     },
     "gallery": {
       "imageAlt": "Screenshot {position} of {title}",
@@ -776,7 +828,8 @@
         "note_required": "Write a note for “Another reason”.",
         "invalid": "Pick a reason first.",
         "failed": "Couldn't save. Please try again."
-      }
+      },
+      "repoPrivate": "private repo"
     },
     "reports": {
       "title": "Reports",
