@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import { getFormatter, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { Avatar } from "@/components/ui/avatar";
-import { Badge, MonoLabel } from "@/components/ui/badge";
+import { Badge, Label } from "@/components/ui/badge";
 import { SystemMessage, TimeGap } from "@/components/ui/bubble";
 import { buttonStyles } from "@/components/ui/button";
 import { ShareButton } from "@/components/ui/copy-link";
@@ -176,7 +176,7 @@ export async function ProjectDetailView({
 
           {project.description ? (
             <section className="mt-4 flex flex-col gap-2.5">
-              <MonoLabel>{t("about")}</MonoLabel>
+              <Label>{t("about")}</Label>
               <p className="text-[17px] leading-relaxed break-words whitespace-pre-line text-ink-2">
                 {project.description}
               </p>

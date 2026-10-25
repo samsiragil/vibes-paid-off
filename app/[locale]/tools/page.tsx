@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { SiteFooter } from "@/components/layout/site-footer";
-import { MonoLabel } from "@/components/ui/badge";
+import { Label } from "@/components/ui/badge";
 import { pillStyles } from "@/components/ui/pill";
 import { cn } from "@/lib/cn";
 import { getToolCatalog } from "@/lib/projects/catalog";
@@ -48,7 +48,7 @@ export default async function ToolsIndexPage() {
                 className="flex flex-col gap-4 border-b border-border py-8 md:flex-row md:gap-10"
               >
                 <h2 id={`kind-${kind}`} className="md:w-[220px] md:shrink-0 md:pt-3">
-                  <MonoLabel className="text-xs">{tKinds(kind)}</MonoLabel>
+                  <Label className="text-xs">{tKinds(kind)}</Label>
                 </h2>
                 <ul className="flex flex-wrap gap-2">
                   {tools.map((tool) => (

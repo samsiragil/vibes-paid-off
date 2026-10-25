@@ -2,7 +2,7 @@ import { cacheLife } from "next/cache";
 import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { buttonStyles } from "@/components/ui/button";
-import { MonoLabel } from "@/components/ui/badge";
+import { Label } from "@/components/ui/badge";
 import { donateUrl } from "@/lib/donate";
 import { PICKING_ANCHOR } from "@/lib/site";
 import { Wordmark } from "./logo";
@@ -66,7 +66,7 @@ export async function SiteFooter({ variant = "compact" }: { variant?: "full" | "
           <p className="max-w-80 text-sm leading-relaxed text-ink-2">{t("tagline")}</p>
         </div>
         <div className="flex flex-col gap-2.5 text-sm">
-          <MonoLabel>{t("explore")}</MonoLabel>
+          <Label>{t("explore")}</Label>
           <Link href="/explore" className={link}>
             {t("allProjects")}
           </Link>
@@ -75,7 +75,7 @@ export async function SiteFooter({ variant = "compact" }: { variant?: "full" | "
           </Link>
         </div>
         <div className="flex flex-col gap-2.5 text-sm">
-          <MonoLabel>{t("community")}</MonoLabel>
+          <Label>{t("community")}</Label>
           <Link href="/rules" className={link}>
             {t("rules")}
           </Link>

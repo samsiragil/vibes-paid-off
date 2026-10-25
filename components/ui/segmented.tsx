@@ -10,7 +10,7 @@ type SegmentedProps<T extends string> = {
   className?: string;
 };
 
-/** Pill-shaped segmented control, e.g. the "Paling worth it / Terbaru" sort switch. */
+/** Plain-text switch, e.g. the "Paling worth it / Terbaru" sort; the active option is highlighted. */
 export function Segmented<T extends string>({
   label,
   value,
@@ -19,14 +19,7 @@ export function Segmented<T extends string>({
   className,
 }: SegmentedProps<T>) {
   return (
-    <div
-      role="group"
-      aria-label={label}
-      className={cn(
-        "inline-flex gap-[3px] rounded-full border border-border-strong bg-surface p-[3px]",
-        className,
-      )}
-    >
+    <div role="group" aria-label={label} className={cn("inline-flex gap-1", className)}>
       {options.map((option) => (
         <button
           key={option.value}
@@ -34,11 +27,11 @@ export function Segmented<T extends string>({
           aria-pressed={option.value === value}
           onClick={() => onChange?.(option.value)}
           className={cn(
-            "h-9 rounded-full px-3.5 text-[13px] transition-colors",
-            option.value === value ? "bg-ink text-bg" : "text-ink hover:bg-bubble",
+            "h-11 rounded-md px-2 text-base transition-colors duration-150 ease-out motion-reduce:transition-none",
+            option.value === value ? "text-ink" : "text-ink-2 hover:text-ink",
           )}
         >
-          {option.label}
+          <span className={option.value === value ? "stabilo" : undefined}>{option.label}</span>
         </button>
       ))}
     </div>

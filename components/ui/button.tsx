@@ -5,21 +5,25 @@ type Variant = "primary" | "accent" | "outline" | "outline-accent" | "ghost";
 type Size = "sm" | "md" | "lg";
 
 const base =
-  "inline-flex shrink-0 items-center justify-center gap-2 rounded-full font-medium whitespace-nowrap transition-colors disabled:pointer-events-none disabled:opacity-50";
+  "inline-flex shrink-0 items-center justify-center gap-2 rounded-md font-semibold whitespace-nowrap transition-colors duration-150 ease-out disabled:pointer-events-none disabled:opacity-50 motion-reduce:transition-none";
+
+// The design system has one filled button (brick). "primary" and "accent" both render it; pages
+// pick one main action per screen and demote the rest to "outline".
+const filled = "bg-accent text-on-accent hover:bg-accent/90";
 
 const variants: Record<Variant, string> = {
-  primary: "bg-ink text-bg hover:bg-ink/85",
-  accent: "bg-accent text-on-accent hover:bg-accent/90",
-  outline: "border border-border-strong bg-surface text-ink hover:border-ink",
+  primary: filled,
+  accent: filled,
+  outline: "border-[1.5px] border-border-strong bg-surface text-ink hover:border-ink",
   "outline-accent":
-    "border border-accent-text bg-transparent text-accent-text hover:bg-accent-soft",
-  ghost: "text-ink hover:bg-bubble",
+    "border-[1.5px] border-accent-text bg-surface text-accent-text hover:bg-accent-soft",
+  ghost: "text-ink hover:bg-placeholder",
 };
 
 const sizes: Record<Size, string> = {
-  sm: "h-9 px-3.5 text-[13px]",
-  md: "h-11 px-[18px] text-sm",
-  lg: "h-[52px] px-6 text-[15px]",
+  sm: "h-9 px-3 text-sm",
+  md: "h-11 px-4 text-base",
+  lg: "h-12 px-5 text-base",
 };
 
 export function buttonStyles({

@@ -2,6 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { useEffect, useRef, useState } from "react";
+import { buttonStyles } from "@/components/ui/button";
 import { cn } from "@/lib/cn";
 
 /** Copies text; true when it worked. */
@@ -29,6 +30,23 @@ function useCopied() {
   ] as const;
 }
 
+/** Confirmation mark next to "Tersalin". */
+function CheckIcon() {
+  return (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.75"
+      aria-hidden="true"
+    >
+      <path d="M5 12.5l4.5 4.5L19 7.5" />
+    </svg>
+  );
+}
+
 /** The page's own address without query or hash. */
 function currentUrl() {
   return window.location.origin + window.location.pathname;
@@ -51,14 +69,12 @@ export function CopyLinkField({
   const [copied, markCopied] = useCopied();
 
   return (
-    <div
-      className={cn(
-        "flex items-center gap-2.5 rounded-full border border-border bg-surface py-1.5 pr-1.5 pl-[18px]",
-        className,
-      )}
-    >
-      <span className="min-w-0 grow truncate font-mono text-[13px]" title={url}>
-        {display}
+    <div className={cn("flex items-center gap-2", className)}>
+      <span
+        className="flex h-11 min-w-0 grow items-center rounded-md border border-border bg-surface px-3 text-sm"
+        title={url}
+      >
+        <span className="truncate">{display}</span>
       </span>
       <button
         type="button"
@@ -66,9 +82,16 @@ export function CopyLinkField({
         onClick={async () => {
           if (await copyText(url)) markCopied();
         }}
-        className="h-10 shrink-0 rounded-full bg-ink px-4 text-[13px] font-medium text-bg transition-colors hover:bg-ink/85"
+        className={buttonStyles({ variant: "outline", className: "min-w-28" })}
       >
-        {copied ? t("copied") : t("copy")}
+        {copied ? (
+          <>
+            <CheckIcon />
+            {t("copied")}
+          </>
+        ) : (
+          t("copy")
+        )}
       </button>
       <span role="status" className="sr-only">
         {copied ? t("copiedAnnouncement") : ""}
@@ -102,7 +125,7 @@ export function ShareButton({ title, className }: { title: string; className?: s
         type="button"
         onClick={share}
         aria-label={t("share")}
-        className="inline-flex size-[50px] items-center justify-center rounded-full border border-border-strong bg-surface text-ink transition-colors hover:border-ink"
+        className={buttonStyles({ variant: "outline", size: "lg", className: "w-12 px-0" })}
       >
         <svg
           width="18"
@@ -110,9 +133,7 @@ export function ShareButton({ title, className }: { title: string; className?: s
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
+          strokeWidth="1.75"
           aria-hidden="true"
         >
           <path d="M4 12v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7" />
@@ -122,7 +143,7 @@ export function ShareButton({ title, className }: { title: string; className?: s
       <span
         role="status"
         className={cn(
-          "pointer-events-none absolute top-full right-0 mt-2 rounded-full bg-ink px-3 py-1.5 text-xs whitespace-nowrap text-bg transition-opacity",
+          "pointer-events-none absolute top-full right-0 mt-2 rounded-md bg-ink px-3 py-1.5 text-sm whitespace-nowrap text-bg transition-opacity motion-reduce:transition-none",
           copied ? "opacity-100" : "opacity-0",
         )}
       >

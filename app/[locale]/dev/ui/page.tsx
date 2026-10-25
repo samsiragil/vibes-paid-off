@@ -1,9 +1,11 @@
 import type { ReactNode } from "react";
 import { notFound } from "next/navigation";
 import { Avatar } from "@/components/ui/avatar";
-import { Badge, MonoLabel } from "@/components/ui/badge";
+import { Badge, Label } from "@/components/ui/badge";
 import { PromptBubble, ResultBubble, SystemMessage, TimeGap } from "@/components/ui/bubble";
 import { Button } from "@/components/ui/button";
+import { CopyLinkField } from "@/components/ui/copy-link";
+import { LinkStatusBadge } from "@/components/project/link-status-badge";
 import { Field, Input, Select, Textarea } from "@/components/ui/field";
 import { pillStyles } from "@/components/ui/pill";
 import { MediaUploader } from "@/components/project/media-uploader";
@@ -62,7 +64,7 @@ const sampleTools: CatalogTool[] = (
 function Section({ title, children }: { title: string; children: ReactNode }) {
   return (
     <section className="flex flex-col gap-4 border-t border-border py-8">
-      <MonoLabel>{title}</MonoLabel>
+      <Label>{title}</Label>
       {children}
     </section>
   );
@@ -120,42 +122,48 @@ export default function UiKitPage() {
 
       <Section title="Tombol">
         <div className="flex flex-wrap items-center gap-3">
+          <Button size="lg">Pamerin proyekmu</Button>
           <Button>Pamerin proyekmu</Button>
-          <Button variant="accent" size="lg">
-            Pamerin proyekmu
-          </Button>
-          <Button variant="outline" size="lg">
-            Jelajahi proyek
-          </Button>
-          <Button variant="outline-accent">Beliin kopi</Button>
+          <Button variant="outline">Jelajahi proyek</Button>
+          <Button variant="outline-accent">Traktir Ragil kopi</Button>
           <Button variant="ghost">Masuk</Button>
           <Button size="sm" variant="outline">
             Worth it · 128
           </Button>
           <Button disabled>Nonaktif</Button>
+          <Button variant="outline" disabled>
+            Nonaktif
+          </Button>
+        </div>
+        <div className="max-w-md">
+          <CopyLinkField
+            url="https://jadinya.id/u/ragil"
+            display="jadinya.id/u/ragil"
+            label="Bagikan profil ini"
+          />
         </div>
       </Section>
 
-      <Section title="Pill, segmented, badge">
+      <Section title="Chip, urutan, badge">
         <SegmentedDemo />
         <div className="flex flex-wrap gap-2">
-          <span className={pillStyles({ tone: "accent", className: "h-11 px-[18px] text-sm" })}>
-            Claude Code
-          </span>
-          <span className={pillStyles({ tone: "accent", className: "h-11 px-[18px] text-sm" })}>
-            Cursor
-          </span>
+          <span className={pillStyles({ tone: "accent" })}>Claude Code</span>
+          <span className={pillStyles({ tone: "accent" })}>Cursor</span>
         </div>
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex flex-wrap items-center gap-3">
           <Badge>Maker terpercaya</Badge>
-          <Badge className="font-mono text-[11px] font-normal">PILIHAN MINGGU INI</Badge>
-          <Badge variant="live">● Live</Badge>
-          <Badge variant="offline">○ Offline</Badge>
-          <Badge variant="archived">Diarsipkan</Badge>
+          <Badge variant="highlight">Pilihan minggu ini</Badge>
+          <LinkStatusBadge status="live" />
+          <LinkStatusBadge status="offline" />
+          <LinkStatusBadge status="archived" />
           <Badge variant="lang">ID</Badge>
           <Badge variant="lang">EN</Badge>
           <Badge variant="outline">UMKM</Badge>
         </div>
+        <p className="max-w-[68ch] text-base leading-6">
+          Stabilo menandai kata yang cocok: kasir buat <span className="stabilo">warung</span>{" "}
+          kelontong.
+        </p>
       </Section>
 
       <Section title="Avatar">

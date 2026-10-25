@@ -6,7 +6,7 @@ import { SiteFooter } from "@/components/layout/site-footer";
 import { ProjectGridCard } from "@/components/project/project-grid-card";
 import { JsonLd } from "@/components/seo/json-ld";
 import { Avatar } from "@/components/ui/avatar";
-import { Badge, MonoLabel } from "@/components/ui/badge";
+import { Badge, Label } from "@/components/ui/badge";
 import { SystemMessage } from "@/components/ui/bubble";
 import { buttonStyles } from "@/components/ui/button";
 import { CopyLinkField } from "@/components/ui/copy-link";
@@ -117,7 +117,7 @@ async function ProfileContent({
         </div>
 
         <div className="flex flex-col gap-3 lg:w-[340px] lg:shrink-0 lg:pt-2">
-          <MonoLabel>{t("shareLabel")}</MonoLabel>
+          <Label>{t("shareLabel")}</Label>
           <CopyLinkField
             url={`${siteUrl}${path}`}
             display={displayUrl(path)}

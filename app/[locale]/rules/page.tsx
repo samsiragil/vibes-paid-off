@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { getFormatter, getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { SiteFooter } from "@/components/layout/site-footer";
-import { MonoLabel } from "@/components/ui/badge";
+import { Label } from "@/components/ui/badge";
 import { SystemMessage } from "@/components/ui/bubble";
 import { cn } from "@/lib/cn";
 import { localeAlternates } from "@/lib/seo";
@@ -58,7 +58,7 @@ export default async function RulesPage() {
               )}
             >
               <h2 id={`rules-${section.key}`}>
-                <MonoLabel>{t(`${section.key}.title`)}</MonoLabel>
+                <Label>{t(`${section.key}.title`)}</Label>
               </h2>
               <ol className="flex flex-col">
                 {section.items.map((item, index) => (

@@ -4,7 +4,7 @@ import { getFormatter, getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SystemAvatar } from "@/components/ui/avatar";
-import { MonoLabel } from "@/components/ui/badge";
+import { Label } from "@/components/ui/badge";
 import { PromptBubble } from "@/components/ui/bubble";
 import { buttonStyles } from "@/components/ui/button";
 import { cn } from "@/lib/cn";
@@ -73,11 +73,11 @@ export default async function SupportPage() {
           <aside className="flex flex-col gap-4 lg:w-[400px] lg:shrink-0 lg:pt-3">
             <CostTable />
             <div className="flex flex-col gap-2 rounded-[22px] border border-dashed border-(--dashed) bg-surface p-[22px]">
-              <MonoLabel>{t("later.label")}</MonoLabel>
+              <Label>{t("later.label")}</Label>
               <p className="text-[15px] leading-[1.55]">{t("later.body")}</p>
             </div>
             <div className="flex flex-col gap-1.5 rounded-[22px] bg-ink p-[22px] text-bg">
-              <MonoLabel className="text-bg/70">{t("target.label")}</MonoLabel>
+              <Label className="text-bg/70">{t("target.label")}</Label>
               <p className="font-display text-2xl leading-[1.25]">
                 {t("target.lead")} <span className="italic">{t("target.tail")}</span>
               </p>
@@ -124,7 +124,7 @@ async function DonateCard({ channel }: { channel: DonateChannel }) {
 
   return (
     <div className="flex flex-col gap-3 rounded-[22px] border border-border bg-surface p-6">
-      <MonoLabel>{t("eyebrow")}</MonoLabel>
+      <Label>{t("eyebrow")}</Label>
       <h2 className="font-display text-[28px] leading-[1.1] font-normal">
         {t("titleLead")} <span className="italic">{t("titleTail")}</span>
       </h2>
@@ -158,7 +158,7 @@ async function CostTable() {
 
   return (
     <div className="flex flex-col rounded-[22px] border border-border bg-surface p-6">
-      <MonoLabel className="mb-2.5">{t("label")}</MonoLabel>
+      <Label className="mb-2.5">{t("label")}</Label>
       <table className="w-full border-collapse text-left">
         <caption className="sr-only">{t("label")}</caption>
         <tbody>
@@ -219,7 +219,7 @@ async function HowWePick() {
       </div>
 
       <div className="mt-4 flex flex-col gap-1.5 self-start rounded-[22px] bg-ink px-6 py-5 text-bg">
-        <MonoLabel className="text-bg/70">{t("formulaLabel")}</MonoLabel>
+        <Label className="text-bg/70">{t("formulaLabel")}</Label>
         <p className="font-mono text-base sm:text-lg">{t("formula")}</p>
       </div>
 
@@ -321,7 +321,7 @@ async function PickExample() {
 
   return (
     <div className="mt-4 flex flex-col gap-3 rounded-[22px] border border-dashed border-(--dashed) bg-surface p-6">
-      <MonoLabel>{t(pick ? "exampleLabel" : "exampleSampleLabel")}</MonoLabel>
+      <Label>{t(pick ? "exampleLabel" : "exampleSampleLabel")}</Label>
       {body}
     </div>
   );

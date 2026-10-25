@@ -92,6 +92,21 @@
   --font-hand: var(--font-gochi-hand), cursive;
 }
 
+/* Highlighter stroke over the lower half of the letters: marks matches and selected states. */
+@utility stabilo {
+  background-image: linear-gradient(
+    transparent 50%,
+    var(--highlight) 50%,
+    var(--highlight) 92%,
+    transparent 92%
+  );
+  color: var(--highlight-ink);
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  padding-inline: 0.15em;
+  margin-inline: -0.15em;
+}
+
 @layer base {
   html {
     -webkit-text-size-adjust: 100%;

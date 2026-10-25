@@ -5,7 +5,7 @@ const sizes = {
   xs: "size-[26px] text-[10px]",
   sm: "size-[34px] text-[11px]",
   md: "size-10 text-[13px]",
-  lg: "size-[84px] font-display text-[32px] font-normal",
+  lg: "size-[84px] text-[32px]",
 } as const;
 
 const pixels = { xs: 26, sm: 34, md: 40, lg: 84 } as const;
@@ -41,7 +41,7 @@ export function initialsOf(name: string) {
   return letters.toUpperCase();
 }
 
-/** Maker avatar: photo when available, otherwise initials on the accent color. */
+/** Maker avatar: photo when available, otherwise initials on the soft accent color. */
 export function Avatar({
   name,
   src,
@@ -54,7 +54,7 @@ export function Avatar({
   className?: string;
 }) {
   const classes = cn(
-    "relative inline-flex shrink-0 items-center justify-center overflow-hidden rounded-full bg-accent font-semibold text-on-accent",
+    "relative inline-flex shrink-0 items-center justify-center overflow-hidden rounded-full bg-accent-soft font-semibold text-accent-ink",
     sizes[size],
     className,
   );

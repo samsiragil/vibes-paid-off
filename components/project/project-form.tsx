@@ -12,7 +12,7 @@ import {
   type ReactNode,
   type Ref,
 } from "react";
-import { MonoLabel } from "@/components/ui/badge";
+import { Label } from "@/components/ui/badge";
 import { SystemMessage } from "@/components/ui/bubble";
 import { Button, buttonStyles } from "@/components/ui/button";
 import { Field, Input, Select, Textarea } from "@/components/ui/field";
@@ -769,7 +769,7 @@ function ProjectFormBody({
       </form>
 
       <aside className="flex shrink-0 flex-col gap-3 lg:sticky lg:top-6 lg:w-[360px]">
-        <MonoLabel>{t("preview.label")}</MonoLabel>
+        <Label>{t("preview.label")}</Label>
         <ProjectCardView
           makerName={maker.name}
           makerAvatarUrl={maker.avatarUrl}

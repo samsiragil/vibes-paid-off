@@ -7,7 +7,7 @@ import { Link } from "@/i18n/navigation";
 import { ResultsGrid } from "@/components/discovery/explore-client";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { ProjectGridCard } from "@/components/project/project-grid-card";
-import { MonoLabel } from "@/components/ui/badge";
+import { Label } from "@/components/ui/badge";
 import { SystemMessage } from "@/components/ui/bubble";
 import { buttonStyles } from "@/components/ui/button";
 import { ExternalLink } from "@/components/ui/external-link";
@@ -85,7 +85,7 @@ async function ToolContent({ params }: { params: PageProps<"/[locale]/tools/[slu
         <div className="flex min-w-0 flex-col gap-5 sm:flex-row sm:items-center sm:gap-6">
           <ToolMark tool={tool} />
           <div className="min-w-0">
-            <MonoLabel className="text-xs normal-case">/tools/{tool.slug}</MonoLabel>
+            <Label className="text-xs normal-case">/tools/{tool.slug}</Label>
             <h1 className="mt-1.5 font-display text-[40px] leading-none font-normal tracking-[-1px] break-words sm:text-[60px] sm:tracking-[-1.4px]">
               {t("pageTitleLead")} <span className="italic">{tool.name}</span>
             </h1>
@@ -99,7 +99,7 @@ async function ToolContent({ params }: { params: PageProps<"/[locale]/tools/[slu
         <div className="flex shrink-0 flex-row items-center justify-between gap-3 md:flex-col md:items-end">
           <div className="md:text-right">
             <div className="font-display text-[44px] leading-none">{page.total}</div>
-            <MonoLabel className="text-xs">{t("countLabel")}</MonoLabel>
+            <Label className="text-xs">{t("countLabel")}</Label>
           </div>
           {tool.url ? (
             <ExternalLink href={tool.url} className={buttonStyles({ variant: "outline" })}>

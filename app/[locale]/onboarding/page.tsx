@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import { getLocale, getTranslations } from "next-intl/server";
-import { MonoLabel } from "@/components/ui/badge";
+import { Label } from "@/components/ui/badge";
 import { SystemMessage } from "@/components/ui/bubble";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { getCurrentUser } from "@/lib/auth/current-user";
@@ -21,7 +21,7 @@ export default async function OnboardingPage({ searchParams }: PageProps<"/[loca
   return (
     <>
       <main className="mx-auto flex w-full max-w-[560px] flex-col gap-6 px-4 pt-14 pb-20 sm:px-6 sm:pt-24">
-        <MonoLabel className="text-xs text-accent-text">{t("eyebrow")}</MonoLabel>
+        <Label className="text-xs text-accent-text">{t("eyebrow")}</Label>
         <h1 className="font-display text-[40px] leading-[1.05] font-normal tracking-[-1px] sm:text-[52px]">
           {t("titleLead")} <span className="italic">{t("titleTail")}</span>
         </h1>

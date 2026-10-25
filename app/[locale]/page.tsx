@@ -7,7 +7,7 @@ import { JsonLd } from "@/components/seo/json-ld";
 import { ProjectRow } from "@/components/discovery/project-row";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { ProjectGridCard } from "@/components/project/project-grid-card";
-import { MonoLabel } from "@/components/ui/badge";
+import { Label } from "@/components/ui/badge";
 import { SystemAvatar } from "@/components/ui/avatar";
 import { SystemMessage } from "@/components/ui/bubble";
 import { buttonStyles } from "@/components/ui/button";
@@ -47,7 +47,7 @@ export default async function HomePage() {
       <main className="mx-auto w-full max-w-[1200px] px-4 sm:px-6">
         <section className="flex flex-col gap-12 pt-14 pb-16 lg:flex-row lg:items-center lg:gap-16 lg:pt-[88px] lg:pb-20">
           <div className="flex min-w-0 flex-col gap-[22px] lg:flex-[1_1_440px]">
-            <MonoLabel className="text-xs text-accent-text">{t("eyebrow")}</MonoLabel>
+            <Label className="text-xs text-accent-text">{t("eyebrow")}</Label>
             <h1 className="font-display text-[44px] leading-[1.02] font-normal tracking-[-1px] sm:text-[68px] sm:tracking-[-1.8px]">
               {t("titleLead")}
               <br />
@@ -129,7 +129,7 @@ async function HomeLists() {
 
       {tools.length > 0 ? (
         <section className="flex flex-col gap-4 pt-14">
-          <MonoLabel className="text-xs">{t("toolsLabel")}</MonoLabel>
+          <Label className="text-xs">{t("toolsLabel")}</Label>
           <ul className="flex flex-wrap gap-2.5">
             {tools.map((tool) => (
               <li key={tool.id}>
