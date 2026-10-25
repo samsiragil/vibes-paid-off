@@ -78,15 +78,7 @@ export function ProjectCardView({
         </div>
       )}
       <PromptBubble className={cn("break-words", muted && "text-muted")}>{prompt}</PromptBubble>
-      <TimeGap>
-        {timeLabel}
-        {story ? (
-          <>
-            {" · "}
-            <span className="text-accent-text">{story}</span>
-          </>
-        ) : null}
-      </TimeGap>
+      <TimeGap note={story}>{timeLabel}</TimeGap>
       <ResultBubble>
         <div className="relative h-[130px] overflow-hidden rounded-[10px] bg-placeholder">
           {imageUrl ? (

@@ -177,31 +177,35 @@ export default function UiKitPage() {
 
       <Section title="Obrolan">
         <div className="grid gap-6 md:grid-cols-2">
-          <div className="flex flex-col gap-3.5">
-            <div className="flex items-end justify-end gap-2.5">
-              <PromptBubble tone="ink" size="lg" className="max-w-[82%]">
-                Bikin kasir buat warung kelontong, tombolnya gede, bisa dipakai ibu-ibu tanpa
-                tutorial.
-              </PromptBubble>
-              <Avatar name="Ragil Samsi" />
-            </div>
-            <TimeGap>6 jam kemudian</TimeGap>
-            <ResultBubble size="lg">
-              <div className="h-48 rounded-[14px] bg-placeholder" />
-              <div className="px-1.5 pb-1">
-                <div className="font-semibold">Kasir Warung Bu Tini</div>
-                <div className="text-[13px] text-muted">
-                  Jadinya pakai Claude Code dan Supabase.
+          <div className="flex flex-col gap-4">
+            <PromptBubble size="lg" label="Prompt kunci">
+              Bikin kasir buat warung kelontong, tombolnya gede, bisa dipakai ibu-ibu tanpa
+              tutorial.
+            </PromptBubble>
+            <TimeGap note="ada cerita build" className="pl-6 sm:pl-[72px]">
+              satu weekend kemudian
+            </TimeGap>
+            <ResultBubble size="lg" taped className="sm:ml-[72px]">
+              <div className="h-48 rounded-sm bg-placeholder" />
+              <div>
+                <div className="text-lg leading-6 font-semibold">Kasir Warung Bu Tini</div>
+                <div className="text-base leading-6 text-ink-2">
+                  Kasir sederhana untuk warung, tombol besar.
                 </div>
               </div>
             </ResultBubble>
           </div>
-          <div className="flex flex-col gap-2.5 rounded-[22px] border border-border bg-surface p-[18px]">
+          <div className="flex flex-col gap-3 rounded border border-border bg-surface p-4">
+            <div className="flex items-center gap-2 text-sm text-muted">
+              <Avatar name="Nina Kurnia" size="xs" />
+              Nina Kurnia
+              <span className="ml-auto">Komunitas</span>
+            </div>
             <PromptBubble>Pengingat jadwal ronda RT, kirim lewat WhatsApp tiap sore.</PromptBubble>
             <TimeGap>3 jam kemudian</TimeGap>
             <ResultBubble>
-              <div className="h-32 rounded-[10px] bg-placeholder" />
-              <div className="px-1 text-sm font-semibold">Jadwal Ronda</div>
+              <div className="h-32 rounded-sm bg-placeholder" />
+              <div className="text-lg leading-6 font-semibold">Jadwal Ronda</div>
             </ResultBubble>
           </div>
         </div>

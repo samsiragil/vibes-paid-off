@@ -107,6 +107,32 @@
   margin-inline: -0.15em;
 }
 
+/*
+ * Notebook ruling: one line every 32 px. Text inside must use a 32 px line-height and a top padding
+ * that is a multiple of 8, or it drifts off the lines. Not for mixed font sizes.
+ */
+@utility ruled {
+  background-image: repeating-linear-gradient(to bottom, transparent 0 31px, var(--rule) 31px 32px);
+  line-height: 32px;
+}
+
+/* The one signature motion (README §11): a stroke that draws itself once, 400 ms. */
+@utility draw-once {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+  animation: draw-once 400ms ease-out both;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+
+@keyframes draw-once {
+  from {
+    stroke-dashoffset: 1;
+  }
+}
+
 @layer base {
   html {
     -webkit-text-size-adjust: 100%;
