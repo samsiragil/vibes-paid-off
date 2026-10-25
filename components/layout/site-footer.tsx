@@ -41,62 +41,66 @@ export async function SiteFooter({ variant = "compact" }: { variant?: "full" | "
 
   if (variant === "compact") {
     return (
-      <footer className="mt-24 border-t border-border">
-        <div className="mx-auto flex max-w-[1120px] flex-col gap-5 px-4 py-8 sm:flex-row sm:items-center sm:justify-between sm:px-6">
-          <Logo className="h-7" />
-          <div className="flex flex-wrap items-center gap-x-5 gap-y-3 text-sm">
+      <div className="mt-auto pt-24">
+        <footer className="border-t border-border">
+          <div className="mx-auto flex max-w-[1120px] flex-col gap-5 px-4 py-8 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+            <Logo className="h-7" />
+            <div className="flex flex-wrap items-center gap-x-5 gap-y-3 text-sm">
+              <Link href="/rules" className={link}>
+                {t("rules")}
+              </Link>
+              <Link href="/support" className={link}>
+                {t("about")}
+              </Link>
+              <DonateLink locale={locale} label={t("buyCoffee")} />
+            </div>
+          </div>
+        </footer>
+      </div>
+    );
+  }
+
+  return (
+    <div className="mt-auto pt-24">
+      <footer className="border-t border-border">
+        <div className="mx-auto grid max-w-[1120px] gap-10 px-4 pt-12 pb-6 sm:px-6 md:grid-cols-[minmax(0,2fr)_repeat(3,minmax(0,1fr))]">
+          <div className="flex flex-col gap-2.5">
+            <Logo className="h-7" />
+            <p className="max-w-80 text-sm leading-relaxed text-ink-2">{t("tagline")}</p>
+          </div>
+          <div className="flex flex-col gap-2.5 text-sm">
+            <Label>{t("explore")}</Label>
+            <Link href="/explore" className={link}>
+              {t("allProjects")}
+            </Link>
+            <Link href="/tools" className={link}>
+              {t("byTools")}
+            </Link>
+          </div>
+          <div className="flex flex-col gap-2.5 text-sm">
+            <Label>{t("community")}</Label>
             <Link href="/rules" className={link}>
               {t("rules")}
             </Link>
             <Link href="/support" className={link}>
               {t("about")}
             </Link>
+            <Link href={`/support#${PICKING_ANCHOR}`} className={link}>
+              {t("howWePick")}
+            </Link>
+          </div>
+          <div className="flex flex-col items-start gap-2.5">
+            <p className="text-sm text-ink-2">{t("freeNote")}</p>
             <DonateLink locale={locale} label={t("buyCoffee")} />
           </div>
         </div>
+        <div className="mx-auto flex max-w-[1120px] flex-col gap-2 px-4 pt-4 pb-8 text-sm text-muted sm:flex-row sm:justify-between sm:px-6">
+          <span>{t("copyright", { year })}</span>
+          <span>
+            {tLocale("id")} · {tLocale("en")}
+          </span>
+        </div>
       </footer>
-    );
-  }
-
-  return (
-    <footer className="mt-24 border-t border-border">
-      <div className="mx-auto grid max-w-[1120px] gap-10 px-4 pt-12 pb-6 sm:px-6 md:grid-cols-[minmax(0,2fr)_repeat(3,minmax(0,1fr))]">
-        <div className="flex flex-col gap-2.5">
-          <Logo className="h-7" />
-          <p className="max-w-80 text-sm leading-relaxed text-ink-2">{t("tagline")}</p>
-        </div>
-        <div className="flex flex-col gap-2.5 text-sm">
-          <Label>{t("explore")}</Label>
-          <Link href="/explore" className={link}>
-            {t("allProjects")}
-          </Link>
-          <Link href="/tools" className={link}>
-            {t("byTools")}
-          </Link>
-        </div>
-        <div className="flex flex-col gap-2.5 text-sm">
-          <Label>{t("community")}</Label>
-          <Link href="/rules" className={link}>
-            {t("rules")}
-          </Link>
-          <Link href="/support" className={link}>
-            {t("about")}
-          </Link>
-          <Link href={`/support#${PICKING_ANCHOR}`} className={link}>
-            {t("howWePick")}
-          </Link>
-        </div>
-        <div className="flex flex-col items-start gap-2.5">
-          <p className="text-sm text-ink-2">{t("freeNote")}</p>
-          <DonateLink locale={locale} label={t("buyCoffee")} />
-        </div>
-      </div>
-      <div className="mx-auto flex max-w-[1120px] flex-col gap-2 px-4 pt-4 pb-8 text-sm text-muted sm:flex-row sm:justify-between sm:px-6">
-        <span>{t("copyright", { year })}</span>
-        <span>
-          {tLocale("id")} · {tLocale("en")}
-        </span>
-      </div>
-    </footer>
+    </div>
   );
 }
