@@ -10,6 +10,7 @@ import type { MyProject } from "@/lib/profiles/me";
 import { rejectReasonText } from "@/lib/projects/reject-reason";
 import type { ProjectStatus } from "@/lib/projects/types";
 import { ArchiveButton } from "./archive-button";
+import { DeleteButton } from "./delete-button";
 import { DismissibleNudge } from "./story-nudge";
 
 // The "Proyek saya" tab of /me (VPO-Me) and the offline-link notice above the tabs.
@@ -114,7 +115,7 @@ export async function MyProjects({
   }
 
   const columns =
-    "lg:grid-cols-[minmax(0,1fr)_140px_120px_72px_72px_260px] lg:items-center lg:gap-5";
+    "lg:grid-cols-[minmax(0,1fr)_140px_120px_72px_72px_330px] lg:items-center lg:gap-5";
 
   return (
     <section className="flex flex-col pt-6">
@@ -198,6 +199,7 @@ export async function MyProjects({
                   archived={project.linkStatus === "archived"}
                 />
               ) : null}
+              <DeleteButton projectId={project.id} title={project.title} />
             </div>
           </li>
         ))}

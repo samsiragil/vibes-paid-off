@@ -196,6 +196,20 @@
         "failed": "Couldn't save. Please try again."
       }
     },
+    "delete": {
+      "delete": "Delete",
+      "deleting": "Deleting…",
+      "confirmLabel": "Delete {title}?",
+      "confirm": "Delete this project for good? The page, screenshots, story, Worth it votes and replies go with it and can't be restored. To just close its link, use Archive.",
+      "confirmYes": "Yes, delete",
+      "cancel": "Cancel",
+      "errors": {
+        "unauthorized": "Your session expired. Sign in again, then retry.",
+        "forbidden": "You can't delete this project.",
+        "invalid": "Invalid request. Reload the page.",
+        "failed": "Couldn't delete. Please try again."
+      }
+    },
     "adminLink": "Admin panel",
     "review": {
       "approved": "Good news: an admin approved <strong>{title}</strong> and it is live. You are a trusted maker now, so your next projects go live right away.",

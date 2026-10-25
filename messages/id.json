@@ -196,6 +196,20 @@
         "failed": "Gagal menyimpan. Coba lagi, ya."
       }
     },
+    "delete": {
+      "delete": "Hapus",
+      "deleting": "Menghapus…",
+      "confirmLabel": "Hapus {title}?",
+      "confirm": "Hapus proyek ini untuk selamanya? Halaman, screenshot, cerita, Worth it, dan balasannya ikut terhapus dan tidak bisa dikembalikan. Kalau cuma mau menutup link-nya, pakai Arsipkan.",
+      "confirmYes": "Ya, hapus",
+      "cancel": "Batal",
+      "errors": {
+        "unauthorized": "Sesi login habis. Masuk lagi, lalu coba lagi.",
+        "forbidden": "Kamu tidak bisa menghapus proyek ini.",
+        "invalid": "Permintaan tidak valid. Muat ulang halaman.",
+        "failed": "Gagal menghapus. Coba lagi, ya."
+      }
+    },
     "adminLink": "Panel admin",
     "review": {
       "approved": "Kabar baik: <strong>{title}</strong> sudah disetujui admin dan tayang. Mulai sekarang kamu maker terpercaya, jadi proyek berikutnya langsung tayang.",

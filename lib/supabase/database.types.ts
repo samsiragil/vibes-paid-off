@@ -68,6 +68,32 @@ export type Database = {
           },
         ];
       };
+      media_rate_log: {
+        Row: {
+          created_at: string;
+          kind: string;
+          user_id: string;
+        };
+        Insert: {
+          created_at?: string;
+          kind: string;
+          user_id: string;
+        };
+        Update: {
+          created_at?: string;
+          kind?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "media_rate_log_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       profiles: {
         Row: {
           avatar_url: string | null;
@@ -373,6 +399,29 @@ export type Database = {
           },
         ];
       };
+      reply_quota_log: {
+        Row: {
+          created_at: string;
+          user_id: string;
+        };
+        Insert: {
+          created_at: string;
+          user_id: string;
+        };
+        Update: {
+          created_at?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "reply_quota_log_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       reports: {
         Row: {
           created_at: string;
@@ -643,6 +692,7 @@ export type Database = {
         };
       };
       consume_media_quota: { Args: { p_kind: string }; Returns: undefined };
+      delete_project: { Args: { p_project_id: string }; Returns: string[] };
       eligible_upvotes_for: {
         Args: { p_now?: string; p_project_id: string };
         Returns: number;
@@ -663,6 +713,7 @@ export type Database = {
         Args: { at_time?: string; created_at: string };
         Returns: boolean;
       };
+      links_are_https: { Args: { links: Json }; Returns: boolean };
       popular_this_week: {
         Args: { p_limit?: number; p_now?: string };
         Returns: {
@@ -703,6 +754,15 @@ export type Database = {
         Returns: unknown;
       };
       raise_rate_limit: { Args: { resource: string }; Returns: undefined };
+      record_link_checks: {
+        Args: { p_results: Json };
+        Returns: {
+          changed: boolean;
+          link_fail_count: number;
+          link_status: Database["public"]["Enums"]["link_status"];
+          project_id: string;
+        }[];
+      };
       refresh_eligible_upvote_counts: {
         Args: { p_now?: string };
         Returns: number;
