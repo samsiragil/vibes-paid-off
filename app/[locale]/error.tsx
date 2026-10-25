@@ -22,14 +22,14 @@ export default function ErrorPage({
   }, [error]);
 
   return (
-    <main className="mx-auto flex w-full max-w-[1200px] flex-col gap-6 px-4 pt-20 pb-24 sm:px-6">
-      <h1 className="font-display text-5xl font-normal tracking-[-1px]">
-        500 · {t("title")} <span className="italic">{t("titleTail")}</span>
+    <main className="mx-auto flex w-full max-w-[1120px] flex-col gap-5 px-4 pt-16 pb-24 sm:px-6 sm:pt-20">
+      <h1 className="text-[30px] leading-9 font-bold break-words sm:text-[40px] sm:leading-11">
+        500 · {t("title")} {t("titleTail")}
       </h1>
       <SystemMessage className="max-w-xl">
         {t("body")}
         {error.digest ? (
-          <span className="mt-2 block font-mono text-xs text-muted">
+          <span className="mt-2 block text-sm text-muted">
             {t("code", { digest: error.digest })}
           </span>
         ) : null}

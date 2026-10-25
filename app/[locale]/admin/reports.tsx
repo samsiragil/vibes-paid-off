@@ -51,21 +51,21 @@ export async function ReportCard({ group }: { group: ReportGroup }) {
     <article
       aria-labelledby={titleId}
       className={cn(
-        "flex flex-col gap-5 rounded-[22px] border bg-surface p-4 sm:p-5 xl:flex-row xl:items-center",
-        group.hidden ? "border-ink" : "border-border",
+        "flex flex-col gap-5 rounded border bg-surface p-4 sm:p-5 xl:flex-row xl:items-center",
+        group.hidden ? "border-border-strong" : "border-border",
       )}
     >
       <div className="flex min-w-0 grow flex-col gap-1.5">
         <div className="flex flex-wrap items-center gap-2">
           {group.hidden ? (
-            <span className="inline-flex h-6 items-center rounded-full bg-ink px-2.5 text-[11px] text-bg">
+            <span className="inline-flex h-6 items-center rounded bg-placeholder px-2 text-[13px] font-semibold text-ink">
               {group.count >= 3 ? t("autoHidden") : t("hidden")}
             </span>
           ) : null}
-          <span className="font-mono text-xs text-muted uppercase">
+          <span className="text-[13px] font-semibold text-muted">
             {t(isProject ? "metaProject" : "metaReply", { count: group.count })}
             {!isProject && group.project ? (
-              <span className="normal-case">
+              <span className="font-normal">
                 {" "}
                 · {t("onProject", { title: group.project.title })}
               </span>
@@ -86,11 +86,11 @@ export async function ReportCard({ group }: { group: ReportGroup }) {
           <p className="text-sm text-ink-2">{group.project.tagline}</p>
         ) : null}
         {group.comment ? (
-          <p className="max-w-full self-start rounded-[14px] rounded-bl-[4px] bg-bubble px-3.5 py-2.5 text-sm break-words whitespace-pre-line">
+          <p className="max-w-full self-start rounded-sm bg-placeholder px-3.5 py-2.5 text-sm break-words whitespace-pre-line">
             {group.comment.body}
           </p>
         ) : null}
-        {missing ? <p className="text-sm text-ink-2 italic">{t("targetGone")}</p> : null}
+        {missing ? <p className="text-sm text-muted">{t("targetGone")}</p> : null}
 
         <p className="text-sm text-ink-2">
           {t("reasons", {

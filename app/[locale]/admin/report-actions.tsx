@@ -162,7 +162,7 @@ export function ReportActions({
           <span className="sr-only">: @{person.username}</span>
         </button>
       ) : null}
-      <p role="alert" className="text-[13px] text-red-700 empty:hidden dark:text-red-400">
+      <p role="alert" className="text-sm text-danger empty:hidden">
         {error ? t(`errors.${error}`) : ""}
       </p>
     </div>

@@ -449,8 +449,7 @@
     "archivedNotice": "The maker archived this project, so its live link no longer opens. The story stays here.",
     "keyPrompt": "Key prompt",
     "about": "About this project",
-    "howLead": "How it was",
-    "howTail": "made",
+    "how": "How it was made",
     "trusted": "trusted maker",
     "viewProfile": "View profile",
     "tip": "Buy {name} a coffee",
@@ -610,8 +609,7 @@
       "upvotes": "People said worth it",
       "topTool": "Go-to tool"
     },
-    "projectsLead": "{name}'s chats that",
-    "projectsTail": "became real",
+    "projects": "{name}'s chats that became real",
     "empty": "{name} hasn't shown off any chats yet. They'll show up here once they do.",
     "og": {
       "projects": "{count, plural, one {# chat} other {# chats}}",
@@ -664,7 +662,6 @@
     "allTools": "All tools",
     "toolMeta": "{name}: chats built with {name}",
     "pageTitleLead": "Built with",
-    "countLabel": "Live chats",
     "site": "{name} website ↗",
     "intro": "These are makers' chats whose results were built with {name}. Most worth it first.",
     "emptyLead": "No chats with",

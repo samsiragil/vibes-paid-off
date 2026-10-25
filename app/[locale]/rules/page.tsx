@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { getFormatter, getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { SiteFooter } from "@/components/layout/site-footer";
-import { Label } from "@/components/ui/badge";
 import { SystemMessage } from "@/components/ui/bubble";
 import { cn } from "@/lib/cn";
 import { localeAlternates } from "@/lib/seo";
@@ -34,39 +33,39 @@ export default async function RulesPage() {
 
   return (
     <>
-      <main className="mx-auto w-full max-w-[1200px] px-4 pt-12 sm:px-6 sm:pt-16">
-        <div className="flex max-w-[820px] flex-col gap-6">
-          <h1 className="font-display text-[44px] leading-none font-normal tracking-[-1px] sm:text-[64px] sm:tracking-[-1.6px]">
-            {t("titleLead")} <span className="italic">{t("titleTail")}</span>
+      <main className="mx-auto w-full max-w-[1120px] px-4 pt-10 sm:px-6 sm:pt-12">
+        <div className="flex max-w-[820px] flex-col gap-5">
+          <h1 className="text-[30px] leading-9 font-bold break-words sm:text-[40px] sm:leading-11">
+            {t("titleLead")} {t("titleTail")}
           </h1>
           <SystemMessage>{t("intro")}</SystemMessage>
-          <p className="font-mono text-xs text-muted">
+          <p className="text-sm text-muted">
             {t("updated", {
               date: format.dateTime(UPDATED_AT, { day: "numeric", month: "long", year: "numeric" }),
             })}
           </p>
         </div>
 
-        <div className="mt-12 grid gap-4 md:grid-cols-2">
+        <div className="mt-10 grid gap-4 md:grid-cols-2">
           {sections.map((section) => (
             <section
               key={section.key}
               aria-labelledby={`rules-${section.key}`}
               className={cn(
-                "flex flex-col gap-4 rounded-[22px] border p-6 sm:p-7",
-                section.key === "forbidden" ? "border-ink bg-surface" : "border-border bg-surface",
+                "flex flex-col gap-3 rounded border bg-surface p-5 sm:p-6",
+                section.key === "forbidden" ? "border-border-strong" : "border-border",
               )}
             >
-              <h2 id={`rules-${section.key}`}>
-                <Label>{t(`${section.key}.title`)}</Label>
+              <h2 id={`rules-${section.key}`} className="text-lg leading-6 font-semibold">
+                {t(`${section.key}.title`)}
               </h2>
               <ol className="flex flex-col">
                 {section.items.map((item, index) => (
                   <li
                     key={item}
-                    className="flex gap-3 border-t border-border py-3 text-[15px] leading-relaxed first:border-t-0 first:pt-0"
+                    className="flex gap-3 border-t border-border py-3 text-base leading-6 first:border-t-0 first:pt-0"
                   >
-                    <span aria-hidden="true" className="pt-0.5 font-mono text-xs text-muted">
+                    <span aria-hidden="true" className="text-sm leading-6 text-muted tabular-nums">
                       {String(index + 1).padStart(2, "0")}
                     </span>
                     <span>
@@ -74,7 +73,7 @@ export default async function RulesPage() {
                         link: (chunks) => (
                           <Link
                             href={`/support#${PICKING_ANCHOR}`}
-                            className="font-medium text-accent-text underline underline-offset-2"
+                            className="font-semibold text-accent-text underline underline-offset-3"
                           >
                             {chunks}
                           </Link>
@@ -88,7 +87,7 @@ export default async function RulesPage() {
           ))}
         </div>
 
-        <p className="mt-8 text-[15px] text-ink-2">{t("closing")}</p>
+        <p className="mt-8 max-w-[68ch] text-base leading-6 text-ink-2">{t("closing")}</p>
       </main>
       <SiteFooter />
     </>

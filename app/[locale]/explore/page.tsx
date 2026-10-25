@@ -43,9 +43,9 @@ export default async function ExplorePage({ searchParams }: PageProps<"/[locale]
 
   return (
     <>
-      <main className="mx-auto w-full max-w-[1200px] px-4 pt-12 sm:px-6 sm:pt-14">
-        <h1 className="font-display text-[44px] leading-none font-normal tracking-[-1px] sm:text-[56px] sm:tracking-[-1.2px]">
-          {t("titleLead")} <span className="italic">{t("titleTail")}</span>
+      <main className="mx-auto w-full max-w-[1120px] px-4 pt-10 sm:px-6 sm:pt-12">
+        <h1 className="text-[30px] leading-9 font-bold break-words sm:text-[40px] sm:leading-11">
+          {t("titleLead")} {t("titleTail")}
         </h1>
         <Suspense fallback={<ExploreSkeleton />}>
           <ExploreBody searchParams={searchParams} />
@@ -102,7 +102,7 @@ async function ExploreBody({
 
   return (
     <ExploreProvider filters={filters}>
-      <div className="border-b border-border pt-5 pb-8">
+      <div className="border-b border-border pt-5 pb-6">
         <SearchForm />
       </div>
       <PendingStatus />
@@ -140,14 +140,14 @@ async function ExploreBody({
             <div className="flex flex-col items-start gap-4 py-6">
               <SystemMessage>
                 {t("empty")}{" "}
-                <Link href="/submit" className="text-accent-text underline underline-offset-2">
+                <Link href="/submit" className="text-accent-text underline underline-offset-3">
                   {t("emptyCta")}
                 </Link>
               </SystemMessage>
               {hasFilters ? (
                 <Link
                   href="/explore"
-                  className="ml-[46px] text-sm font-medium text-accent-text underline-offset-2 hover:underline"
+                  className="inline-flex min-h-11 items-center text-sm font-semibold text-accent-text underline underline-offset-3 sm:ml-12"
                 >
                   {t("clear")}
                 </Link>
@@ -163,18 +163,18 @@ async function ExploreBody({
 function ExploreSkeleton() {
   return (
     <div aria-hidden="true">
-      <div className="border-b border-border pt-5 pb-8">
-        <div className="h-[60px] max-w-[760px] rounded-[30px] bg-bubble" />
+      <div className="border-b border-border pt-5 pb-6">
+        <div className="h-14 max-w-[760px] rounded-md border-[1.5px] border-border bg-surface" />
       </div>
       <div className="flex gap-10 pt-8">
         <div className="hidden w-[220px] shrink-0 flex-col gap-3 lg:flex">
           {[0, 1, 2, 3, 4, 5].map((index) => (
-            <div key={index} className="h-6 rounded bg-bubble" />
+            <div key={index} className="h-5 rounded-sm bg-placeholder" />
           ))}
         </div>
-        <div className="grid grow gap-[18px] sm:grid-cols-2 xl:grid-cols-3">
+        <div className="grid grow gap-6 sm:grid-cols-2 xl:grid-cols-3">
           {[0, 1, 2].map((index) => (
-            <div key={index} className="h-80 rounded-[22px] bg-bubble" />
+            <div key={index} className="h-80 rounded border border-border bg-surface" />
           ))}
         </div>
       </div>

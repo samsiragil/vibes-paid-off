@@ -92,14 +92,14 @@ export function ReviewActions({ projectId, title }: { projectId: string; title: 
               requestAnimationFrame(() => rejectRef.current?.focus());
             }
           }}
-          className="flex flex-col gap-3 rounded-2xl border border-border bg-bg p-3.5"
+          className="flex flex-col gap-3 rounded border border-border bg-bg p-3.5"
         >
           <fieldset className="flex flex-col gap-0.5">
             <legend className="mb-1.5 text-sm font-medium">{t("reasonLabel")}</legend>
             {REJECT_CODES.map((value, index) => (
               <label
                 key={value}
-                className="flex min-h-10 cursor-pointer items-center gap-2.5 rounded-lg px-1.5 text-sm hover:bg-bubble"
+                className="flex min-h-10 cursor-pointer items-center gap-2.5 rounded-sm px-1.5 text-sm hover:bg-placeholder"
               >
                 <input
                   ref={index === 0 ? firstReasonRef : undefined}
@@ -120,7 +120,7 @@ export function ReviewActions({ projectId, title }: { projectId: string; title: 
               <label htmlFor={noteId} className="text-sm font-medium">
                 {noteRequired ? t("noteLabelRequired") : t("noteLabel")}
               </label>
-              <span className="font-mono text-[11px] text-muted">
+              <span className="text-[13px] text-muted tabular-nums">
                 {note.length}/{REJECT_NOTE_MAX}
               </span>
             </div>
@@ -155,7 +155,7 @@ export function ReviewActions({ projectId, title }: { projectId: string; title: 
           </div>
         </form>
       )}
-      <p role="alert" className="text-[13px] text-red-700 empty:hidden dark:text-red-400">
+      <p role="alert" className="text-sm text-danger empty:hidden">
         {error ? t(`errors.${error}`) : ""}
       </p>
     </div>

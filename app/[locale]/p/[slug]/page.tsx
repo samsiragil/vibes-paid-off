@@ -154,10 +154,7 @@ async function OwnerEditLink({ project }: { project: ProjectDetail }) {
 async function EditLink({ slug }: { slug: string }) {
   const t = await getTranslations("project");
   return (
-    <Link
-      href={`/p/${slug}/edit`}
-      className={buttonStyles({ variant: "outline", className: "h-[50px] px-[22px] text-[15px]" })}
-    >
+    <Link href={`/p/${slug}/edit`} className={buttonStyles({ variant: "outline", size: "lg" })}>
       {t("edit")}
     </Link>
   );
@@ -180,7 +177,7 @@ async function OwnerNotice({ project }: { project: ProjectDetail }) {
 
   return (
     <SystemMessage tone="soft">
-      <span className="font-medium">{t("onlyYou")}</span> {message}
+      <span className="font-semibold">{t("onlyYou")}</span> {message}
     </SystemMessage>
   );
 }
@@ -196,10 +193,10 @@ async function AdminNotice({ project }: { project: ProjectDetail }) {
 
   return (
     <SystemMessage tone="soft">
-      <span className="font-medium">{t("title")}</span>{" "}
+      <span className="font-semibold">{t("title")}</span>{" "}
       {t("status", { status: tStatus(project.status) })}
       {reason ? ` ${t("reason", { reason })}` : null}{" "}
-      <Link href={`/admin${tab}`} className="text-accent-text underline-offset-2 hover:underline">
+      <Link href={`/admin${tab}`} className="text-accent-text underline underline-offset-3">
         {t("back")}
       </Link>
     </SystemMessage>
@@ -207,17 +204,20 @@ async function AdminNotice({ project }: { project: ProjectDetail }) {
 }
 
 function ProjectSkeleton() {
+  // Empty ruled lines the size of the content (README §7).
   return (
-    <main aria-hidden="true" className="mx-auto w-full max-w-[1200px] px-4 pt-7 sm:px-6">
-      <div className="h-4 w-48 rounded bg-bubble" />
-      <div className="mt-10 h-14 w-3/4 max-w-xl rounded-2xl bg-bubble" />
-      <div className="mt-4 h-5 w-1/2 max-w-md rounded bg-bubble" />
+    <main aria-hidden="true" className="mx-auto w-full max-w-[1120px] px-4 pt-6 sm:px-6">
+      <div className="h-5 w-48 rounded-sm bg-placeholder" />
+      <div className="mt-10 h-10 w-3/4 max-w-xl rounded-sm bg-placeholder" />
+      <div className="mt-4 h-6 w-1/2 max-w-md rounded-sm bg-placeholder" />
       <div className="mt-12 flex flex-col gap-12 lg:flex-row lg:gap-14">
-        <div className="flex grow flex-col gap-5">
-          <div className="h-32 w-4/5 self-end rounded-[26px] bg-bubble" />
-          <div className="aspect-[16/10] rounded-[26px] bg-bubble" />
+        <div className="flex grow flex-col gap-6">
+          <div className="relative h-32 ruled">
+            <span className="absolute inset-y-0 left-3 w-[1.5px] bg-margin sm:left-14" />
+          </div>
+          <div className="aspect-[16/10] rounded border border-border bg-surface sm:ml-[72px]" />
         </div>
-        <div className="h-72 rounded-[22px] bg-bubble lg:w-[340px]" />
+        <div className="h-72 rounded border border-border bg-surface lg:w-[300px]" />
       </div>
     </main>
   );

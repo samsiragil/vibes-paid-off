@@ -93,8 +93,8 @@ export function ProfileForm({
       >
         <div
           className={cn(
-            "flex h-12 items-center rounded-2xl border border-border-strong bg-surface pl-4 font-mono text-[13px] text-muted transition-colors focus-within:border-accent-text hover:border-ink",
-            errors.username && "border-red-700 dark:border-red-400",
+            "flex h-11 items-center rounded-md border-[1.5px] border-border-strong bg-surface pl-3 text-base text-muted transition-colors duration-150 focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-accent hover:border-ink",
+            errors.username && "border-danger",
           )}
         >
           <span aria-hidden="true" className="max-w-[55%] shrink-0 truncate">

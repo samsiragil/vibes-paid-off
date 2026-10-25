@@ -449,8 +449,7 @@
     "archivedNotice": "Makernya sudah mengarsipkan proyek ini, jadi link live-nya tidak dibuka lagi. Ceritanya tetap di sini.",
     "keyPrompt": "Prompt kunci",
     "about": "Tentang proyek ini",
-    "howLead": "Cara",
-    "howTail": "membuatnya",
+    "how": "Cara membuatnya",
     "trusted": "maker terpercaya",
     "viewProfile": "Lihat profil",
     "tip": "Traktir {name} kopi",
@@ -610,8 +609,7 @@
       "upvotes": "Orang bilang worth it",
       "topTool": "Tools andalan"
     },
-    "projectsLead": "Obrolan {name} yang",
-    "projectsTail": "jadi beneran",
+    "projects": "Obrolan {name} yang jadi beneran",
     "empty": "{name} belum memamerkan obrolan. Kalau nanti sudah ada, muncul di sini.",
     "og": {
       "projects": "{count} obrolan",
@@ -664,7 +662,6 @@
     "allTools": "Semua tools",
     "toolMeta": "{name}: obrolan yang dibikin pakai {name}",
     "pageTitleLead": "Dibikin pakai",
-    "countLabel": "Obrolan tayang",
     "site": "Situs {name} ↗",
     "intro": "Ini obrolan maker yang hasilnya dibangun dengan {name}. Urut dari yang paling worth it.",
     "emptyLead": "Belum ada obrolan dengan",

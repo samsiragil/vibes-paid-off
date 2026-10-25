@@ -75,7 +75,7 @@ export function SearchForm() {
           q: typeof q === "string" ? q.trim().slice(0, MAX_QUERY_LENGTH) : "",
         });
       }}
-      className="flex h-[60px] max-w-[760px] items-center gap-3 rounded-[30px] border border-border-strong bg-surface py-2 pr-2 pl-[22px] focus-within:border-ink"
+      className="flex h-14 max-w-[760px] items-center gap-3 rounded-md border-[1.5px] border-border-strong bg-surface py-1.5 pr-1.5 pl-4 transition-colors duration-150 focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-accent hover:border-ink"
     >
       <label htmlFor={inputId} className="sr-only">
         {t("searchLabel")}
@@ -101,7 +101,7 @@ export function SearchForm() {
       {filters.sort !== "worth_it" ? (
         <input type="hidden" name="sort" value={filters.sort} />
       ) : null}
-      <button type="submit" className={buttonStyles({ variant: "primary", className: "px-5" })}>
+      <button type="submit" className={buttonStyles({ variant: "primary" })}>
         {t("searchButton")}
       </button>
     </form>
@@ -168,7 +168,7 @@ export function FilterPanel({
     <div className={cn("flex flex-col gap-7", className)} aria-busy={pending}>
       {toolGroups.length > 0 ? (
         <fieldset className="flex flex-col gap-3">
-          <legend className="mb-2.5 font-mono text-[11px] tracking-[0.4px] text-muted uppercase">
+          <legend className="mb-2 text-[13px] leading-4 font-semibold text-muted">
             {t("tools")}
           </legend>
           <label htmlFor={searchId} className="sr-only">
@@ -180,14 +180,16 @@ export function FilterPanel({
             value={toolQuery}
             onChange={(event) => setToolQuery(event.target.value)}
             placeholder={t("toolSearch")}
-            className="h-11 rounded-full border border-border-strong bg-surface px-4 text-sm text-ink outline-none placeholder:text-muted focus:border-ink"
+            className="h-11 rounded-md border-[1.5px] border-border-strong bg-surface px-3 text-base text-ink transition-colors duration-150 placeholder:text-muted hover:border-ink"
           />
           {groups.length === 0 ? (
             <p className="text-sm text-muted">{t("toolSearchEmpty")}</p>
           ) : null}
           {groups.map((group) => (
             <div key={group.kind} className="flex flex-col gap-0.5">
-              <div className="pt-1.5 pb-1 text-xs font-medium text-ink-2">{group.label}</div>
+              <div className="pt-2 pb-1 text-sm leading-5 font-semibold text-ink-2">
+                {group.label}
+              </div>
               {group.shown.map((tool) => (
                 <CheckRow
                   key={tool.slug}
@@ -202,7 +204,7 @@ export function FilterPanel({
                   type="button"
                   aria-expanded={group.open}
                   onClick={() => setExpanded((current) => toggle(current, group.kind))}
-                  className="flex min-h-11 items-center self-start text-sm font-medium text-accent-text underline-offset-2 hover:underline"
+                  className="flex min-h-11 items-center self-start text-sm font-semibold text-accent-text underline underline-offset-3"
                 >
                   {group.open ? t("seeLess") : t("seeAll", { count: group.matching.length })}
                 </button>
@@ -213,7 +215,7 @@ export function FilterPanel({
       ) : null}
 
       <fieldset className="flex flex-col gap-0.5">
-        <legend className="mb-2.5 font-mono text-[11px] tracking-[0.4px] text-muted uppercase">
+        <legend className="mb-2 text-[13px] leading-4 font-semibold text-muted">
           {t("categories")}
         </legend>
         {categories.map((category) => (
@@ -229,9 +231,7 @@ export function FilterPanel({
       </fieldset>
 
       <fieldset>
-        <legend className="mb-2.5 font-mono text-[11px] tracking-[0.4px] text-muted uppercase">
-          {t("lang")}
-        </legend>
+        <legend className="mb-2 text-[13px] leading-4 font-semibold text-muted">{t("lang")}</legend>
         <div className="flex gap-1.5">
           {(
             [
@@ -244,7 +244,6 @@ export function FilterPanel({
               key={label}
               selected={filters.lang === lang}
               onClick={() => navigate({ ...filters, lang })}
-              className={cn("h-11 px-4", filters.lang === lang && "border-ink bg-ink text-bg")}
             >
               {label}
             </Pill>
@@ -267,7 +266,7 @@ function CheckRow({
   onChange: () => void;
 }) {
   return (
-    <label className="flex min-h-11 cursor-pointer items-center gap-2.5 text-[15px] lg:min-h-9">
+    <label className="flex min-h-11 cursor-pointer items-center gap-2.5 text-base lg:min-h-9">
       <input
         type="checkbox"
         checked={checked}
@@ -275,7 +274,9 @@ function CheckRow({
         className="size-[18px] shrink-0 accent-accent"
       />
       <span className="min-w-0 grow truncate">{label}</span>
-      {count !== undefined ? <span className="font-mono text-xs text-muted">{count}</span> : null}
+      {count !== undefined ? (
+        <span className="text-sm text-muted tabular-nums">{count}</span>
+      ) : null}
     </label>
   );
 }
@@ -302,8 +303,7 @@ export function MobileFilters({ children }: { children: ReactNode }) {
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
-          strokeWidth="1.8"
-          strokeLinecap="round"
+          strokeWidth="1.75"
           aria-hidden="true"
         >
           <path d="M4 6h16M7 12h10M10 18h4" />
@@ -317,11 +317,11 @@ export function MobileFilters({ children }: { children: ReactNode }) {
           // A click on the backdrop (the dialog box itself, outside the sheet) closes it.
           if (event.target === event.currentTarget) event.currentTarget.close();
         }}
-        className="m-0 mt-auto max-h-[85dvh] w-full max-w-none rounded-t-[22px] border-t border-border bg-bg p-0 text-ink backdrop:bg-ink/40"
+        className="m-0 mt-auto max-h-[85dvh] w-full max-w-none rounded-t-md border-t border-border bg-bg p-0 text-ink backdrop:bg-ink/40"
       >
         <div className="flex flex-col">
           <div className="sticky top-0 z-10 flex items-center justify-between border-b border-border bg-bg px-4 py-3">
-            <h2 id={titleId} className="font-display text-xl">
+            <h2 id={titleId} className="text-lg leading-6 font-semibold">
               {t("filtersLabel")}
             </h2>
             <button
@@ -404,7 +404,7 @@ export function ResultsGrid({
         explore?.pending && "pointer-events-none opacity-50",
       )}
     >
-      <div className="grid gap-[18px] sm:grid-cols-2 xl:grid-cols-3">
+      <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
         {children}
         {extra.map((project) => (
           <ProjectGridCard key={project.id} project={project} showLang={showLang} />
@@ -416,11 +416,11 @@ export function ResultsGrid({
             type="button"
             onClick={loadMore}
             disabled={status === "loading"}
-            className={buttonStyles({ variant: "outline", size: "lg", className: "h-12" })}
+            className={buttonStyles({ variant: "outline", size: "lg" })}
           >
             {status === "loading" ? t("loading") : t("loadMore")}
           </button>
-          <p role="status" className="text-sm text-red-700 dark:text-red-400">
+          <p role="status" className="text-sm text-danger">
             {status === "error" ? t("loadError") : ""}
           </p>
         </div>

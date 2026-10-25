@@ -64,7 +64,7 @@ export function ToolsAdmin({
     <>
       {suggestions.length > 0 ? (
         <section aria-labelledby="suggestions-title" className="flex flex-col gap-3">
-          <h2 id="suggestions-title" className="font-mono text-xs text-muted uppercase">
+          <h2 id="suggestions-title" className="text-[13px] font-semibold text-muted">
             {t("suggestions.title", { count: suggestions.length })}
           </h2>
           <p className="max-w-[640px] text-sm text-ink-2">{t("suggestions.lede")}</p>
@@ -123,10 +123,10 @@ export function ToolsAdmin({
         </button>
       </div>
 
-      <div className="rounded-[22px] border border-border bg-surface px-4 py-2 sm:px-5">
+      <div className="rounded border border-border bg-surface px-4 py-2 sm:px-5">
         <div
           aria-hidden="true"
-          className={`hidden py-3 font-mono text-[11px] text-muted uppercase md:grid ${columns}`}
+          className={`hidden py-3 text-[13px] font-semibold text-muted md:grid ${columns}`}
         >
           <span />
           <span>{t("table.name")}</span>
@@ -135,7 +135,7 @@ export function ToolsAdmin({
           <span>{t("table.projects")}</span>
           <span />
         </div>
-        <p className="py-3 font-mono text-[11px] text-muted md:hidden" aria-live="polite">
+        <p className="py-3 text-[13px] text-muted md:hidden" aria-live="polite">
           {t("shown", { count: shown.length, total: tools.length })}
         </p>
         {shown.length === 0 ? (
@@ -145,13 +145,13 @@ export function ToolsAdmin({
             {shown.map((tool) => (
               <li
                 key={tool.id}
-                className={cn("grid gap-2 border-t border-border py-3 text-[15px]", columns)}
+                className={cn("grid gap-2 border-t border-border py-3 text-base", columns)}
               >
                 <span
                   aria-hidden="true"
                   className={cn(
-                    "hidden size-10 items-center justify-center rounded-xl font-display text-[15px] italic md:flex",
-                    tool.isActive ? "bg-ink text-bg" : "bg-bubble text-muted",
+                    "hidden size-10 items-center justify-center rounded border border-border text-base font-bold md:flex",
+                    tool.isActive ? "bg-surface text-ink" : "bg-placeholder text-muted",
                   )}
                 >
                   {monogram(tool.name)}
@@ -159,12 +159,12 @@ export function ToolsAdmin({
                 <span className="flex min-w-0 flex-wrap items-center gap-2 font-medium">
                   <span className="break-words">{tool.name}</span>
                   {!tool.isActive ? (
-                    <span className="rounded-full border border-dashed border-muted px-2 text-xs font-normal text-ink-2">
+                    <span className="rounded border border-dashed border-muted px-1.5 text-[13px] font-normal text-ink-2">
                       {t("inactive")}
                     </span>
                   ) : null}
                 </span>
-                <span className="min-w-0 font-mono text-[13px] break-all text-ink-2">
+                <span className="min-w-0 text-sm break-all text-ink-2">
                   {tool.isActive ? (
                     <Link href={`/tools/${tool.slug}`} className="hover:underline">
                       /tools/{tool.slug}
@@ -174,7 +174,7 @@ export function ToolsAdmin({
                   )}
                 </span>
                 <span className="text-[13px] text-ink-2">{tKinds(tool.kind)}</span>
-                <span className="font-mono text-sm">
+                <span className="text-sm tabular-nums">
                   <span className="text-muted md:sr-only">{t("table.projects")} </span>
                   {tool.projectCount}
                 </span>
@@ -249,7 +249,7 @@ function SuggestionCard({
   }
 
   return (
-    <article className="flex flex-col gap-4 rounded-[22px] border border-border bg-surface p-4 sm:p-5">
+    <article className="flex flex-col gap-4 rounded border border-border bg-surface p-4 sm:p-5">
       <div className="flex flex-col gap-1.5">
         <h3 className="text-[17px] font-semibold break-words">{group.name}</h3>
         {group.urls.length > 0 ? (
@@ -333,7 +333,7 @@ function SuggestionCard({
           </button>
         </div>
       </div>
-      <p role="alert" className="text-[13px] text-red-700 empty:hidden dark:text-red-400">
+      <p role="alert" className="text-sm text-danger empty:hidden">
         {error ? t(`errors.${error}`) : ""}
       </p>
     </article>
@@ -398,7 +398,7 @@ function ToolDialog({ editing, onClose }: { editing: Editing | null; onClose: ()
       onClick={(event) => {
         if (event.target === event.currentTarget) dialogRef.current?.close();
       }}
-      className="m-0 mt-auto max-h-[92dvh] w-full max-w-none rounded-t-[22px] border border-border bg-bg p-0 text-ink backdrop:bg-ink/40 sm:m-auto sm:max-w-[560px] sm:rounded-[22px]"
+      className="m-0 mt-auto max-h-[92dvh] w-full max-w-none rounded-t-md border border-border bg-bg p-0 text-ink backdrop:bg-ink/40 sm:m-auto sm:max-w-[560px] sm:rounded"
     >
       {editing ? (
         <ToolForm
@@ -494,7 +494,7 @@ function ToolForm({
       }}
       className="flex flex-col gap-5 p-5 sm:p-6"
     >
-      <h2 id={titleId} className="font-display text-[26px] leading-tight font-normal">
+      <h2 id={titleId} className="text-[22px] leading-7 font-semibold">
         {title}
       </h2>
       {editing.mode === "suggestion" ? (
@@ -531,7 +531,7 @@ function ToolForm({
             }}
             aria-invalid={!!fieldErrors.slug}
             aria-describedby={describe("slug") ?? `${id}-slug-hint`}
-            className="font-mono text-sm"
+            className="text-sm"
             required
           />
         </Field>
@@ -599,7 +599,7 @@ function ToolForm({
       ))}
 
       {editing.mode === "edit" ? (
-        <label className="flex min-h-11 cursor-pointer items-start gap-3 text-[15px]">
+        <label className="flex min-h-11 cursor-pointer items-start gap-3 text-base">
           <input
             type="checkbox"
             checked={values.isActive}
@@ -613,7 +613,7 @@ function ToolForm({
         </label>
       ) : null}
 
-      <p role="alert" className="text-sm text-red-700 empty:hidden dark:text-red-400">
+      <p role="alert" className="text-sm text-danger empty:hidden">
         {error && error !== "invalid" ? t(`errors.${error}`) : ""}
       </p>
       <div className="flex justify-end gap-2">

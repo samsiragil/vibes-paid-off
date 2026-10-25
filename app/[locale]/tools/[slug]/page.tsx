@@ -7,12 +7,10 @@ import { Link } from "@/i18n/navigation";
 import { ResultsGrid } from "@/components/discovery/explore-client";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { ProjectGridCard } from "@/components/project/project-grid-card";
-import { Label } from "@/components/ui/badge";
 import { SystemMessage } from "@/components/ui/bubble";
 import { buttonStyles } from "@/components/ui/button";
 import { ExternalLink } from "@/components/ui/external-link";
 import { pillStyles } from "@/components/ui/pill";
-import { cn } from "@/lib/cn";
 import { getToolCatalog, quickPickIds } from "@/lib/projects/catalog";
 import { getToolPage, searchProjects, type ToolPageData } from "@/lib/projects/discovery";
 import { emptyFilters, type ExploreFilters } from "@/lib/projects/explore-params";
@@ -78,38 +76,33 @@ async function ToolContent({ params }: { params: PageProps<"/[locale]/tools/[slu
   const description = locale === "en" ? tool.description.en : tool.description.id;
 
   return (
-    <main className="mx-auto w-full max-w-[1200px] px-4 pt-10 sm:px-6 sm:pt-12">
+    <main className="mx-auto w-full max-w-[1120px] px-4 pt-8 sm:px-6 sm:pt-10">
       <ToolSwitcher tool={tool} label={t("switcherLabel")} allLabel={t("allTools")} />
 
-      <section className="flex flex-col gap-8 border-b border-border pt-10 pb-10 md:flex-row md:items-end md:justify-between md:gap-12 md:pt-12">
-        <div className="flex min-w-0 flex-col gap-5 sm:flex-row sm:items-center sm:gap-6">
-          <ToolMark tool={tool} />
-          <div className="min-w-0">
-            <Label className="text-xs normal-case">/tools/{tool.slug}</Label>
-            <h1 className="mt-1.5 font-display text-[40px] leading-none font-normal tracking-[-1px] break-words sm:text-[60px] sm:tracking-[-1.4px]">
-              {t("pageTitleLead")} <span className="italic">{tool.name}</span>
-            </h1>
-            {description ? (
-              <p className="mt-2.5 max-w-[620px] text-[17px] leading-relaxed text-ink-2">
-                {description}
-              </p>
-            ) : null}
-          </div>
-        </div>
-        <div className="flex shrink-0 flex-row items-center justify-between gap-3 md:flex-col md:items-end">
-          <div className="md:text-right">
-            <div className="font-display text-[44px] leading-none">{page.total}</div>
-            <Label className="text-xs">{t("countLabel")}</Label>
-          </div>
-          {tool.url ? (
-            <ExternalLink href={tool.url} className={buttonStyles({ variant: "outline" })}>
-              {t("site", { name: tool.name })}
-            </ExternalLink>
+      <section className="flex flex-col gap-4 border-b border-border pt-8 pb-8 sm:flex-row sm:items-center sm:gap-6">
+        <ToolMark tool={tool} />
+        <div className="flex min-w-0 flex-col gap-2">
+          <h1 className="text-[30px] leading-9 font-bold break-words sm:text-[40px] sm:leading-11">
+            {t("pageTitleLead")} {tool.name}
+          </h1>
+          {description ? (
+            <p className="max-w-[68ch] text-base leading-6 text-ink-2">{description}</p>
           ) : null}
+          <p className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted">
+            <span className="tabular-nums">{t("projectCount", { count: page.total })}</span>
+            {tool.url ? (
+              <ExternalLink
+                href={tool.url}
+                className="inline-flex min-h-11 items-center font-semibold text-accent-text underline underline-offset-3 sm:min-h-0"
+              >
+                {t("site", { name: tool.name })}
+              </ExternalLink>
+            ) : null}
+          </p>
         </div>
       </section>
 
-      <section className="flex flex-col gap-[22px] pt-10">
+      <section className="flex flex-col gap-6 pt-8">
         {/* Cards use h3; keep the outline h1 → h2 → h3 for screen readers. */}
         <h2 className="sr-only">{t("projectCount", { count: page.total })}</h2>
         {page.items.length > 0 ? (
@@ -122,13 +115,13 @@ async function ToolContent({ params }: { params: PageProps<"/[locale]/tools/[slu
             </ResultsGrid>
           </>
         ) : (
-          <div className="rounded-[22px] border border-dashed border-border-strong px-6 py-10 text-center">
-            <p className="font-display text-[26px] leading-tight">
-              {t("emptyLead")} <span className="italic">{tool.name}</span>.
-            </p>
+          <div className="flex flex-col items-start gap-4">
+            <SystemMessage className="max-w-xl">
+              {t("emptyLead")} {tool.name}.
+            </SystemMessage>
             <Link
               href="/submit"
-              className={buttonStyles({ variant: "accent", className: "mt-4 h-[46px] px-5" })}
+              className={buttonStyles({ variant: "accent", className: "sm:ml-12" })}
             >
               {t("emptyCta")}
             </Link>
@@ -159,12 +152,7 @@ function ToolSwitcher({
               <Link
                 href={`/tools/${item.slug}`}
                 aria-current={current ? "page" : undefined}
-                className={pillStyles({
-                  className: cn(
-                    "h-[42px] px-[18px] text-sm",
-                    current && "border-ink bg-ink text-bg hover:border-ink",
-                  ),
-                })}
+                className={pillStyles({ selected: current })}
               >
                 {item.name}
               </Link>
@@ -174,7 +162,7 @@ function ToolSwitcher({
         <li className="shrink-0">
           <Link
             href="/tools"
-            className="inline-flex h-[42px] items-center px-3 text-sm font-medium text-accent-text underline-offset-2 hover:underline"
+            className="inline-flex h-11 items-center px-3 text-sm font-semibold text-accent-text underline underline-offset-3 sm:h-9"
           >
             {allLabel} →
           </Link>
@@ -188,7 +176,7 @@ function ToolMark({ tool }: { tool: ToolPageData }) {
   return (
     <div
       aria-hidden="true"
-      className="relative flex size-[72px] shrink-0 items-center justify-center overflow-hidden rounded-[20px] bg-ink font-display text-[28px] text-bg italic sm:size-24 sm:rounded-3xl sm:text-4xl"
+      className="relative flex size-16 shrink-0 items-center justify-center overflow-hidden rounded border border-border bg-surface text-2xl font-bold text-ink sm:size-20 sm:text-[28px]"
     >
       {tool.logoUrl ? (
         <Image
@@ -197,7 +185,7 @@ function ToolMark({ tool }: { tool: ToolPageData }) {
           fill
           unoptimized
           sizes="96px"
-          className="object-contain p-4"
+          className="object-contain p-3"
         />
       ) : (
         monogram(tool.name)
@@ -208,19 +196,19 @@ function ToolMark({ tool }: { tool: ToolPageData }) {
 
 function ToolSkeleton() {
   return (
-    <main aria-hidden="true" className="mx-auto w-full max-w-[1200px] px-4 pt-10 sm:px-6 sm:pt-12">
+    <main aria-hidden="true" className="mx-auto w-full max-w-[1120px] px-4 pt-8 sm:px-6 sm:pt-10">
       <div className="flex flex-wrap gap-2">
         {[0, 1, 2, 3, 4, 5].map((index) => (
-          <div key={index} className="h-[42px] w-28 rounded-full bg-bubble" />
+          <div key={index} className="h-9 w-28 rounded-md border border-border bg-surface" />
         ))}
       </div>
-      <div className="flex items-center gap-6 border-b border-border py-12">
-        <div className="size-24 rounded-3xl bg-bubble" />
-        <div className="h-14 w-96 max-w-[60%] rounded-2xl bg-bubble" />
+      <div className="flex items-center gap-6 border-b border-border py-8">
+        <div className="size-20 rounded border border-border bg-surface" />
+        <div className="h-10 w-96 max-w-[60%] rounded-sm bg-placeholder" />
       </div>
-      <div className="mt-10 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+      <div className="mt-8 grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
         {[0, 1, 2].map((index) => (
-          <div key={index} className="h-80 rounded-[22px] bg-bubble" />
+          <div key={index} className="h-80 rounded border border-border bg-surface" />
         ))}
       </div>
     </main>

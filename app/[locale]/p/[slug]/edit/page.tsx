@@ -25,9 +25,9 @@ export default async function EditProjectPage({ params }: PageProps<"/[locale]/p
 
   return (
     <>
-      <main className="mx-auto w-full max-w-[1200px] px-4 pt-14 sm:px-6">
-        <h1 className="font-display text-[44px] leading-none font-normal tracking-[-1px] sm:text-[60px] sm:tracking-[-1.4px]">
-          {t("editTitleLead")} <span className="italic">{t("editTitleTail")}</span>
+      <main className="mx-auto w-full max-w-[1120px] px-4 pt-10 sm:px-6 sm:pt-12">
+        <h1 className="text-[30px] leading-9 font-bold break-words sm:text-[40px] sm:leading-11">
+          {t("editTitleLead")} {t("editTitleTail")}
         </h1>
         <Suspense fallback={<FormSkeleton />}>
           <EditContent params={params} />
@@ -71,7 +71,7 @@ async function EditContent({ params }: { params: PageProps<"/[locale]/p/[slug]/e
 
   return (
     <>
-      <p className="mt-3 max-w-[760px] text-[17px] leading-relaxed text-ink-2">{t("editLede")}</p>
+      <p className="mt-3 max-w-[68ch] text-[17px] leading-7 text-ink-2">{t("editLede")}</p>
       {statusNotice ? (
         <SystemMessage tone="soft" className="mt-6 max-w-[760px]">
           {statusNotice}

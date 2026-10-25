@@ -11,10 +11,7 @@ export async function ToolsPanel() {
 
   return (
     <>
-      <PanelHeading
-        title={t.rich("title", { em: (chunks) => <span className="italic">{chunks}</span> })}
-        lede={t("lede")}
-      />
+      <PanelHeading title={t.rich("title", { em: (chunks) => chunks })} lede={t("lede")} />
       <ActionLogProvider>
         <ToolsAdmin tools={tools} suggestions={suggestions} />
       </ActionLogProvider>

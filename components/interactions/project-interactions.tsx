@@ -123,7 +123,7 @@ async function ViewerReplies({ project, replies }: { project: Target; replies: R
 // ---------------------------------------------------------------------------
 
 const reportLinkClass =
-  "inline-flex min-h-11 items-center self-center text-[13px] text-muted underline-offset-2 hover:text-ink hover:underline";
+  "inline-flex min-h-11 items-center self-start text-sm text-muted underline-offset-3 hover:text-ink hover:underline";
 
 /** "Laporkan proyek ini" under the sidebar; hidden from the maker. */
 export function ProjectReportLink({ project }: { project: Target }) {

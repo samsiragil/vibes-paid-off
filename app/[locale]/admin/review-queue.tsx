@@ -20,7 +20,7 @@ export async function ReviewQueuePanel() {
   return (
     <>
       <PanelHeading
-        title={t.rich("title", { em: (chunks) => <span className="italic">{chunks}</span> })}
+        title={t.rich("title", { em: (chunks) => chunks })}
         lede={t("lede", { hours: REVIEW_WINDOW_HOURS })}
       />
       <ActionLogProvider>
@@ -52,12 +52,10 @@ export async function PanelHeading({
   return (
     <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
       <div className="min-w-0">
-        <h1 className="font-display text-[36px] leading-tight font-normal tracking-[-0.8px] sm:text-[44px] sm:tracking-[-1px]">
+        <h1 className="text-[30px] leading-9 font-bold break-words sm:text-[40px] sm:leading-11">
           {title}
         </h1>
-        {lede ? (
-          <p className="mt-1.5 max-w-[640px] text-[15px] leading-normal text-ink-2">{lede}</p>
-        ) : null}
+        {lede ? <p className="mt-2 max-w-[68ch] text-base leading-6 text-ink-2">{lede}</p> : null}
       </div>
       {action}
     </div>
@@ -77,9 +75,9 @@ export async function QueueCard({ item, now }: { item: QueueItem; now: number })
   return (
     <article
       aria-labelledby={`queue-${item.id}`}
-      className="flex flex-col gap-5 rounded-[22px] border border-border bg-surface p-4 sm:p-5 md:flex-row md:items-start"
+      className="flex flex-col gap-5 rounded border border-border bg-surface p-4 sm:p-5 md:flex-row md:items-start"
     >
-      <div className="relative aspect-[16/11] w-full shrink-0 overflow-hidden rounded-xl bg-placeholder md:h-[110px] md:w-[160px]">
+      <div className="relative aspect-[16/11] w-full shrink-0 overflow-hidden rounded bg-placeholder md:h-[110px] md:w-[160px]">
         {item.coverKey ? (
           <MediaImage
             mediaKey={item.coverKey}
@@ -89,7 +87,7 @@ export async function QueueCard({ item, now }: { item: QueueItem; now: number })
             className="object-cover"
           />
         ) : (
-          <span className="absolute inset-0 flex items-center justify-center font-mono text-[11px] text-muted uppercase">
+          <span className="absolute inset-0 flex items-center justify-center text-[13px] font-semibold text-muted">
             {t("noImage")}
           </span>
         )}
@@ -119,8 +117,8 @@ export async function QueueCard({ item, now }: { item: QueueItem; now: number })
           </time>
           <span
             className={cn(
-              "font-mono text-[11px] uppercase sm:ml-auto",
-              overdue ? "rounded-full bg-ink px-2 py-0.5 text-bg" : "text-muted",
+              "text-[13px] font-semibold sm:ml-auto",
+              overdue ? "text-warning" : "text-muted",
             )}
           >
             {overdue
@@ -135,7 +133,7 @@ export async function QueueCard({ item, now }: { item: QueueItem; now: number })
           </Link>
         </h2>
         <p className="text-sm text-ink-2">{item.tagline}</p>
-        <p className="max-w-full self-start rounded-[14px] rounded-br-[4px] bg-bubble px-3.5 py-2.5 text-sm leading-[1.45] break-words">
+        <p className="max-w-full self-start rounded-sm bg-placeholder px-3.5 py-2.5 text-sm leading-5 break-words">
           {item.keyPrompt}
         </p>
         <p className="text-xs leading-relaxed text-muted">

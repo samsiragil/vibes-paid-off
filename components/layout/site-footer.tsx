@@ -42,7 +42,7 @@ export async function SiteFooter({ variant = "compact" }: { variant?: "full" | "
   if (variant === "compact") {
     return (
       <footer className="mt-24 border-t border-border">
-        <div className="mx-auto flex max-w-[1200px] flex-col gap-5 px-4 py-8 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+        <div className="mx-auto flex max-w-[1120px] flex-col gap-5 px-4 py-8 sm:flex-row sm:items-center sm:justify-between sm:px-6">
           <Logo className="h-7" />
           <div className="flex flex-wrap items-center gap-x-5 gap-y-3 text-sm">
             <Link href="/rules" className={link}>
@@ -60,7 +60,7 @@ export async function SiteFooter({ variant = "compact" }: { variant?: "full" | "
 
   return (
     <footer className="mt-24 border-t border-border">
-      <div className="mx-auto grid max-w-[1200px] gap-10 px-4 pt-12 pb-6 sm:px-6 md:grid-cols-[minmax(0,2fr)_repeat(3,minmax(0,1fr))]">
+      <div className="mx-auto grid max-w-[1120px] gap-10 px-4 pt-12 pb-6 sm:px-6 md:grid-cols-[minmax(0,2fr)_repeat(3,minmax(0,1fr))]">
         <div className="flex flex-col gap-2.5">
           <Logo className="h-7" />
           <p className="max-w-80 text-sm leading-relaxed text-ink-2">{t("tagline")}</p>
@@ -91,7 +91,7 @@ export async function SiteFooter({ variant = "compact" }: { variant?: "full" | "
           <DonateLink locale={locale} label={t("buyCoffee")} />
         </div>
       </div>
-      <div className="mx-auto flex max-w-[1200px] flex-col gap-2 px-4 pt-4 pb-8 font-mono text-xs text-muted sm:flex-row sm:justify-between sm:px-6">
+      <div className="mx-auto flex max-w-[1120px] flex-col gap-2 px-4 pt-4 pb-8 text-sm text-muted sm:flex-row sm:justify-between sm:px-6">
         <span>{t("copyright", { year })}</span>
         <span>
           {tLocale("id")} · {tLocale("en")}

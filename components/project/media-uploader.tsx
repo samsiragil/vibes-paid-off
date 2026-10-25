@@ -294,7 +294,7 @@ export function MediaUploader({
     <div className="flex flex-col gap-3">
       <ol
         className={cn(
-          "grid grid-cols-3 gap-2 rounded-2xl transition-colors sm:gap-3",
+          "grid grid-cols-3 gap-2 rounded transition-colors sm:gap-3",
           dragging && "bg-accent-soft",
         )}
         onDragOver={(event) => {
@@ -317,7 +317,7 @@ export function MediaUploader({
                 {index === items.length ? (
                   <label
                     htmlFor={inputId}
-                    className="flex aspect-[4/3] cursor-pointer flex-col items-center justify-center gap-1.5 rounded-2xl border border-dashed border-(--dashed) bg-surface px-2 text-center text-[13px] font-medium text-ink-2 transition-colors hover:border-ink hover:text-ink has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-accent-text"
+                    className="flex aspect-[4/3] cursor-pointer flex-col items-center justify-center gap-1.5 rounded border-[1.5px] border-dashed border-(--dashed) bg-surface px-2 text-center text-sm font-semibold text-ink-2 transition-colors duration-150 hover:border-ink hover:text-ink has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-accent"
                   >
                     <PlusIcon />
                     {t("add")}
@@ -325,7 +325,7 @@ export function MediaUploader({
                 ) : (
                   <div
                     aria-hidden="true"
-                    className="aspect-[4/3] rounded-2xl border border-dashed border-border-strong bg-placeholder"
+                    className="aspect-[4/3] rounded border border-dashed border-border-strong bg-placeholder"
                   />
                 )}
               </li>
@@ -339,7 +339,7 @@ export function MediaUploader({
 
           return (
             <li key={item.localId} className="flex flex-col gap-1.5">
-              <div className="relative aspect-[4/3] overflow-hidden rounded-2xl border border-border bg-placeholder">
+              <div className="relative aspect-[4/3] overflow-hidden rounded border border-border bg-placeholder">
                 <Image
                   src={item.previewUrl}
                   alt={t("imageAlt", { position })}
@@ -349,28 +349,28 @@ export function MediaUploader({
                   className="object-cover"
                 />
                 {index === 0 ? (
-                  <span className="absolute top-1.5 left-1.5 rounded-full bg-ink/80 px-2 py-0.5 font-mono text-[11px] text-bg">
+                  <span className="absolute top-1.5 left-1.5 rounded-sm bg-highlight px-1.5 py-0.5 text-[13px] leading-4 font-semibold text-highlight-ink">
                     {t("cover")}
                   </span>
                 ) : null}
 
                 {item.status === "error" ? (
                   <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-bg/90 p-2 text-center">
-                    <p role="alert" className="text-xs text-red-700 dark:text-red-400">
+                    <p role="alert" className="text-sm text-danger">
                       {t(`errors.${item.error ?? "failed"}`)}
                     </p>
                     {item.blob ? (
                       <button
                         type="button"
                         onClick={() => retry(item)}
-                        className="rounded-full border border-border-strong bg-surface px-3 py-1 text-xs font-medium text-ink hover:border-ink"
+                        className="rounded-md border-[1.5px] border-border-strong bg-surface px-3 py-1 text-sm font-semibold text-ink hover:border-ink"
                       >
                         {t("retry")}
                       </button>
                     ) : null}
                   </div>
                 ) : item.status === "waiting" && !item.removing ? (
-                  <span className="absolute right-1 bottom-1 left-1 truncate rounded-full bg-surface/90 px-1.5 py-0.5 text-center text-[10px] font-medium text-ink-2 sm:text-[11px]">
+                  <span className="absolute right-1 bottom-1 left-1 truncate rounded-sm bg-surface/90 px-1.5 py-0.5 text-center text-xs font-semibold text-ink-2 sm:text-[13px]">
                     {status}
                   </span>
                 ) : status ? (
@@ -435,7 +435,7 @@ export function MediaUploader({
       />
 
       {notice ? (
-        <p id={hintId} role="alert" className="text-[13px] text-red-700 dark:text-red-400">
+        <p id={hintId} role="alert" className="text-sm text-danger">
           {t(`errors.${notice}`)}
         </p>
       ) : (
@@ -465,7 +465,7 @@ function IconButton({
       title={label}
       disabled={disabled}
       onClick={onClick}
-      className="inline-flex size-8 items-center justify-center rounded-full border border-border bg-surface text-ink transition-colors hover:border-ink disabled:pointer-events-none disabled:opacity-40"
+      className="inline-flex size-8 items-center justify-center rounded-md border border-border-strong bg-surface text-ink transition-colors duration-150 hover:border-ink disabled:pointer-events-none disabled:opacity-40"
     >
       <svg
         width="16"

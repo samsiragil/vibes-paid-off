@@ -16,6 +16,7 @@ import { SystemAvatar } from "./avatar";
 export function PromptBubble({
   size = "md",
   label,
+  margin,
   className,
   children,
 }: {
@@ -24,6 +25,8 @@ export function PromptBubble({
   size?: "md" | "lg";
   /** Optional "Prompt kunci" label, sitting on the first ruled line. */
   label?: ReactNode;
+  /** `lg` only: a short handwritten note (the date) in the margin column, from `sm` up. */
+  margin?: ReactNode;
   className?: string;
   children: ReactNode;
 }) {
@@ -39,6 +42,11 @@ export function PromptBubble({
           aria-hidden="true"
           className="absolute inset-y-0 left-3 w-[1.5px] bg-margin sm:left-14"
         />
+        {margin ? (
+          <span className="absolute top-0 left-0 hidden w-12 text-right font-hand text-lg/8 whitespace-nowrap text-ink-2 sm:block">
+            {margin}
+          </span>
+        ) : null}
         {label ? (
           <span className="block text-[13px]/8 font-semibold text-muted">{label}</span>
         ) : null}

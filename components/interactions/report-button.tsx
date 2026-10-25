@@ -78,16 +78,16 @@ export function ReportButton({
           // A click on the backdrop (the dialog box itself, outside the panel) closes it.
           if (event.target === event.currentTarget) close();
         }}
-        className="m-0 mt-auto max-h-[90dvh] w-full max-w-none rounded-t-[22px] border border-border bg-bg p-0 text-ink backdrop:bg-ink/40 sm:m-auto sm:max-w-[460px] sm:rounded-[22px]"
+        className="m-0 mt-auto max-h-[90dvh] w-full max-w-none rounded-t-md border border-border bg-bg p-0 text-ink backdrop:bg-ink/40 sm:m-auto sm:max-w-[460px] sm:rounded"
       >
         <div className="flex flex-col gap-5 p-5 sm:p-6">
-          <h2 id={titleId} className="font-display text-[26px] leading-tight font-normal">
+          <h2 id={titleId} className="text-[22px] leading-7 font-semibold">
             {t(`title.${subject}`)}
           </h2>
 
           {done ? (
             <>
-              <p role="status" className="text-[15px] leading-relaxed text-ink-2">
+              <p role="status" className="text-base leading-6 text-ink-2">
                 {t(`done.${done === "hidden" ? `hidden_${subject}` : done}`)}
               </p>
               <button
@@ -107,13 +107,15 @@ export function ReportButton({
               }}
               className="flex flex-col gap-5"
             >
-              <p className="text-sm leading-relaxed text-ink-2">{t("intro")}</p>
+              <p className="text-base leading-6 text-ink-2">{t("intro")}</p>
               <fieldset className="flex flex-col gap-1">
-                <legend className="mb-2 text-sm font-medium">{t("reasonLabel")}</legend>
+                <legend className="mb-2 text-[13px] leading-4 font-semibold">
+                  {t("reasonLabel")}
+                </legend>
                 {REPORT_REASONS.map((value) => (
                   <label
                     key={value}
-                    className="flex min-h-11 cursor-pointer items-center gap-3 rounded-xl px-2 text-[15px] hover:bg-bubble"
+                    className="flex min-h-11 cursor-pointer items-center gap-3 rounded-sm px-2 text-base hover:bg-placeholder"
                   >
                     <input
                       type="radio"
@@ -122,7 +124,7 @@ export function ReportButton({
                       required
                       checked={reason === value}
                       onChange={() => setReason(value)}
-                      className="size-4 accent-[var(--accent-text)]"
+                      className="size-4 accent-accent"
                     />
                     {t(`reasons.${value}`)}
                   </label>
@@ -130,10 +132,10 @@ export function ReportButton({
               </fieldset>
               <div className="flex flex-col gap-2">
                 <div className="flex items-baseline justify-between gap-3">
-                  <label htmlFor={noteId} className="text-sm font-medium">
+                  <label htmlFor={noteId} className="text-[13px] leading-4 font-semibold">
                     {t("noteLabel")}
                   </label>
-                  <span className="font-mono text-xs text-muted">
+                  <span className="text-[13px] text-muted tabular-nums">
                     {note.length}/{REPORT_NOTE_MAX}
                   </span>
                 </div>
@@ -147,7 +149,7 @@ export function ReportButton({
                 />
               </div>
               {error ? (
-                <p role="alert" className="text-sm text-red-700 dark:text-red-400">
+                <p role="alert" className="text-sm text-danger">
                   {t(`errors.${error}`)}
                 </p>
               ) : null}

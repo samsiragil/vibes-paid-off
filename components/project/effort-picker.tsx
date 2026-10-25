@@ -33,12 +33,12 @@ export function EffortPicker({
         tabIndex={-1}
         aria-invalid={error ? true : undefined}
         aria-describedby={error ? `${id}-error` : undefined}
-        className="flex flex-wrap gap-2 rounded-[22px] focus:outline-none"
+        className="flex flex-wrap gap-2 rounded-md focus:outline-none"
       >
         {BUILD_EFFORTS.map((effort, index) => (
           <label
             key={effort}
-            className="inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-full border border-border-strong bg-bg px-4 text-[15px] text-ink transition-colors hover:border-ink has-checked:border-accent has-checked:bg-accent-soft has-checked:text-accent-ink has-focus-visible:ring-2 has-focus-visible:ring-accent"
+            className="inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-md border-[1.5px] border-border-strong bg-surface px-4 text-base text-ink transition-colors duration-150 hover:border-ink has-checked:border-highlight has-checked:bg-highlight has-checked:font-semibold has-checked:text-highlight-ink has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-accent"
           >
             <input
               type="radio"
@@ -51,7 +51,7 @@ export function EffortPicker({
             />
             {tCard("effort", { effort })}
             {suggested === effort ? (
-              <span className="font-mono text-[11px] text-accent-text">
+              <span className="text-[13px] font-normal text-accent-text">
                 {t("autofill.suggested")}
               </span>
             ) : null}
@@ -59,7 +59,7 @@ export function EffortPicker({
         ))}
       </div>
       {error ? (
-        <p id={`${id}-error`} className="text-[13px] text-red-700 dark:text-red-400">
+        <p id={`${id}-error`} className="text-sm text-danger">
           {error}
         </p>
       ) : null}

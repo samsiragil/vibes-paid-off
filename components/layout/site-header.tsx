@@ -37,7 +37,7 @@ export async function SiteHeader({ user }: { user?: HeaderUser | null }) {
 
   return (
     <header className="relative border-b border-border">
-      <div className="mx-auto flex max-w-[1200px] items-center gap-4 px-4 py-3.5 sm:px-6 md:gap-7">
+      <div className="mx-auto flex max-w-[1120px] items-center gap-4 px-4 py-3.5 sm:px-6 md:gap-7">
         <Link href="/" aria-label={tBrand("home")} className="shrink-0">
           <Logo />
         </Link>
@@ -117,5 +117,5 @@ async function AccountLink({ user }: { user: HeaderUser | null }) {
 
 /** Same footprint as the avatar so the header does not shift when the session arrives. */
 function AccountPlaceholder() {
-  return <span aria-hidden="true" className="inline-block size-10 rounded-full bg-bubble" />;
+  return <span aria-hidden="true" className="inline-block size-10 rounded-full bg-placeholder" />;
 }

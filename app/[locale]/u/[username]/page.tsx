@@ -7,7 +7,7 @@ import { ProjectGridCard } from "@/components/project/project-grid-card";
 import { JsonLd } from "@/components/seo/json-ld";
 import { Avatar } from "@/components/ui/avatar";
 import { Badge, Label } from "@/components/ui/badge";
-import { SystemMessage } from "@/components/ui/bubble";
+import { PromptBubble, SystemMessage } from "@/components/ui/bubble";
 import { buttonStyles } from "@/components/ui/button";
 import { CopyLinkField } from "@/components/ui/copy-link";
 import { ExternalLink } from "@/components/ui/external-link";
@@ -70,7 +70,7 @@ async function ProfileContent({
   const t = await getTranslations("profile");
   const format = await getFormatter();
   const path = `/u/${profile.username}`;
-  const [firstName, ...restNames] = profile.displayName.split(" ");
+  const [firstName] = profile.displayName.split(" ");
   const meta = [
     `@${profile.username}`,
     profile.location,
@@ -80,76 +80,56 @@ async function ProfileContent({
   ].filter(Boolean);
 
   return (
-    <main className="mx-auto w-full max-w-[1200px] px-4 pt-12 sm:px-6 sm:pt-16">
+    <main className="mx-auto w-full max-w-[1120px] px-4 pt-10 sm:px-6 sm:pt-14">
       <ProfileJsonLd profile={profile} />
-      <section className="flex flex-col gap-10 border-b border-border pb-11 lg:flex-row lg:items-start lg:gap-14">
-        <div className="flex min-w-0 grow flex-col gap-[22px]">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-[18px]">
+      <section className="flex flex-col gap-8 lg:flex-row lg:items-start lg:gap-14">
+        <div className="flex min-w-0 grow flex-col gap-6">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-5">
             <Avatar name={profile.displayName} src={profile.avatarUrl} size="lg" />
-            <div className="min-w-0">
-              <h1 className="font-display text-[44px] leading-[0.98] font-normal tracking-[-1px] break-words sm:text-[64px] sm:tracking-[-1.8px]">
-                {firstName}
-                {restNames.length > 0 ? (
-                  <span className="italic"> {restNames.join(" ")}</span>
-                ) : null}
+            <div className="flex min-w-0 flex-col gap-2">
+              <h1 className="text-[30px] leading-9 font-bold break-words sm:text-[40px] sm:leading-11">
+                {profile.displayName}
               </h1>
-              <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-2 font-mono text-[13px] text-muted">
+              <p className="flex flex-wrap items-center gap-x-3 gap-y-2 text-sm leading-5 text-muted">
                 <span>{meta.join(" · ")}</span>
                 {profile.isTrusted ? <Badge>{t("trusted")}</Badge> : null}
-              </div>
+              </p>
             </div>
           </div>
 
           {profile.bio ? (
-            <div className="flex max-w-[720px] items-end gap-3">
-              <Avatar
-                name={profile.displayName}
-                src={profile.avatarUrl}
-                className="size-9 text-xs"
-              />
-              <p className="min-w-0 rounded-[22px] rounded-bl-md border border-border bg-surface px-[22px] py-[18px] text-lg leading-[1.55] break-words whitespace-pre-line">
-                {profile.bio}
-              </p>
-            </div>
+            <PromptBubble size="lg" className="max-w-[720px] break-words whitespace-pre-line">
+              {profile.bio}
+            </PromptBubble>
           ) : null}
 
           <SocialLinks profile={profile} />
         </div>
 
-        <div className="flex flex-col gap-3 lg:w-[340px] lg:shrink-0 lg:pt-2">
-          <Label>{t("shareLabel")}</Label>
+        <div className="flex flex-col gap-3 lg:w-[320px] lg:shrink-0 lg:pt-2">
+          {profile.tipUrl ? (
+            <ExternalLink
+              href={profile.tipUrl}
+              className={buttonStyles({ variant: "outline-accent", size: "lg" })}
+            >
+              {t("tip", { name: firstName })}
+            </ExternalLink>
+          ) : null}
+          <Label className="pt-2">{t("shareLabel")}</Label>
           <CopyLinkField
             url={`${siteUrl}${path}`}
             display={displayUrl(path)}
             label={t("shareLabel")}
           />
-          {profile.tipUrl ? (
-            <ExternalLink
-              href={profile.tipUrl}
-              className={buttonStyles({ variant: "outline-accent", size: "lg", className: "h-12" })}
-            >
-              {t("tip", { name: firstName })}
-            </ExternalLink>
-          ) : null}
         </div>
       </section>
 
-      <dl className="grid grid-cols-2 border-b border-border md:grid-cols-4">
-        <Stat label={t("stats.projects")}>{format.number(profile.stats.projectCount)}</Stat>
-        <Stat label={t("stats.stories")}>{format.number(profile.stats.storyCount)}</Stat>
-        <Stat label={t("stats.upvotes")}>{format.number(profile.stats.upvoteCount)}</Stat>
-        <Stat label={t("stats.topTool")} small>
-          {profile.stats.topTool ?? "—"}
-        </Stat>
-      </dl>
-
       <section className="flex flex-col gap-6 pt-14">
-        <h2 className="font-display text-[30px] leading-tight font-normal tracking-[-0.6px] sm:text-[38px]">
-          {t("projectsLead", { name: firstName })}{" "}
-          <span className="italic">{t("projectsTail")}</span>
+        <h2 className="text-[22px] leading-7 font-semibold sm:text-[26px] sm:leading-8">
+          {t("projects", { name: firstName })}
         </h2>
         {profile.projects.length > 0 ? (
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {profile.projects.map((project) => (
               <ProjectGridCard key={project.id} project={project} showMaker={false} />
             ))}
@@ -158,6 +138,13 @@ async function ProfileContent({
           <SystemMessage className="max-w-xl">{t("empty", { name: firstName })}</SystemMessage>
         )}
       </section>
+
+      <dl className="mt-12 flex flex-wrap gap-x-10 gap-y-4 border-t border-border pt-6">
+        <Stat label={t("stats.projects")}>{format.number(profile.stats.projectCount)}</Stat>
+        <Stat label={t("stats.stories")}>{format.number(profile.stats.storyCount)}</Stat>
+        <Stat label={t("stats.upvotes")}>{format.number(profile.stats.upvoteCount)}</Stat>
+        <Stat label={t("stats.topTool")}>{profile.stats.topTool ?? "—"}</Stat>
+      </dl>
     </main>
   );
 }
@@ -202,13 +189,13 @@ async function SocialLinks({ profile }: { profile: PublicProfile }) {
   if (links.length === 0) return null;
 
   return (
-    <ul className="flex flex-wrap gap-2 sm:pl-12">
+    <ul className="flex flex-wrap gap-x-5 gap-y-1">
       {links.map((link) => (
         <li key={link.key}>
           <ExternalLink
             href={link.url}
             rel="me"
-            className="inline-flex h-11 items-center rounded-full border border-border-strong bg-surface px-4 text-sm transition-colors hover:border-ink"
+            className="inline-flex min-h-11 items-center text-base font-semibold text-accent-text underline underline-offset-3"
           >
             {t(link.key)}
           </ExternalLink>
@@ -218,42 +205,29 @@ async function SocialLinks({ profile }: { profile: PublicProfile }) {
   );
 }
 
-function Stat({
-  label,
-  small = false,
-  children,
-}: {
-  label: string;
-  small?: boolean;
-  children: ReactNode;
-}) {
+/** One figure in the small stats row under the list (secondary to the projects themselves). */
+function Stat({ label, children }: { label: string; children: ReactNode }) {
   return (
-    <div className="flex flex-col-reverse justify-end py-6 pr-4">
-      <dt className="font-mono text-xs text-muted uppercase">{label}</dt>
-      <dd
-        className={
-          small
-            ? "font-display text-[22px] leading-[1.45] break-words sm:text-[28px]"
-            : "font-display text-[34px] leading-tight sm:text-[40px]"
-        }
-      >
-        {children}
-      </dd>
+    <div className="flex flex-col-reverse">
+      <dt className="text-[13px] leading-4 font-semibold text-muted">{label}</dt>
+      <dd className="text-lg leading-7 font-semibold break-words tabular-nums">{children}</dd>
     </div>
   );
 }
 
 function ProfileSkeleton() {
   return (
-    <main aria-hidden="true" className="mx-auto w-full max-w-[1200px] px-4 pt-12 sm:px-6 sm:pt-16">
-      <div className="flex items-center gap-[18px]">
-        <div className="size-[84px] rounded-full bg-bubble" />
-        <div className="h-14 w-72 max-w-[60%] rounded-2xl bg-bubble" />
+    <main aria-hidden="true" className="mx-auto w-full max-w-[1120px] px-4 pt-10 sm:px-6 sm:pt-14">
+      <div className="flex items-center gap-5">
+        <div className="size-[84px] rounded-full bg-placeholder" />
+        <div className="h-10 w-72 max-w-[60%] rounded-sm bg-placeholder" />
       </div>
-      <div className="mt-6 h-24 max-w-[720px] rounded-[22px] bg-bubble" />
-      <div className="mt-16 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="relative mt-6 h-24 max-w-[720px] ruled">
+        <span className="absolute inset-y-0 left-3 w-[1.5px] bg-margin sm:left-14" />
+      </div>
+      <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {[0, 1, 2].map((index) => (
-          <div key={index} className="h-80 rounded-[22px] bg-bubble" />
+          <div key={index} className="h-80 rounded border border-border bg-surface" />
         ))}
       </div>
     </main>

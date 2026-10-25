@@ -78,8 +78,6 @@ type AutofillState =
 
 /** Ids of the form controls; errors focus the first one in page order. */
 const fieldId = (path: string) => `pf-${path.replaceAll(".", "-")}`;
-const inputClass = "h-11 rounded-xl bg-bg";
-const textareaClass = "rounded-xl bg-bg";
 
 type ProjectFormProps = {
   mode: ProjectFormMode;
@@ -97,8 +95,8 @@ type ProjectFormProps = {
 const subscribeNothing = () => () => {};
 
 /**
- * The conversational submit/edit form (VPO-Submit): the site asks, the maker answers in
- * right-aligned bubbles, with a live card preview beside it. Shared by /submit and
+ * The conversational submit/edit form (VPO-Submit): the site asks in short notes, the maker
+ * answers in the fields under each one, with a live card preview beside it. Shared by /submit and
  * /p/[slug]/edit. Four answers publish a project (link, key prompt, rough build time, tools);
  * the build story is optional and can come later. Rendered only after hydration, so the submit
  * draft (localStorage) can seed the initial state without a server/client mismatch.
@@ -422,8 +420,8 @@ function ProjectFormBody({
   );
 
   return (
-    <div className="flex flex-col gap-10 pt-11 lg:flex-row lg:items-start lg:gap-14">
-      <form noValidate onSubmit={onSubmit} className="flex min-w-0 flex-1 flex-col gap-[18px]">
+    <div className="flex flex-col gap-10 pt-10 lg:flex-row lg:items-start lg:gap-14">
+      <form noValidate onSubmit={onSubmit} className="flex min-w-0 flex-1 flex-col gap-4">
         {restoredAt ? (
           <SystemMessage tone="soft">
             <span className="flex flex-wrap items-center gap-x-3 gap-y-2">
@@ -431,7 +429,7 @@ function ProjectFormBody({
               <button
                 type="button"
                 onClick={startOver}
-                className="font-medium text-accent-text underline underline-offset-2"
+                className="font-semibold text-accent-text underline underline-offset-3"
               >
                 {t("draftDiscard")}
               </button>
@@ -453,7 +451,6 @@ function ProjectFormBody({
                 placeholder={t("liveUrlPlaceholder")}
                 onChange={(event) => update("liveUrl", event.target.value)}
                 onBlur={autofillOnBlur}
-                className={inputClass}
               />
             </Field>
             <Field
@@ -469,7 +466,6 @@ function ProjectFormBody({
                 placeholder={t("repoUrlPlaceholder")}
                 onChange={(event) => update("repoUrl", event.target.value)}
                 onBlur={autofillOnBlur}
-                className={inputClass}
               />
             </Field>
           </div>
@@ -493,7 +489,6 @@ function ProjectFormBody({
               maxLength={PROJECT_LIMITS.title}
               placeholder={t("titlePlaceholder")}
               onChange={(event) => update("title", event.target.value)}
-              className={inputClass}
             />
           </Field>
           <Field
@@ -508,11 +503,10 @@ function ProjectFormBody({
               maxLength={PROJECT_LIMITS.tagline}
               placeholder={t("taglinePlaceholder")}
               onChange={(event) => update("tagline", event.target.value)}
-              className={inputClass}
             />
           </Field>
           <div className="flex flex-col gap-2">
-            <p className="text-sm font-medium text-ink">{t("screenshots")}</p>
+            <p className="text-[13px] leading-4 font-semibold text-ink">{t("screenshots")}</p>
             <MediaUploader
               ref={uploaderRef}
               projectId={isCreate ? undefined : mode.projectId}
@@ -527,33 +521,40 @@ function ProjectFormBody({
 
         {/* 2. Key prompt. */}
         <Question>{t.rich("steps.prompt", { strong })}</Question>
-        <Answer
-          className={cn("p-1.5 sm:p-1.5", errors.keyPrompt && "border-red-700 dark:border-red-400")}
-        >
-          <label htmlFor={fieldId("keyPrompt")} className="sr-only">
-            {t("keyPrompt")}
-          </label>
-          <textarea
-            {...errorProps("keyPrompt")}
-            rows={3}
-            value={values.keyPrompt}
-            maxLength={PROJECT_LIMITS.keyPrompt}
-            placeholder={t("keyPromptPlaceholder")}
-            onChange={(event) => update("keyPrompt", event.target.value)}
-            className="w-full resize-y rounded-[18px] bg-transparent px-3.5 py-3 font-display text-[19px] leading-[1.35] text-ink placeholder:text-muted focus:outline-none sm:text-[22px]"
-          />
-          <div className="flex items-baseline justify-between gap-3 px-3.5 pb-2">
+        <Answer>
+          {/* The page's main field: a ruled note with the margin line (README §6). */}
+          <div
+            className={cn(
+              "relative overflow-hidden rounded-md border-[1.5px] bg-surface transition-colors duration-150 focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-accent",
+              errors.keyPrompt ? "border-danger" : "border-border-strong hover:border-ink",
+            )}
+          >
+            <span
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-y-0 left-3 w-[1.5px] bg-margin sm:left-6"
+            />
+            <label htmlFor={fieldId("keyPrompt")} className="sr-only">
+              {t("keyPrompt")}
+            </label>
+            <textarea
+              {...errorProps("keyPrompt")}
+              rows={4}
+              value={values.keyPrompt}
+              maxLength={PROJECT_LIMITS.keyPrompt}
+              placeholder={t("keyPromptPlaceholder")}
+              onChange={(event) => update("keyPrompt", event.target.value)}
+              className="block w-full resize-y bg-transparent ruled [background-attachment:local] pt-0 pr-4 pb-0 pl-7 text-lg/8 text-ink placeholder:text-muted focus:outline-none sm:pl-10"
+            />
+          </div>
+          <div className="flex items-baseline justify-between gap-3">
             {fieldError("keyPrompt") ? (
-              <p
-                id={`${fieldId("keyPrompt")}-error`}
-                className="text-[13px] text-red-700 dark:text-red-400"
-              >
+              <p id={`${fieldId("keyPrompt")}-error`} className="text-sm text-danger">
                 {fieldError("keyPrompt")}
               </p>
             ) : (
               <span />
             )}
-            <span className="font-mono text-xs text-muted">
+            <span className="text-[13px] text-muted tabular-nums">
               {values.keyPrompt.length}/{PROJECT_LIMITS.keyPrompt}
             </span>
           </div>
@@ -590,7 +591,6 @@ function ProjectFormBody({
                 {...errorProps("category")}
                 value={values.category}
                 onChange={(event) => update("category", event.target.value)}
-                className={inputClass}
               >
                 <option value="" disabled>
                   {t("categoryPlaceholder")}
@@ -603,8 +603,10 @@ function ProjectFormBody({
               </Select>
             </Field>
             <fieldset className="flex flex-col gap-2">
-              <legend className="mb-2 text-sm font-medium text-ink">{t("contentLang")}</legend>
-              <div className="flex h-11 items-center gap-5 text-[15px]">
+              <legend className="mb-2 text-[13px] leading-4 font-semibold text-ink">
+                {t("contentLang")}
+              </legend>
+              <div className="flex h-11 items-center gap-5 text-base">
                 {(["id", "en"] as const).map((lang) => (
                   <label key={lang} className="flex cursor-pointer items-center gap-2">
                     <input
@@ -622,17 +624,18 @@ function ProjectFormBody({
             </fieldset>
           </div>
 
-          <details open={extrasOpen} className="group rounded-2xl border border-border px-3.5 py-3">
-            <summary className="flex min-h-6 cursor-pointer list-none items-center gap-2 text-sm font-medium text-ink [&::-webkit-details-marker]:hidden">
+          <details
+            open={extrasOpen}
+            className="group rounded border border-border bg-surface px-4 py-2"
+          >
+            <summary className="flex min-h-9 cursor-pointer list-none items-center gap-2 text-base font-semibold text-ink [&::-webkit-details-marker]:hidden">
               <svg
-                width="14"
-                height="14"
+                width="16"
+                height="16"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
+                strokeWidth="1.75"
                 aria-hidden="true"
                 className="transition-transform group-open:rotate-90"
               >
@@ -640,7 +643,7 @@ function ProjectFormBody({
               </svg>
               {t("extras")} <span className="font-normal text-muted">{t("extrasHint")}</span>
             </summary>
-            <div className="mt-3.5 flex flex-col gap-3.5">
+            <div className="mt-3 flex flex-col gap-4 pb-2">
               <Field
                 id={fieldId("description")}
                 label={<Optional label={t("description")} note={t("optional")} />}
@@ -653,7 +656,6 @@ function ProjectFormBody({
                   maxLength={PROJECT_LIMITS.description}
                   placeholder={t("descriptionPlaceholder")}
                   onChange={(event) => update("description", event.target.value)}
-                  className={textareaClass}
                 />
               </Field>
               <Field
@@ -668,7 +670,6 @@ function ProjectFormBody({
                   value={values.videoUrl}
                   placeholder={t("videoUrlPlaceholder")}
                   onChange={(event) => update("videoUrl", event.target.value)}
-                  className={inputClass}
                 />
               </Field>
             </div>
@@ -679,7 +680,7 @@ function ProjectFormBody({
         <div id="cerita" className="scroll-mt-6">
           <Question>{t.rich("steps.story", { strong })}</Question>
         </div>
-        <Answer className="bg-bg">
+        <Answer>
           <StoryMoments
             idFor={(moment) => fieldId(momentKeys[moment])}
             values={{
@@ -701,12 +702,15 @@ function ProjectFormBody({
           <Question>
             {t.rich("steps.rules", {
               link: (chunks) => (
-                <Link href="/rules" className="font-medium text-accent-text underline">
+                <Link
+                  href="/rules"
+                  className="font-semibold text-accent-text underline underline-offset-3"
+                >
                   {chunks}
                 </Link>
               ),
             })}
-            <ul className="mt-1.5 list-disc pl-[18px] text-ink-2">
+            <ul className="list-disc pl-5 text-ink-2">
               {(["own", "illegal", "privacy", "respect"] as const).map((rule) => (
                 <li key={rule}>{t(`rules.${rule}`)}</li>
               ))}
@@ -731,7 +735,7 @@ function ProjectFormBody({
           {formError ? (
             <div
               role="alert"
-              className="rounded-2xl border border-red-700/30 bg-surface px-4 py-3 text-sm text-red-700 sm:max-w-[80%] dark:border-red-400/30 dark:text-red-400"
+              className="rounded border border-danger bg-surface px-4 py-3 text-base text-danger sm:max-w-[80%]"
             >
               {t(`formErrors.${formError}`)}
               {formError === "unauthorized" ? (
@@ -739,7 +743,7 @@ function ProjectFormBody({
                   {" "}
                   <Link
                     href={`/login?next=${encodeURIComponent(isCreate ? `/${locale}/submit` : `/${locale}/p/${mode.slug}/edit`)}`}
-                    className="font-medium underline"
+                    className="font-semibold underline underline-offset-3"
                   >
                     {t("signIn")}
                   </Link>
@@ -823,7 +827,7 @@ function AutofillStatus({ state }: { state: AutofillState }) {
   }
 
   return (
-    <p role="status" className="min-w-0 flex-1 text-[13px] leading-normal text-ink-2">
+    <p role="status" className="min-w-0 flex-1 text-sm leading-5 text-ink-2">
       {lines.join(" ")}
     </p>
   );
@@ -838,17 +842,15 @@ function AutofillAbout() {
   ];
 
   return (
-    <details className="group -mt-1.5 text-[13px] leading-normal text-ink-2">
-      <summary className="inline-flex min-h-6 cursor-pointer list-none items-center gap-1.5 underline-offset-2 hover:underline [&::-webkit-details-marker]:hidden">
+    <details className="group -mt-1.5 text-sm leading-5 text-ink-2">
+      <summary className="inline-flex min-h-6 cursor-pointer list-none items-center gap-1.5 underline-offset-3 hover:underline [&::-webkit-details-marker]:hidden">
         <svg
-          width="12"
-          height="12"
+          width="14"
+          height="14"
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
+          strokeWidth="1.75"
           aria-hidden="true"
           className="transition-transform group-open:rotate-90"
         >
@@ -856,11 +858,11 @@ function AutofillAbout() {
         </svg>
         {t("toggle")}
       </summary>
-      <div className="mt-2 flex flex-col gap-3 rounded-2xl border border-border px-3.5 py-3">
+      <div className="mt-2 flex flex-col gap-3 rounded border border-border bg-surface px-4 py-3">
         <div className="grid gap-3 sm:grid-cols-2">
           {sources.map((source) => (
             <div key={source.heading}>
-              <p className="font-medium text-ink">{source.heading}</p>
+              <p className="font-semibold text-ink">{source.heading}</p>
               <ul className="mt-1 list-disc space-y-0.5 pl-4">
                 {source.items.map((item) => (
                   <li key={item}>{item}</li>
@@ -875,27 +877,14 @@ function AutofillAbout() {
   );
 }
 
-/** The site's question, as a left-aligned chat bubble. */
+/** The site's question, as a short note from the site (system avatar + ruled note). */
 function Question({ children }: { children: ReactNode }) {
-  return (
-    <SystemMessage className="mt-2 [&>div]:text-base [&>div]:leading-normal">
-      {children}
-    </SystemMessage>
-  );
+  return <SystemMessage className="mt-6">{children}</SystemMessage>;
 }
 
-/** The maker's answer: a right-aligned bubble with the inputs. */
+/** The maker's answer: the inputs, written under the question (indented past the avatar). */
 function Answer({ className, children }: { className?: string; children: ReactNode }) {
-  return (
-    <div
-      className={cn(
-        "flex w-full flex-col gap-3.5 self-end rounded-[22px] rounded-br-md border border-ink bg-surface p-3.5 sm:w-[88%] sm:p-[18px]",
-        className,
-      )}
-    >
-      {children}
-    </div>
-  );
+  return <div className={cn("flex w-full flex-col gap-4 sm:pl-12", className)}>{children}</div>;
 }
 
 function Optional({ label, note }: { label: string; note: string }) {
@@ -919,7 +908,7 @@ function SuccessMessage({
 }) {
   const t = useTranslations("projectForm.success");
   const external = donateUrl(locale);
-  const linkClass = "font-semibold text-accent-ink underline underline-offset-2";
+  const linkClass = "font-semibold text-accent-text underline underline-offset-3";
   const link = (chunks: ReactNode) =>
     external ? (
       <a href={external} target="_blank" rel="noopener noreferrer" className={linkClass}>
@@ -932,28 +921,19 @@ function SuccessMessage({
     );
 
   return (
-    <div ref={ref} className="flex max-w-[760px] flex-col gap-5 pt-11">
-      <div className="flex items-end gap-2.5">
-        <span
-          aria-hidden="true"
-          className="inline-flex size-9 shrink-0 items-center justify-center rounded-full bg-accent font-display text-sm text-on-accent italic"
-        >
-          V
-        </span>
-        <div
-          role="status"
-          className="rounded-[20px] rounded-bl-md bg-accent-soft px-[18px] py-3.5 text-base leading-normal text-accent-ink"
-        >
+    <div ref={ref} className="flex max-w-[760px] flex-col gap-5 pt-10">
+      <SystemMessage>
+        <span role="status">
           {t.rich(success.status === "published" ? "published" : "pending", { link })}
-        </div>
-      </div>
+        </span>
+      </SystemMessage>
       {success.mediaFailed ? (
         <SystemMessage>
           <span role="alert">{t("mediaFailed")}</span>
         </SystemMessage>
       ) : null}
       <SystemMessage>{t("story")}</SystemMessage>
-      <div className="flex flex-wrap gap-3 pl-[46px]">
+      <div className="flex flex-wrap gap-3 sm:pl-12">
         <Link href={`/p/${success.slug}`} className={buttonStyles({ variant: "primary" })}>
           {t("view")}
         </Link>

@@ -64,7 +64,7 @@ export default async function LocaleLayout({ children }: LayoutProps<"/[locale]"
           <NextIntlClientProvider>
             <a
               href="#konten"
-              className="sr-only rounded-full bg-ink text-sm font-medium whitespace-nowrap text-bg focus:not-sr-only focus:absolute focus:top-3 focus:left-3 focus:z-50 focus:px-4 focus:py-2.5"
+              className="sr-only rounded-md bg-accent text-base font-semibold whitespace-nowrap text-on-accent focus:not-sr-only focus:absolute focus:top-3 focus:left-3 focus:z-50 focus:px-4 focus:py-2.5"
             >
               {t("skipToContent")}
             </a>

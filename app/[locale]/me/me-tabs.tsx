@@ -66,13 +66,12 @@ export function MeTabs({
             tabIndex={active === tab ? 0 : -1}
             onClick={() => select(tab)}
             className={cn(
-              "-mb-px h-[46px] shrink-0 border-b-2 px-4 text-[15px] whitespace-nowrap transition-colors",
-              active === tab
-                ? "border-ink font-semibold text-ink"
-                : "border-transparent text-muted hover:text-ink",
+              "h-11 shrink-0 px-3 text-base whitespace-nowrap transition-colors duration-150",
+              active === tab ? "font-semibold text-ink" : "text-ink-2 hover:text-ink",
             )}
           >
-            {tabLabels[tab]}
+            {/* The active tab is marked with the highlighter (README §6). */}
+            {active === tab ? <span className="stabilo">{tabLabels[tab]}</span> : tabLabels[tab]}
           </button>
         ))}
       </div>

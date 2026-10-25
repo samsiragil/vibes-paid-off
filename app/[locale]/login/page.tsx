@@ -22,17 +22,17 @@ export default async function LoginPage({ searchParams }: PageProps<"/[locale]/l
 
   return (
     <>
-      <main className="mx-auto flex w-full max-w-[520px] flex-col gap-6 px-4 pt-14 pb-20 sm:px-6 sm:pt-24">
-        <Label className="text-xs text-accent-text">{t("eyebrow")}</Label>
-        <h1 className="font-display text-[40px] leading-[1.05] font-normal tracking-[-1px] sm:text-[52px]">
-          {t("titleLead")} <span className="italic">{t("titleTail")}</span>
+      <main className="mx-auto flex w-full max-w-[520px] flex-col gap-5 px-4 pt-12 pb-20 sm:px-6 sm:pt-20">
+        <Label>{t("eyebrow")}</Label>
+        <h1 className="text-[30px] leading-9 font-bold break-words sm:text-[40px] sm:leading-11">
+          {t("titleLead")} {t("titleTail")}
         </h1>
         <SystemMessage>{t("intro")}</SystemMessage>
         {/* The fallback is the same form without ?next, so the buttons are usable before the request resolves. */}
         <Suspense fallback={<LoginOptions />}>
           <LoginOptionsForRequest searchParams={searchParams} />
         </Suspense>
-        <p className="text-[13px] leading-normal text-muted">{t("note")}</p>
+        <p className="text-sm leading-5 text-muted">{t("note")}</p>
       </main>
       <SiteFooter />
     </>
@@ -70,7 +70,7 @@ async function LoginOptions({
       <input type="hidden" name="locale" value={locale} />
       <input type="hidden" name="next" value={next ?? `/${locale}`} />
       {error ? (
-        <p role="alert" className="text-sm text-red-700 dark:text-red-400">
+        <p role="alert" className="text-sm text-danger">
           {t(`errors.${error}`)}
         </p>
       ) : null}

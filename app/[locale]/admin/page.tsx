@@ -26,7 +26,7 @@ type AdminTab = (typeof tabs)[number];
 export default function AdminPage({ searchParams }: PageProps<"/[locale]/admin">) {
   return (
     <>
-      <main className="mx-auto w-full max-w-[1200px] px-4 pt-8 pb-24 sm:px-6 lg:pt-10">
+      <main className="mx-auto w-full max-w-[1120px] px-4 pt-8 pb-24 sm:px-6 lg:pt-10">
         <Suspense fallback={<AdminSkeleton />}>
           <AdminContent searchParams={searchParams} />
         </Suspense>
@@ -73,9 +73,6 @@ async function AdminNav({ active, counts }: { active: AdminTab; counts: AdminCou
 
   return (
     <div className="flex flex-col gap-3 lg:sticky lg:top-6 lg:w-[220px] lg:shrink-0">
-      <span className="inline-flex h-[26px] items-center self-start rounded-full bg-ink px-2.5 font-mono text-[11px] text-bg">
-        ADMIN
-      </span>
       <nav aria-label={t("label")} className="-mx-4 overflow-x-auto px-4 lg:mx-0 lg:px-0">
         <ul className="flex gap-1 lg:flex-col">
           {tabs.map((tab) => (
@@ -84,13 +81,15 @@ async function AdminNav({ active, counts }: { active: AdminTab; counts: AdminCou
                 href={tab === "queue" ? "/admin" : `/admin?tab=${tab}`}
                 aria-current={active === tab ? "page" : undefined}
                 className={cn(
-                  "flex h-[46px] items-center justify-between gap-3 rounded-full px-3.5 text-sm whitespace-nowrap transition-colors",
-                  active === tab ? "bg-ink text-bg" : "text-ink hover:bg-bubble",
+                  "flex h-11 items-center justify-between gap-3 rounded-md px-3 text-base whitespace-nowrap transition-colors duration-150",
+                  active === tab
+                    ? "bg-highlight font-semibold text-highlight-ink"
+                    : "text-ink hover:bg-placeholder",
                 )}
               >
                 <span>{t(tab)}</span>
                 {count[tab] !== undefined ? (
-                  <span className="font-mono text-xs">
+                  <span className="text-sm tabular-nums">
                     {count[tab]}
                     <span className="sr-only"> {t(`countLabel.${tab}`)}</span>
                   </span>
@@ -109,14 +108,14 @@ function AdminSkeleton() {
     <div aria-hidden="true" className="flex flex-col gap-8 lg:flex-row lg:gap-10">
       <div className="flex gap-1 lg:w-[220px] lg:flex-col">
         {[0, 1, 2, 3].map((index) => (
-          <div key={index} className="h-[46px] w-32 rounded-full bg-bubble lg:w-full" />
+          <div key={index} className="h-11 w-32 rounded-md bg-placeholder lg:w-full" />
         ))}
       </div>
       <div className="flex grow flex-col gap-[18px]">
-        <div className="h-12 w-72 max-w-full rounded-2xl bg-bubble" />
-        <div className="h-5 w-96 max-w-full rounded bg-bubble" />
+        <div className="h-10 w-72 max-w-full rounded-sm bg-placeholder" />
+        <div className="h-5 w-96 max-w-full rounded-sm bg-placeholder" />
         {[0, 1].map((index) => (
-          <div key={index} className="h-40 rounded-[22px] bg-bubble" />
+          <div key={index} className="h-40 rounded border border-border bg-surface" />
         ))}
       </div>
     </div>

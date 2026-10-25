@@ -105,7 +105,7 @@ export async function MyProjects({
         <SystemMessage className="max-w-xl">{t("empty")}</SystemMessage>
         <Link
           href="/submit"
-          className={buttonStyles({ variant: "primary", className: "ml-[46px]" })}
+          className={buttonStyles({ variant: "primary", className: "sm:ml-12" })}
         >
           {t("emptyCta")}
         </Link>
@@ -120,7 +120,7 @@ export async function MyProjects({
     <section className="flex flex-col pt-6">
       <div
         aria-hidden="true"
-        className={`hidden pb-2.5 font-mono text-[11px] text-muted uppercase lg:grid ${columns}`}
+        className={`hidden pb-2 text-[13px] leading-4 font-semibold text-muted lg:grid ${columns}`}
       >
         <span>{t("table.project")}</span>
         <span>{t("table.status")}</span>
@@ -131,9 +131,9 @@ export async function MyProjects({
       </div>
       <ul>
         {projects.map((project) => (
-          <li key={project.id} className={`grid gap-4 border-t border-border py-[18px] ${columns}`}>
+          <li key={project.id} className={`grid gap-4 border-t border-border py-4 ${columns}`}>
             <div className="flex min-w-0 items-start gap-3.5 lg:items-center">
-              <div className="relative h-[60px] w-[84px] shrink-0 overflow-hidden rounded-[10px] border border-border bg-placeholder">
+              <div className="relative h-[60px] w-[84px] shrink-0 overflow-hidden rounded-sm border border-border bg-placeholder">
                 {project.coverKey ? (
                   <MediaImage
                     mediaKey={project.coverKey}
@@ -145,8 +145,8 @@ export async function MyProjects({
                 ) : null}
               </div>
               <div className="min-w-0">
-                <p className="text-[15px] font-semibold break-words">{project.title}</p>
-                <p className="mt-1 max-w-full truncate rounded-xl rounded-br-sm bg-bubble px-2.5 py-1.5 text-[13px] text-ink-2">
+                <p className="text-base leading-6 font-semibold break-words">{project.title}</p>
+                <p className="mt-1 max-w-full truncate border-l-[1.5px] border-margin pl-2.5 text-sm leading-5 text-ink-2">
                   {project.keyPrompt}
                 </p>
                 {project.status === "rejected" ? <RejectReason project={project} /> : null}
@@ -158,11 +158,11 @@ export async function MyProjects({
               <span className="lg:justify-self-start">
                 <LinkStatusBadge status={project.linkStatus} />
               </span>
-              <span className="font-mono text-sm max-lg:ml-2">
+              <span className="text-sm tabular-nums max-lg:ml-2">
                 <span className="text-muted lg:sr-only">{t("table.worthIt")} </span>
                 {project.upvoteCount}
               </span>
-              <span className="font-mono text-sm max-lg:ml-2">
+              <span className="text-sm tabular-nums max-lg:ml-2">
                 <span className="text-muted lg:sr-only">{t("table.replies")} </span>
                 {project.commentCount}
               </span>
@@ -174,7 +174,7 @@ export async function MyProjects({
                 className={buttonStyles({
                   variant: "outline",
                   size: "sm",
-                  className: "h-11 px-4 lg:h-[38px]",
+                  className: "h-11 px-4 lg:h-9",
                 })}
               >
                 {t("edit")}
@@ -185,7 +185,7 @@ export async function MyProjects({
                 className={buttonStyles({
                   variant: "ghost",
                   size: "sm",
-                  className: "h-11 px-4 text-accent-text lg:h-[38px]",
+                  className: "h-11 px-4 text-accent-text lg:h-9",
                 })}
               >
                 {t("view")}
@@ -227,7 +227,7 @@ async function RejectReason({ project }: { project: MyProject }) {
 
 function StatusBadge({ status, label }: { status: ProjectStatus; label: string }) {
   if (status === "published") {
-    return <Badge className="h-7 px-3 lg:justify-self-start">{label}</Badge>;
+    return <Badge className="lg:justify-self-start">{label}</Badge>;
   }
   return (
     <Badge

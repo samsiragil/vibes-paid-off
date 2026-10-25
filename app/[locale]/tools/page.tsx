@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { SiteFooter } from "@/components/layout/site-footer";
-import { Label } from "@/components/ui/badge";
 import { pillStyles } from "@/components/ui/pill";
 import { cn } from "@/lib/cn";
 import { getToolCatalog } from "@/lib/projects/catalog";
@@ -29,11 +28,11 @@ export default async function ToolsIndexPage() {
 
   return (
     <>
-      <main className="mx-auto w-full max-w-[1200px] px-4 pt-12 sm:px-6 sm:pt-14">
-        <h1 className="font-display text-[44px] leading-none font-normal tracking-[-1px] sm:text-[56px] sm:tracking-[-1.2px]">
-          {t("titleLead")} <span className="italic">{t("titleTail")}</span>
+      <main className="mx-auto w-full max-w-[1120px] px-4 pt-10 sm:px-6 sm:pt-12">
+        <h1 className="text-[30px] leading-9 font-bold break-words sm:text-[40px] sm:leading-11">
+          {t("titleLead")} {t("titleTail")}
         </h1>
-        <p className="mt-4 max-w-[620px] text-[17px] leading-relaxed text-ink-2">{t("lede")}</p>
+        <p className="mt-3 max-w-[68ch] text-[17px] leading-7 text-ink-2">{t("lede")}</p>
 
         <div className="mt-10 flex flex-col border-t border-border">
           {TOOL_KINDS.map((kind) => {
@@ -47,8 +46,11 @@ export default async function ToolsIndexPage() {
                 aria-labelledby={`kind-${kind}`}
                 className="flex flex-col gap-4 border-b border-border py-8 md:flex-row md:gap-10"
               >
-                <h2 id={`kind-${kind}`} className="md:w-[220px] md:shrink-0 md:pt-3">
-                  <Label className="text-xs">{tKinds(kind)}</Label>
+                <h2
+                  id={`kind-${kind}`}
+                  className="text-base leading-6 font-semibold md:w-[220px] md:shrink-0 md:pt-1.5"
+                >
+                  {tKinds(kind)}
                 </h2>
                 <ul className="flex flex-wrap gap-2">
                   {tools.map((tool) => (
@@ -56,14 +58,11 @@ export default async function ToolsIndexPage() {
                       <Link
                         href={`/tools/${tool.slug}`}
                         className={pillStyles({
-                          className: cn(
-                            "h-11 px-4 text-sm",
-                            tool.projectCount === 0 && "text-ink-2",
-                          ),
+                          className: cn(tool.projectCount === 0 && "text-ink-2"),
                         })}
                       >
                         {tool.name}
-                        <span aria-hidden="true" className="font-mono text-xs text-muted">
+                        <span aria-hidden="true" className="text-muted tabular-nums">
                           {tool.projectCount}
                         </span>
                         <span className="sr-only">

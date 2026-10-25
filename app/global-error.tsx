@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
+import { Logo } from "@/components/layout/logo";
 import "./globals.css";
 
 // Replaces the root layout when it fails, so there is no next-intl provider here: the two
@@ -39,29 +40,29 @@ export default function GlobalError({
     <html lang={locale}>
       <body className="min-h-full bg-bg text-ink">
         <title>{`${t.title} · Jadinya`}</title>
-        <main className="mx-auto flex max-w-[1200px] flex-col gap-6 px-4 pt-20 sm:px-6">
-          <p className="font-serif text-2xl">
-            Jadi<span className="text-accent-text italic">nya.</span>
-          </p>
-          <h1 className="font-serif text-5xl font-normal tracking-[-1px]">500 · {t.title}</h1>
-          <p className="max-w-xl rounded-[18px] rounded-bl-md border border-border bg-surface px-[18px] py-3.5 text-[15px] leading-normal">
+        <main className="mx-auto flex max-w-[1120px] flex-col gap-5 px-4 pt-16 sm:px-6 sm:pt-20">
+          <Logo className="self-start" />
+          <h1 className="text-[30px] leading-9 font-bold sm:text-[40px] sm:leading-11">
+            500 · {t.title}
+          </h1>
+          <p className="max-w-xl rounded border border-border bg-surface px-4 py-3 text-base leading-6">
             {t.body}
             {error.digest ? (
-              <span className="mt-2 block font-mono text-xs text-muted">{error.digest}</span>
+              <span className="mt-2 block text-sm text-muted">{error.digest}</span>
             ) : null}
           </p>
           <div className="flex flex-wrap gap-3">
             <button
               type="button"
               onClick={() => retry()}
-              className="inline-flex h-11 items-center rounded-full bg-ink px-[18px] text-sm font-medium text-bg"
+              className="inline-flex h-11 items-center rounded-md bg-accent px-4 text-base font-semibold text-on-accent"
             >
               {t.retry}
             </button>
             {/* A full page load on purpose: the app shell itself is what failed. */}
             <a
               href={`/${locale}`}
-              className="inline-flex h-11 items-center rounded-full border border-border-strong bg-surface px-[18px] text-sm font-medium"
+              className="inline-flex h-11 items-center rounded-md border-[1.5px] border-border-strong bg-surface px-4 text-base font-semibold"
             >
               {t.home}
             </a>

@@ -208,7 +208,6 @@ export function ToolPicker({
           onClick={() => setOpen(true)}
           onBlur={() => setOpen(false)}
           onKeyDown={onSearchKeyDown}
-          className="h-11 rounded-xl bg-bg"
         />
         {open ? (
           <div
@@ -217,7 +216,7 @@ export function ToolPicker({
             role="listbox"
             aria-label={t("results")}
             aria-multiselectable="true"
-            className="absolute inset-x-0 top-full z-20 mt-1.5 max-h-80 overflow-y-auto rounded-2xl border border-border-strong bg-surface p-1.5 shadow-lg"
+            className="absolute inset-x-0 top-full z-20 mt-1.5 max-h-80 overflow-y-auto rounded border border-border-strong bg-surface p-1 shadow-[0_2px_0_var(--border)]"
           >
             {groups.map((group) => (
               <div
@@ -228,7 +227,7 @@ export function ToolPicker({
               >
                 <div
                   id={`${listId}-${group.kind}`}
-                  className="px-2.5 pt-2 pb-1 font-mono text-[11px] tracking-[0.4px] text-muted uppercase"
+                  className="px-2.5 pt-2 pb-1 text-[13px] leading-4 font-semibold text-muted"
                 >
                   {tKinds(group.kind)}
                 </div>
@@ -246,8 +245,8 @@ export function ToolPicker({
                       onClick={() => choose({ type: "tool", tool })}
                       onMouseMove={() => setActive(index)}
                       className={cn(
-                        "flex min-h-10 cursor-pointer items-center justify-between gap-3 rounded-xl px-2.5 text-sm",
-                        index === activeIndex && "bg-bubble",
+                        "flex min-h-11 cursor-pointer items-center justify-between gap-3 rounded-sm px-2.5 text-base",
+                        index === activeIndex && "bg-placeholder",
                         isSelected && "font-medium text-accent-text",
                       )}
                     >
@@ -273,7 +272,7 @@ export function ToolPicker({
                 onClick={() => choose(options[options.length - 1])}
                 onMouseMove={() => setActive(options.length - 1)}
                 className={cn(
-                  "flex min-h-10 cursor-pointer items-center gap-2 rounded-xl border-t border-border px-2.5 text-sm font-medium text-accent-text",
+                  "flex min-h-11 cursor-pointer items-center gap-2 rounded-sm border-t border-border px-2.5 text-base font-semibold text-accent-text",
                   activeIndex === options.length - 1 && "bg-accent-soft",
                 )}
               >
@@ -286,7 +285,7 @@ export function ToolPicker({
       </div>
 
       {draft ? (
-        <div className="flex flex-col gap-3 rounded-2xl border border-dashed border-(--dashed) p-3.5">
+        <div className="flex flex-col gap-3 rounded border border-dashed border-(--dashed) bg-surface p-4">
           <p className="text-sm font-medium">{t("suggestTitle")}</p>
           <div className="grid gap-2.5 sm:grid-cols-2">
             <div className="flex flex-col gap-1.5">
@@ -302,7 +301,6 @@ export function ToolPicker({
                   setDraft({ ...draft, name: event.target.value, error: undefined })
                 }
                 onKeyDown={onDraftKeyDown}
-                className="h-11 rounded-xl bg-bg"
               />
             </div>
             <div className="flex flex-col gap-1.5">
@@ -320,12 +318,11 @@ export function ToolPicker({
                   setDraft({ ...draft, url: event.target.value, error: undefined })
                 }
                 onKeyDown={onDraftKeyDown}
-                className="h-11 rounded-xl bg-bg"
               />
             </div>
           </div>
           {draft.error ? (
-            <p role="alert" className="text-[13px] text-red-700 dark:text-red-400">
+            <p role="alert" className="text-sm text-danger">
               {draft.error}
             </p>
           ) : (
@@ -372,9 +369,7 @@ export function ToolPicker({
                   className={pillStyles({ className: "border-dashed" })}
                 >
                   {suggestion.name}
-                  <span className="font-mono text-[10px] text-muted uppercase">
-                    {t("suggested")}
-                  </span>
+                  <span className="text-[13px] text-muted">{t("suggested")}</span>
                   <CrossIcon />
                 </button>
               </li>
@@ -384,11 +379,11 @@ export function ToolPicker({
       ) : null}
 
       {error ? (
-        <p id={hintId} className="text-[13px] text-red-700 dark:text-red-400">
+        <p id={hintId} className="text-sm text-danger">
           {error}
         </p>
       ) : (
-        <p id={hintId} className="text-[13px] text-muted">
+        <p id={hintId} className="text-sm text-muted">
           {t("hint")}
         </p>
       )}

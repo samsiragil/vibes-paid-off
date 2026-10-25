@@ -9,9 +9,9 @@ export default async function NotFound() {
 
   return (
     <>
-      <main className="mx-auto flex w-full max-w-[1200px] flex-col gap-6 px-4 pt-20 sm:px-6">
-        <h1 className="font-display text-5xl font-normal tracking-[-1px]">
-          404 · <span className="italic">{t("title")}</span>
+      <main className="mx-auto flex w-full max-w-[1120px] flex-col gap-5 px-4 pt-16 sm:px-6 sm:pt-20">
+        <h1 className="text-[30px] leading-9 font-bold break-words sm:text-[40px] sm:leading-11">
+          404 · {t("title")}
         </h1>
         <SystemMessage className="max-w-xl">{t("body")}</SystemMessage>
         <Link href="/" className={buttonStyles({ variant: "outline", className: "self-start" })}>

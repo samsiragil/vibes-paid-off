@@ -44,16 +44,18 @@ export default async function HomePage() {
           },
         }}
       />
-      <main className="mx-auto w-full max-w-[1200px] px-4 sm:px-6">
-        <section className="flex flex-col gap-12 pt-14 pb-16 lg:flex-row lg:items-center lg:gap-16 lg:pt-[88px] lg:pb-20">
-          <div className="flex min-w-0 flex-col gap-[22px] lg:flex-[1_1_440px]">
-            <Label className="text-xs text-accent-text">{t("eyebrow")}</Label>
-            <h1 className="font-display text-[44px] leading-[1.02] font-normal tracking-[-1px] sm:text-[68px] sm:tracking-[-1.8px]">
+      <main className="mx-auto w-full max-w-[1120px] px-4 sm:px-6">
+        <section className="flex flex-col gap-10 pt-10 pb-16 lg:flex-row lg:items-center lg:gap-16 lg:pt-16 lg:pb-20">
+          <div className="flex min-w-0 flex-col gap-5 lg:flex-[1_1_400px]">
+            <Label>{t("eyebrow")}</Label>
+            <h1 className="text-[32px] leading-9 font-bold sm:text-[44px] sm:leading-12">
               {t("titleLead")}
               <br />
-              <span className="italic">{t("titleTail")}</span>
+              {t("titleTail")}
             </h1>
-            <p className="max-w-[480px] text-lg leading-relaxed text-ink-2">{t("lede")}</p>
+            <p className="max-w-[46ch] text-[17px] leading-7 text-ink-2 sm:text-lg sm:leading-8">
+              {t("lede")}
+            </p>
             <div className="flex flex-wrap gap-3">
               <Link href="/submit" className={buttonStyles({ variant: "accent", size: "lg" })}>
                 {t("ctaSubmit")}
@@ -63,7 +65,7 @@ export default async function HomePage() {
               </Link>
             </div>
           </div>
-          <div className="min-w-0 lg:flex-[1_1_500px]">
+          <div className="min-w-0 lg:flex-[1_1_560px]">
             <Suspense fallback={<HeroSkeleton />}>
               <Hero />
             </Suspense>
@@ -74,16 +76,16 @@ export default async function HomePage() {
           <HomeLists />
         </Suspense>
 
-        <section className="mt-[72px] flex flex-col gap-5 rounded-[28px] border border-border bg-surface px-5 py-8 sm:px-12 sm:py-10">
-          <div className="flex items-end gap-2.5">
+        <section className="mt-20 flex flex-col gap-5 rounded border border-border bg-surface px-5 py-8 sm:px-10 sm:py-10">
+          <div className="flex items-center gap-3">
             <SystemAvatar />
-            <p className="rounded-[20px] rounded-bl-md bg-bubble px-5 py-4 font-display text-[22px] leading-[1.2] sm:text-[28px]">
-              {t("ctaLead")} <span className="italic">{t("ctaTail")}</span>
-            </p>
+            <h2 className="text-[22px] leading-7 font-semibold sm:text-[26px] sm:leading-8">
+              {t("ctaLead")} {t("ctaTail")}
+            </h2>
           </div>
           <Link
             href="/submit"
-            className="flex min-h-[60px] flex-wrap items-center gap-3 rounded-[30px] border border-border-strong bg-bg py-2 pr-2 pl-[22px] transition-colors hover:border-ink sm:ml-[46px]"
+            className="flex min-h-14 flex-wrap items-center gap-3 rounded-md border-[1.5px] border-border-strong bg-bg py-1.5 pr-1.5 pl-4 transition-colors duration-150 hover:border-ink sm:ml-12"
           >
             <span className="min-w-0 grow text-base text-muted">{t("ctaPlaceholder")}</span>
             <span className={buttonStyles({ variant: "accent", className: "max-sm:w-full" })}>
@@ -112,12 +114,12 @@ async function HomeLists() {
 
   return (
     <>
-      <section className="flex flex-col gap-6 border-t border-border pt-14">
+      <section className="flex flex-col gap-6 border-t border-border pt-12">
         <SectionHeading href="/explore" seeAll={t("seeAll")}>
-          {t("popularLead")} <span className="italic">{t("popularTail")}</span>
+          {t("popularLead")} {t("popularTail")}
         </SectionHeading>
         {popular.length > 0 ? (
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {popular.map((project) => (
               <ProjectGridCard key={project.id} project={project} />
             ))}
@@ -128,15 +130,12 @@ async function HomeLists() {
       </section>
 
       {tools.length > 0 ? (
-        <section className="flex flex-col gap-4 pt-14">
-          <Label className="text-xs">{t("toolsLabel")}</Label>
-          <ul className="flex flex-wrap gap-2.5">
+        <section className="flex flex-col gap-3 pt-12">
+          <Label>{t("toolsLabel")}</Label>
+          <ul className="flex flex-wrap gap-2">
             {tools.map((tool) => (
               <li key={tool.id}>
-                <Link
-                  href={`/tools/${tool.slug}`}
-                  className={pillStyles({ tone: "accent", className: "h-11 px-[18px] text-sm" })}
-                >
+                <Link href={`/tools/${tool.slug}`} className={pillStyles({ tone: "accent" })}>
                   {tool.name}
                 </Link>
               </li>
@@ -146,11 +145,11 @@ async function HomeLists() {
       ) : null}
 
       {latest.length > 0 ? (
-        <section className="flex flex-col pt-16">
-          <SectionHeading href="/explore?sort=new" seeAll={t("seeAll")} className="pb-4">
-            {t("latestLead")} <span className="italic">{t("latestTail")}</span>
+        <section className="flex flex-col pt-14">
+          <SectionHeading href="/explore?sort=new" seeAll={t("seeAll")} className="pb-2">
+            {t("latestLead")} {t("latestTail")}
           </SectionHeading>
-          <div>
+          <div className="border-t border-rule">
             {latest.map((project) => (
               <ProjectRow key={project.id} project={project} />
             ))}
@@ -174,12 +173,12 @@ function SectionHeading({
 }) {
   return (
     <div className={cn("flex items-baseline justify-between gap-4", className)}>
-      <h2 className="font-display text-[30px] leading-tight font-normal tracking-[-0.6px] sm:text-[38px]">
+      <h2 className="text-[22px] leading-7 font-semibold sm:text-[26px] sm:leading-8">
         {children}
       </h2>
       <Link
         href={href}
-        className="shrink-0 text-sm font-medium text-accent-text underline-offset-2 hover:underline"
+        className="shrink-0 text-sm font-semibold text-accent-text underline underline-offset-3"
       >
         {seeAll}
       </Link>
@@ -188,10 +187,13 @@ function SectionHeading({
 }
 
 function HeroSkeleton() {
+  // The hero page with its ruling and margin line, still empty.
   return (
-    <div aria-hidden="true" className="flex flex-col gap-3.5">
-      <div className="ml-auto h-20 w-4/5 rounded-[22px] bg-bubble" />
-      <div className="h-[300px] w-[88%] rounded-[22px] bg-bubble" />
+    <div
+      aria-hidden="true"
+      className="relative h-[480px] rounded border border-border bg-surface ruled sm:h-[512px]"
+    >
+      <span className="absolute inset-y-0 left-3 w-[1.5px] bg-margin sm:left-14" />
     </div>
   );
 }
@@ -200,10 +202,10 @@ function ListsSkeleton() {
   return (
     <div
       aria-hidden="true"
-      className="grid gap-5 border-t border-border pt-14 sm:grid-cols-2 lg:grid-cols-3"
+      className="grid gap-6 border-t border-border pt-12 sm:grid-cols-2 lg:grid-cols-3"
     >
       {[0, 1, 2].map((index) => (
-        <div key={index} className="h-80 rounded-[22px] bg-bubble" />
+        <div key={index} className="h-80 rounded border border-border bg-surface" />
       ))}
     </div>
   );

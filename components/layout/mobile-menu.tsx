@@ -35,7 +35,7 @@ export function MobileMenu({ children }: { children: ReactNode }) {
           setOpen(!isOpen);
           setOpenedAt(pathname);
         }}
-        className="inline-flex size-11 items-center justify-center rounded-full text-ink hover:bg-bubble"
+        className="inline-flex size-11 items-center justify-center rounded-md text-ink transition-colors duration-150 hover:bg-placeholder"
       >
         <svg
           width="20"

@@ -22,7 +22,7 @@ export function LocaleSwitcher({ className }: { className?: string }) {
     <div
       role="group"
       aria-label={t("label")}
-      className={cn("flex items-center font-mono text-xs text-muted", className)}
+      className={cn("flex items-center text-sm text-muted", className)}
     >
       {routing.locales.map((locale, index) => (
         <span key={locale} className="flex items-center">

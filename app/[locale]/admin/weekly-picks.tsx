@@ -14,10 +14,7 @@ export async function WeeklyPicksPanel() {
 
   return (
     <>
-      <PanelHeading
-        title={t.rich("title", { em: (chunks) => <span className="italic">{chunks}</span> })}
-        lede={t("lede")}
-      />
+      <PanelHeading title={t.rich("title", { em: (chunks) => chunks })} lede={t("lede")} />
       {picks.length === 0 ? (
         <SystemMessage className="max-w-xl">{t("empty")}</SystemMessage>
       ) : (
@@ -43,10 +40,10 @@ export async function PickCard({ pick }: { pick: WeeklyPickView }) {
   return (
     <article
       aria-labelledby={titleId}
-      className="flex flex-col gap-4 rounded-[22px] border border-border bg-surface p-4 sm:p-5"
+      className="flex flex-col gap-4 rounded border border-border bg-surface p-4 sm:p-5"
     >
       <div className="flex flex-col gap-1">
-        <p className="font-mono text-xs text-muted uppercase">
+        <p className="text-[13px] font-semibold text-muted">
           {t("week", { date: format.dateTime(week, { dateStyle: "medium" }) })}
         </p>
         <h2 id={titleId} className="text-[17px] font-semibold">
@@ -90,7 +87,7 @@ export async function PickCard({ pick }: { pick: WeeklyPickView }) {
         <div className="overflow-x-auto">
           <table className="w-full min-w-[440px] text-left text-sm">
             <caption className="sr-only">{t("candidatesCaption")}</caption>
-            <thead className="font-mono text-[11px] text-muted uppercase">
+            <thead className="text-[13px] font-semibold text-muted">
               <tr>
                 <th scope="col" className="py-2 pr-3 font-normal">
                   #
@@ -112,7 +109,7 @@ export async function PickCard({ pick }: { pick: WeeklyPickView }) {
             <tbody>
               {pick.candidates.map((candidate, index) => (
                 <tr key={candidate.projectId} className="border-t border-border">
-                  <td className="py-2.5 pr-3 font-mono text-muted">{index + 1}</td>
+                  <td className="py-2.5 pr-3 text-muted tabular-nums">{index + 1}</td>
                   <td className="py-2.5 pr-3">
                     {candidate.slug ? (
                       <Link href={`/p/${candidate.slug}`} className="hover:underline">
@@ -122,9 +119,13 @@ export async function PickCard({ pick }: { pick: WeeklyPickView }) {
                       t("deletedProject")
                     )}
                   </td>
-                  <td className="py-2.5 pr-3 text-right font-mono">{candidate.eligibleVotes}</td>
-                  <td className="py-2.5 pr-3 text-right font-mono">{candidate.eligibleRepliers}</td>
-                  <td className="py-2.5 text-right font-mono">{format.number(candidate.score)}</td>
+                  <td className="py-2.5 pr-3 text-right tabular-nums">{candidate.eligibleVotes}</td>
+                  <td className="py-2.5 pr-3 text-right tabular-nums">
+                    {candidate.eligibleRepliers}
+                  </td>
+                  <td className="py-2.5 text-right tabular-nums">
+                    {format.number(candidate.score)}
+                  </td>
                 </tr>
               ))}
             </tbody>

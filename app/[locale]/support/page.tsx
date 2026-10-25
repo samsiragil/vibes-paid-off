@@ -3,9 +3,8 @@ import { Suspense, type ReactNode } from "react";
 import { getFormatter, getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { SiteFooter } from "@/components/layout/site-footer";
-import { SystemAvatar } from "@/components/ui/avatar";
-import { Label } from "@/components/ui/badge";
-import { PromptBubble } from "@/components/ui/bubble";
+import { Badge, Label } from "@/components/ui/badge";
+import { PromptBubble, SystemMessage } from "@/components/ui/bubble";
 import { buttonStyles } from "@/components/ui/button";
 import { cn } from "@/lib/cn";
 import { donateLink, type DonateChannel } from "@/lib/donate";
@@ -34,14 +33,14 @@ export default async function SupportPage() {
 
   return (
     <>
-      <main className="mx-auto w-full max-w-[1200px] px-4 pt-12 sm:px-6 sm:pt-16">
-        <div className="flex flex-col gap-12 lg:flex-row lg:items-start lg:gap-16">
-          <section className="flex min-w-0 grow flex-col gap-[18px]">
-            <h1 className="mb-3 font-display text-[44px] leading-none font-normal tracking-[-1px] sm:text-[64px] sm:tracking-[-1.6px]">
-              {t("titleLead")} <span className="italic">{t("titleTail")}</span>
+      <main className="mx-auto w-full max-w-[1120px] px-4 pt-10 sm:px-6 sm:pt-12">
+        <div className="flex flex-col gap-12 lg:flex-row lg:items-start lg:gap-14">
+          <section className="flex min-w-0 grow flex-col gap-4">
+            <h1 className="text-[30px] leading-9 font-bold break-words sm:text-[40px] sm:leading-11">
+              {t("titleLead")} {t("titleTail")}
             </h1>
 
-            <div className="flex flex-col gap-[18px]">
+            <div className="flex flex-col gap-4 pt-2">
               <Question>{t("faq.freeQ")}</Question>
               <Answer>{t("faq.freeA")}</Answer>
               <Question>{t("faq.moneyQ")}</Question>
@@ -53,33 +52,30 @@ export default async function SupportPage() {
               <DonateCard channel="global" />
             </div>
 
-            <div className="mt-4 flex items-end gap-3">
-              <SystemAvatar />
-              <p className="max-w-[78%] rounded-[20px] rounded-bl-md bg-accent-soft px-[18px] py-3.5 text-[15px] leading-[1.55] text-accent-ink max-sm:max-w-none">
-                {t.rich("makerTip", {
-                  link: (chunks) => (
-                    <Link
-                      href="/me?tab=profile"
-                      className="font-semibold underline underline-offset-2"
-                    >
-                      {chunks}
-                    </Link>
-                  ),
-                })}
-              </p>
-            </div>
+            <SystemMessage tone="soft" className="mt-4">
+              {t.rich("makerTip", {
+                link: (chunks) => (
+                  <Link
+                    href="/me?tab=profile"
+                    className="font-semibold text-accent-text underline underline-offset-3"
+                  >
+                    {chunks}
+                  </Link>
+                ),
+              })}
+            </SystemMessage>
           </section>
 
-          <aside className="flex flex-col gap-4 lg:w-[400px] lg:shrink-0 lg:pt-3">
+          <aside className="flex flex-col gap-4 lg:w-[360px] lg:shrink-0 lg:pt-2">
             <CostTable />
-            <div className="flex flex-col gap-2 rounded-[22px] border border-dashed border-(--dashed) bg-surface p-[22px]">
+            <div className="flex flex-col gap-2 rounded border border-dashed border-(--dashed) bg-surface p-5">
               <Label>{t("later.label")}</Label>
-              <p className="text-[15px] leading-[1.55]">{t("later.body")}</p>
+              <p className="text-base leading-6">{t("later.body")}</p>
             </div>
-            <div className="flex flex-col gap-1.5 rounded-[22px] bg-ink p-[22px] text-bg">
-              <Label className="text-bg/70">{t("target.label")}</Label>
-              <p className="font-display text-2xl leading-[1.25]">
-                {t("target.lead")} <span className="italic">{t("target.tail")}</span>
+            <div className="flex flex-col gap-2 rounded border border-border bg-surface p-5">
+              <Label>{t("target.label")}</Label>
+              <p className="text-lg leading-7 font-semibold">
+                {t("target.lead")} {t("target.tail")}
               </p>
             </div>
           </aside>
@@ -92,28 +88,14 @@ export default async function SupportPage() {
   );
 }
 
+/** A visitor's question, as a note with the margin line. */
 function Question({ children }: { children: ReactNode }) {
-  return (
-    <div className="flex justify-end">
-      <PromptBubble
-        tone="ink"
-        className="max-w-[70%] rounded-[20px] rounded-br-md px-[18px] py-3.5 text-base leading-normal max-sm:max-w-[88%]"
-      >
-        {children}
-      </PromptBubble>
-    </div>
-  );
+  return <PromptBubble className="max-w-[68ch] font-semibold">{children}</PromptBubble>;
 }
 
+/** The site's answer: a note from the site itself. */
 function Answer({ children }: { children: ReactNode }) {
-  return (
-    <div className="flex items-end gap-3">
-      <SystemAvatar />
-      <p className="max-w-[78%] rounded-[20px] rounded-bl-md border border-border bg-surface px-5 py-4 text-base leading-relaxed max-sm:max-w-none">
-        {children}
-      </p>
-    </div>
-  );
+  return <SystemMessage className="max-w-[720px]">{children}</SystemMessage>;
 }
 
 async function DonateCard({ channel }: { channel: DonateChannel }) {
@@ -123,18 +105,18 @@ async function DonateCard({ channel }: { channel: DonateChannel }) {
   const variant = channel === "local" ? "accent" : "outline-accent";
 
   return (
-    <div className="flex flex-col gap-3 rounded-[22px] border border-border bg-surface p-6">
+    <div className="flex flex-col gap-3 rounded border border-border bg-surface p-5 sm:p-6">
       <Label>{t("eyebrow")}</Label>
-      <h2 className="font-display text-[28px] leading-[1.1] font-normal">
-        {t("titleLead")} <span className="italic">{t("titleTail")}</span>
+      <h2 className="text-[22px] leading-7 font-semibold">
+        {t("titleLead")} {t("titleTail")}
       </h2>
-      <p className="text-sm leading-normal text-ink-2">{t("body")}</p>
+      <p className="text-base leading-6 text-ink-2">{t("body")}</p>
       {link ? (
         <a
           href={link.url}
           target="_blank"
           rel="noopener noreferrer"
-          className={buttonStyles({ variant, className: "mt-auto h-12 self-start px-[22px]" })}
+          className={buttonStyles({ variant, size: "lg", className: "mt-auto self-start" })}
         >
           {t("cta", { platform: link.platform })}
         </a>
@@ -142,8 +124,8 @@ async function DonateCard({ channel }: { channel: DonateChannel }) {
         <p
           className={buttonStyles({
             variant: "outline",
-            className:
-              "mt-auto h-12 self-start border-dashed px-[22px] text-muted hover:border-border-strong",
+            size: "lg",
+            className: "mt-auto self-start border-dashed text-muted hover:border-border-strong",
           })}
         >
           {tSupport("soon")}
@@ -157,18 +139,18 @@ async function CostTable() {
   const t = await getTranslations("support.costs");
 
   return (
-    <div className="flex flex-col rounded-[22px] border border-border bg-surface p-6">
-      <Label className="mb-2.5">{t("label")}</Label>
+    <div className="flex flex-col rounded border border-border bg-surface p-5">
+      <Label className="mb-2">{t("label")}</Label>
       <table className="w-full border-collapse text-left">
         <caption className="sr-only">{t("label")}</caption>
         <tbody>
           {costRows.map((row) => (
             <tr key={row} className="border-t border-border">
               <th scope="row" className="py-3 pr-3 font-normal">
-                <span className="block text-[15px] font-medium">{t(row)}</span>
-                <span className="block text-xs text-muted">{t(`${row}Vendor`)}</span>
+                <span className="block text-base leading-6 font-semibold">{t(row)}</span>
+                <span className="block text-sm leading-5 text-muted">{t(`${row}Vendor`)}</span>
               </th>
-              <td className="py-3 text-right align-top font-mono text-sm whitespace-nowrap">
+              <td className="py-3 text-right align-top text-sm whitespace-nowrap tabular-nums">
                 {row === "domain" ? t("domainCost") : t("free")}
               </td>
             </tr>
@@ -176,12 +158,12 @@ async function CostTable() {
         </tbody>
         <tfoot>
           <tr className="border-t border-ink">
-            <th scope="row" className="pt-3.5 text-[15px] font-semibold">
+            <th scope="row" className="pt-3 text-base font-semibold">
               {t("total")}
             </th>
-            <td className="pt-3.5 text-right font-display text-[26px] whitespace-nowrap">
+            <td className="pt-3 text-right text-xl font-bold whitespace-nowrap tabular-nums">
               {t("totalValue")}{" "}
-              <span className="font-sans text-xs text-muted">{t("totalNote")}</span>
+              <span className="text-sm font-normal text-muted">{t("totalNote")}</span>
             </td>
           </tr>
         </tfoot>
@@ -204,23 +186,23 @@ async function HowWePick() {
     <section
       id={PICKING_ANCHOR}
       aria-labelledby={`${PICKING_ANCHOR}-title`}
-      className="mt-20 flex scroll-mt-6 flex-col gap-[18px] border-t border-border pt-14"
+      className="mt-16 flex scroll-mt-6 flex-col gap-4 border-t border-border pt-12"
     >
       <h2
         id={`${PICKING_ANCHOR}-title`}
-        className="mb-3 font-display text-[38px] leading-none font-normal tracking-[-0.8px] sm:text-[52px] sm:tracking-[-1.2px]"
+        className="text-[22px] leading-7 font-semibold sm:text-[26px] sm:leading-8"
       >
-        {t("titleLead")} <span className="italic">{t("titleTail")}</span>
+        {t("titleLead")} {t("titleTail")}
       </h2>
 
-      <div className="flex max-w-[820px] flex-col gap-[18px]">
+      <div className="flex max-w-[820px] flex-col gap-4 pt-2">
         <Question>{t("question")}</Question>
         <Answer>{t("answer")}</Answer>
       </div>
 
-      <div className="mt-4 flex flex-col gap-1.5 self-start rounded-[22px] bg-ink px-6 py-5 text-bg">
-        <Label className="text-bg/70">{t("formulaLabel")}</Label>
-        <p className="font-mono text-base sm:text-lg">{t("formula")}</p>
+      <div className="mt-4 flex flex-col gap-2 self-start rounded border border-border-strong bg-surface px-5 py-4">
+        <Label>{t("formulaLabel")}</Label>
+        <p className="text-lg leading-7 font-semibold">{t("formula")}</p>
       </div>
 
       <ul className="mt-4 grid gap-4 md:grid-cols-2">
@@ -228,20 +210,20 @@ async function HowWePick() {
           <li
             key={title}
             className={cn(
-              "flex flex-col gap-2 rounded-[22px] border border-border bg-surface p-6",
+              "flex flex-col gap-2 rounded border border-border bg-surface p-5",
               title === "pickTitle" && "md:row-span-2",
             )}
           >
-            <h3 className="font-display text-2xl leading-tight font-normal">{t(title)}</h3>
-            <p className="text-[15px] leading-relaxed text-ink-2">
-              {t(body, { min: DEFAULT_MIN_SCORE })}
-            </p>
+            <h3 className="text-lg leading-6 font-semibold">{t(title)}</h3>
+            <p className="text-base leading-6 text-ink-2">{t(body, { min: DEFAULT_MIN_SCORE })}</p>
           </li>
         ))}
       </ul>
 
       <Suspense
-        fallback={<div aria-hidden="true" className="mt-4 h-40 rounded-[22px] bg-bubble" />}
+        fallback={
+          <div aria-hidden="true" className="mt-4 h-40 rounded border border-border bg-surface" />
+        }
       >
         <PickExample />
       </Suspense>
@@ -260,7 +242,7 @@ async function PickExample() {
 
   let body: ReactNode;
   if (!pick) {
-    body = <p className="text-[15px] leading-relaxed">{t("exampleSample", { min })}</p>;
+    body = <p className="text-base leading-6">{t("exampleSample", { min })}</p>;
   } else {
     // Monday the pick was stored for; it scored the Monday–Sunday before it.
     const weekStart = new Date(`${pick.weekStart}T00:00:00+07:00`);
@@ -275,12 +257,12 @@ async function PickExample() {
     body =
       pick.candidates.length === 0 ? (
         <>
-          <p className="text-[15px] leading-relaxed">{t("exampleNone", { week, range, min })}</p>
-          <p className="text-[15px] leading-relaxed text-ink-2">{t("exampleSample", { min })}</p>
+          <p className="text-base leading-6">{t("exampleNone", { week, range, min })}</p>
+          <p className="text-base leading-6 text-ink-2">{t("exampleSample", { min })}</p>
         </>
       ) : (
         <>
-          <p className="text-[15px] leading-relaxed">{t("exampleIntro", { week, range })}</p>
+          <p className="text-base leading-6">{t("exampleIntro", { week, range })}</p>
           <ol className="flex flex-col">
             {pick.candidates.map((candidate, index) => (
               <li
@@ -288,24 +270,22 @@ async function PickExample() {
                 className="flex flex-col gap-1 border-t border-border py-3 sm:flex-row sm:items-baseline sm:justify-between sm:gap-4"
               >
                 <span className="flex min-w-0 items-baseline gap-2.5">
-                  <span className="font-mono text-xs text-muted">{index + 1}</span>
+                  <span className="text-sm text-muted tabular-nums">{index + 1}</span>
                   {candidate.slug && candidate.title ? (
                     <Link
                       href={`/p/${candidate.slug}`}
-                      className="min-w-0 font-medium break-words hover:text-accent-text"
+                      className="min-w-0 font-semibold break-words underline-offset-3 hover:underline"
                     >
                       {candidate.title}
                     </Link>
                   ) : (
-                    <span className="text-ink-2 italic">{t("exampleHidden")}</span>
+                    <span className="text-muted">{t("exampleHidden")}</span>
                   )}
                   {candidate.winner ? (
-                    <span className="shrink-0 rounded-full bg-accent-soft px-2.5 py-0.5 text-xs font-medium text-accent-text">
-                      {t("exampleWinner")}
-                    </span>
+                    <Badge variant="highlight">{t("exampleWinner")}</Badge>
                   ) : null}
                 </span>
-                <span className="font-mono text-[13px] whitespace-nowrap text-ink-2 max-sm:pl-5">
+                <span className="text-sm whitespace-nowrap text-ink-2 tabular-nums max-sm:pl-5">
                   {t("exampleRow", {
                     votes: format.number(candidate.eligibleVotes),
                     repliers: format.number(candidate.eligibleRepliers),
@@ -320,7 +300,7 @@ async function PickExample() {
   }
 
   return (
-    <div className="mt-4 flex flex-col gap-3 rounded-[22px] border border-dashed border-(--dashed) bg-surface p-6">
+    <div className="mt-4 flex flex-col gap-3 rounded border border-dashed border-(--dashed) bg-surface p-5">
       <Label>{t(pick ? "exampleLabel" : "exampleSampleLabel")}</Label>
       {body}
     </div>

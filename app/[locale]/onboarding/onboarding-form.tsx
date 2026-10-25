@@ -82,13 +82,13 @@ export function OnboardingForm({
   return (
     <form
       action={formAction}
-      className="flex flex-col gap-5 rounded-[22px] border border-border bg-surface p-5 sm:p-6"
+      className="flex flex-col gap-5 rounded border border-border bg-surface p-5 sm:p-6"
     >
       <input type="hidden" name="next" value={next} />
 
       <Field id="username" label={t("username")} hint={usernameHint} error={usernameError}>
         <div className="relative">
-          <span className="pointer-events-none absolute top-1/2 left-4 -translate-y-1/2 text-[15px] text-muted">
+          <span className="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-base text-muted">
             @
           </span>
           <Input
@@ -103,7 +103,7 @@ export function OnboardingForm({
             required
             aria-invalid={usernameError ? true : undefined}
             aria-describedby={usernameError ? "username-error" : "username-hint"}
-            className="pl-8"
+            className="pl-7"
           />
         </div>
       </Field>
@@ -120,7 +120,7 @@ export function OnboardingForm({
       </Field>
 
       {state.error === "unknown" ? (
-        <p role="alert" className="text-sm text-red-700 dark:text-red-400">
+        <p role="alert" className="text-sm text-danger">
           {t("error")}
         </p>
       ) : null}
