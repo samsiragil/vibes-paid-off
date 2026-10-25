@@ -1,14 +1,27 @@
 import { hasLocale } from "next-intl";
 import { getTranslations } from "next-intl/server";
 import { routing } from "@/i18n/routing";
-import { clip, GenericCard, initials, og, OG_SIZE, renderOgImage, Wordmark } from "@/lib/og";
+import {
+  clip,
+  GenericCard,
+  HandNote,
+  og,
+  OG_SIZE,
+  OgAvatar,
+  renderOgImage,
+  RuledNote,
+  Wordmark,
+} from "@/lib/og";
 import { getPublishedProject } from "@/lib/projects/detail";
 
 export const size = OG_SIZE;
 export const contentType = "image/png";
 export const alt = "Jadinya";
 
-/** Share card for a project: key prompt → "satu weekend kemudian" → title, like the site's cards. */
+/**
+ * Share card for a project, as a notebook page: the key prompt on ruled lines → "satu weekend
+ * kemudian" in handwriting → the title pasted in, then the maker and Worth it.
+ */
 export default async function Image({
   params,
 }: {
@@ -31,15 +44,7 @@ export default async function Image({
     <div style={{ display: "flex", flexDirection: "column", flexGrow: 1 }}>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
         <Wordmark />
-        <div
-          style={{
-            display: "flex",
-            fontFamily: "Geist Mono",
-            fontSize: 20,
-            color: og.muted,
-            textTransform: "uppercase",
-          }}
-        >
+        <div style={{ display: "flex", fontSize: 24, fontWeight: 600, color: og.muted }}>
           {tCategories(project.category)}
         </div>
       </div>
@@ -50,77 +55,38 @@ export default async function Image({
           flexDirection: "column",
           flexGrow: 1,
           justifyContent: "center",
-          gap: 18,
+          gap: 14,
         }}
       >
-        <div style={{ display: "flex", justifyContent: "flex-end" }}>
-          <div
-            style={{
-              display: "flex",
-              maxWidth: 900,
-              padding: "24px 30px",
-              background: og.ink,
-              color: og.onInk,
-              borderRadius: "30px 30px 8px 30px",
-              fontFamily: "Fraunces",
-              fontSize: 36,
-              lineHeight: 1.25,
-            }}
-          >
-            {clip(project.keyPrompt, 120)}
-          </div>
-        </div>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            fontFamily: "Geist Mono",
-            fontSize: 18,
-            color: og.muted,
-          }}
-        >
-          {timeLabel}
-        </div>
-        <div style={{ display: "flex" }}>
+        <RuledNote fontSize={38}>{clip(project.keyPrompt, 110)}</RuledNote>
+        <HandNote>{timeLabel}</HandNote>
+        <div style={{ display: "flex", paddingLeft: 40 }}>
           <div
             style={{
               display: "flex",
               flexDirection: "column",
-              maxWidth: 900,
-              gap: 6,
-              padding: "22px 30px",
+              maxWidth: 960,
+              gap: 4,
+              padding: "18px 26px",
               background: og.surface,
               border: `1px solid ${og.border}`,
-              borderRadius: "30px 30px 30px 8px",
+              borderRadius: 6,
+              boxShadow: `0 2px 0 ${og.border}`,
+              transform: "rotate(-0.6deg)",
             }}
           >
-            <div style={{ display: "flex", fontSize: 44, fontWeight: 600, lineHeight: 1.1 }}>
+            <div style={{ display: "flex", fontSize: 46, fontWeight: 700, lineHeight: 1.15 }}>
               {clip(project.title, 48)}
             </div>
-            <div style={{ display: "flex", fontSize: 24, color: og.ink2 }}>
+            <div style={{ display: "flex", fontSize: 26, color: og.ink2 }}>
               {clip(project.tagline, 80)}
             </div>
           </div>
         </div>
       </div>
 
-      <div style={{ display: "flex", alignItems: "center", gap: 14, fontSize: 22, color: og.ink2 }}>
-        <div
-          style={{
-            display: "flex",
-            width: 44,
-            height: 44,
-            borderRadius: 22,
-            alignItems: "center",
-            justifyContent: "center",
-            background: og.accent,
-            color: og.onInk,
-            fontSize: 16,
-            fontWeight: 600,
-          }}
-        >
-          {initials(project.maker.displayName)}
-        </div>
+      <div style={{ display: "flex", alignItems: "center", gap: 14, fontSize: 24, color: og.ink2 }}>
+        <OgAvatar name={project.maker.displayName} size={44} />
         <div style={{ display: "flex" }}>
           {project.maker.displayName} · @{project.maker.username}
         </div>

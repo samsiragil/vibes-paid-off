@@ -1,7 +1,16 @@
 import { hasLocale } from "next-intl";
 import { getTranslations } from "next-intl/server";
 import { routing } from "@/i18n/routing";
-import { clip, GenericCard, initials, og, OG_SIZE, renderOgImage, Wordmark } from "@/lib/og";
+import {
+  clip,
+  GenericCard,
+  og,
+  OG_SIZE,
+  OgAvatar,
+  renderOgImage,
+  RuledNote,
+  Wordmark,
+} from "@/lib/og";
 import { getPublicProfile } from "@/lib/profiles/public";
 
 export const size = OG_SIZE;
@@ -24,7 +33,6 @@ export default async function Image({
   }
 
   const t = await getTranslations({ locale, namespace: "profile" });
-  const [firstName, ...restNames] = profile.displayName.split(" ");
   const stats = [
     `@${profile.username}`,
     t("og.projects", { count: profile.stats.projectCount }),
@@ -40,67 +48,19 @@ export default async function Image({
           flexDirection: "column",
           flexGrow: 1,
           justifyContent: "center",
-          gap: 30,
+          gap: 34,
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: 28 }}>
-          <div
-            style={{
-              display: "flex",
-              width: 120,
-              height: 120,
-              borderRadius: 60,
-              alignItems: "center",
-              justifyContent: "center",
-              background: og.accent,
-              color: og.onInk,
-              fontFamily: "Fraunces",
-              fontSize: 46,
-            }}
-          >
-            {initials(profile.displayName)}
-          </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-            <div
-              style={{
-                display: "flex",
-                fontFamily: "Fraunces",
-                fontSize: 80,
-                lineHeight: 1,
-                letterSpacing: -2,
-              }}
-            >
-              {clip(firstName, 20)}
-              {restNames.length > 0 ? (
-                <span style={{ fontStyle: "italic" }}>&nbsp;{clip(restNames.join(" "), 24)}</span>
-              ) : null}
+          <OgAvatar name={profile.displayName} size={120} />
+          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+            <div style={{ display: "flex", fontSize: 72, fontWeight: 700, lineHeight: 1.05 }}>
+              {clip(profile.displayName, 32)}
             </div>
-            <div
-              style={{ display: "flex", fontFamily: "Geist Mono", fontSize: 22, color: og.muted }}
-            >
-              {stats}
-            </div>
+            <div style={{ display: "flex", fontSize: 26, color: og.muted }}>{stats}</div>
           </div>
         </div>
-        {profile.bio ? (
-          <div style={{ display: "flex" }}>
-            <div
-              style={{
-                display: "flex",
-                maxWidth: 980,
-                padding: "22px 28px",
-                background: og.surface,
-                border: `1px solid ${og.border}`,
-                borderRadius: "28px 28px 28px 8px",
-                fontSize: 28,
-                lineHeight: 1.45,
-                color: og.ink,
-              }}
-            >
-              {clip(profile.bio, 150)}
-            </div>
-          </div>
-        ) : null}
+        {profile.bio ? <RuledNote fontSize={30}>{clip(profile.bio, 150)}</RuledNote> : null}
       </div>
     </div>,
   );
