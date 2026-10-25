@@ -3,45 +3,60 @@
 @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
 /*
- * Design tokens, taken from the VPO artboards (light) and derived for dark.
+ * Design tokens for the "Buku Tulis" design system (docs/design-system/README.md §3).
  * Components use the Tailwind names mapped in @theme below (bg-bg, text-ink, ...),
  * never raw hex values.
  */
 :root {
-  --bg: #f7f6f2;
+  --bg: #fbfcfe;
   --surface: #ffffff;
-  --ink: #191919;
-  --ink-2: #4a4a46;
-  --muted: #6b6b66;
-  --border: #e4e2db;
-  --border-strong: #d6d4cc;
-  --accent: #1e5446;
-  --on-accent: #f7f6f2;
-  --accent-text: #1e5446;
-  --accent-soft: #e3eee9;
-  --accent-ink: #123a30;
-  --bubble: #f1f0ea;
-  --placeholder: #efeee8;
-  --dashed: #b9b8b1;
+  --ink: #292523;
+  --ink-2: #4a4744;
+  --muted: #67635e;
+  --border: #e3e4e8;
+  --border-strong: #8e9196;
+  --accent: #a44732;
+  --on-accent: #ffffff;
+  --accent-text: #a44732;
+  --accent-soft: #f6e9e5;
+  --accent-ink: #6e2c1e;
+  /* Notebook material: ruled lines, margin line, highlighter. Decorative only, never carries information. */
+  --rule: #dce4f0;
+  --margin: #e2a397;
+  --highlight: #e5b786;
+  --highlight-ink: #292523;
+  --placeholder: #eef0f4;
+  --dashed: #a9aeb8;
+  --success: #2f6b47;
+  --warning: #805c12;
+  --danger: #b42318;
+  /* Legacy chat-bubble fill. Points at placeholder until bubble.tsx and the skeletons move off it. */
+  --bubble: var(--placeholder);
   color-scheme: light;
 }
 
 [data-theme="dark"] {
-  --bg: #121211;
-  --surface: #1b1b19;
-  --ink: #edebe5;
-  --ink-2: #c4c1b9;
-  --muted: #949189;
-  --border: #2c2b28;
-  --border-strong: #3d3c37;
-  --accent: #2e7a63;
-  --on-accent: #f7f6f2;
-  --accent-text: #8fd1b5;
-  --accent-soft: #1c2e28;
-  --accent-ink: #a6dcc4;
-  --bubble: #252522;
-  --placeholder: #23231f;
-  --dashed: #57554f;
+  --bg: #1a1b1e;
+  --surface: #222428;
+  --ink: #eeeae6;
+  --ink-2: #cbc6c0;
+  --muted: #a29d97;
+  --border: #33363c;
+  --border-strong: #6e727a;
+  --accent: #e8a58e;
+  --on-accent: #2d1d17;
+  --accent-text: #ebaf9a;
+  --accent-soft: #3a2a25;
+  --accent-ink: #f3c9ba;
+  --rule: #2a2f38;
+  --margin: #7a3b2e;
+  --highlight: #6b5034;
+  --highlight-ink: #eeeae6;
+  --placeholder: #2a2c31;
+  --dashed: #5c6068;
+  --success: #a1ceac;
+  --warning: #e6c37b;
+  --danger: #ffb4a9;
   color-scheme: dark;
 }
 
@@ -58,9 +73,16 @@
   --color-accent-text: var(--accent-text);
   --color-accent-soft: var(--accent-soft);
   --color-accent-ink: var(--accent-ink);
-  --color-bubble: var(--bubble);
+  --color-rule: var(--rule);
+  --color-margin: var(--margin);
+  --color-highlight: var(--highlight);
+  --color-highlight-ink: var(--highlight-ink);
   --color-placeholder: var(--placeholder);
   --color-dashed: var(--dashed);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-danger: var(--danger);
+  --color-bubble: var(--bubble);
 
   --font-display: var(--font-fraunces), Georgia, serif;
   --font-sans: var(--font-geist-sans), system-ui, sans-serif;
@@ -79,7 +101,7 @@
   }
 
   :focus-visible {
-    outline: 2px solid var(--accent-text);
+    outline: 2px solid var(--accent);
     outline-offset: 2px;
   }
 }

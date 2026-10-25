@@ -28,9 +28,15 @@ const colorTokens = [
   "accent-text",
   "accent-soft",
   "accent-ink",
-  "bubble",
+  "rule",
+  "margin",
+  "highlight",
+  "highlight-ink",
   "placeholder",
   "dashed",
+  "success",
+  "warning",
+  "danger",
 ];
 
 // A slice of the seed catalog, so the form renders without a database.
