@@ -317,7 +317,7 @@ export function MobileFilters({ children }: { children: ReactNode }) {
           // A click on the backdrop (the dialog box itself, outside the sheet) closes it.
           if (event.target === event.currentTarget) event.currentTarget.close();
         }}
-        className="m-0 mt-auto max-h-[85dvh] w-full max-w-none rounded-t-md border-t border-border bg-bg p-0 text-ink backdrop:bg-ink/40"
+        className="m-0 mt-auto max-h-[85dvh] w-full max-w-none motion-dialog rounded-t-md border-t border-border bg-bg p-0 text-ink backdrop:bg-ink/40"
       >
         <div className="flex flex-col">
           <div className="sticky top-0 z-10 flex items-center justify-between border-b border-border bg-bg px-4 py-3">

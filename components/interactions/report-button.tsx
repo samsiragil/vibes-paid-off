@@ -78,7 +78,7 @@ export function ReportButton({
           // A click on the backdrop (the dialog box itself, outside the panel) closes it.
           if (event.target === event.currentTarget) close();
         }}
-        className="m-0 mt-auto max-h-[90dvh] w-full max-w-none rounded-t-md border border-border bg-bg p-0 text-ink backdrop:bg-ink/40 sm:m-auto sm:max-w-[460px] sm:rounded"
+        className="m-0 mt-auto max-h-[90dvh] w-full max-w-none motion-dialog rounded-t-md border border-border bg-bg p-0 text-ink backdrop:bg-ink/40 sm:m-auto sm:max-w-[460px] sm:rounded"
       >
         <div className="flex flex-col gap-5 p-5 sm:p-6">
           <h2 id={titleId} className="text-[22px] leading-7 font-semibold">

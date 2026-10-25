@@ -125,6 +125,71 @@
   line-height: 32px;
 }
 
+/*
+ * Overlays (README §11). The starting styles only apply when an element appears, so these play on
+ * the way in; `motion-dialog` also plays backwards when a <dialog> closes.
+ */
+
+/* <dialog> and bottom sheets: fade and rise 12 px, backdrop fades. */
+@utility motion-dialog {
+  transition-property: opacity, translate, display, overlay;
+  transition-duration: var(--duration-base);
+  transition-timing-function: var(--ease-standard);
+  transition-behavior: allow-discrete;
+
+  &:not([open]) {
+    opacity: 0;
+    translate: 0 12px;
+  }
+
+  @starting-style {
+    &[open] {
+      opacity: 0;
+      translate: 0 12px;
+    }
+  }
+
+  &::backdrop {
+    transition-property: opacity, display, overlay;
+    transition-duration: var(--duration-base);
+    transition-timing-function: var(--ease-standard);
+    transition-behavior: allow-discrete;
+  }
+
+  &:not([open])::backdrop {
+    opacity: 0;
+  }
+
+  @starting-style {
+    &[open]::backdrop {
+      opacity: 0;
+    }
+  }
+}
+
+/* Menus and popovers that drop from their trigger: fade and settle 4 px. */
+@utility motion-pop {
+  transition-property: opacity, translate;
+  transition-duration: var(--duration-base);
+  transition-timing-function: var(--ease-standard);
+
+  @starting-style {
+    opacity: 0;
+    translate: 0 -4px;
+  }
+}
+
+/* Listboxes, tab panels, opened sections: fade only, quick. */
+@utility motion-fade-in {
+  transition-property: opacity;
+  transition-duration: var(--duration-fast);
+  transition-timing-function: var(--ease-standard);
+
+  @starting-style {
+    opacity: 0;
+  }
+}
+
 /* The one signature motion (README §11): a stroke that draws itself once, 400 ms. */
 @utility draw-once {
   stroke-dasharray: 1;

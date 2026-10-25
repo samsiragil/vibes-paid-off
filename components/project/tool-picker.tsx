@@ -216,7 +216,7 @@ export function ToolPicker({
             role="listbox"
             aria-label={t("results")}
             aria-multiselectable="true"
-            className="absolute inset-x-0 top-full z-20 mt-1.5 max-h-80 overflow-y-auto rounded border border-border-strong bg-surface p-1 shadow-[0_2px_0_var(--border)]"
+            className="absolute inset-x-0 top-full z-20 mt-1.5 max-h-80 overflow-y-auto rounded border border-border-strong bg-surface p-1 motion-fade-in shadow-[0_2px_0_var(--border)]"
           >
             {groups.map((group) => (
               <div

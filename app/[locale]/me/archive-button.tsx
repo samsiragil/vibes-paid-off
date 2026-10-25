@@ -75,7 +75,7 @@ export function ArchiveButton({
           onKeyDown={(event) => {
             if (event.key === "Escape") close();
           }}
-          className="fixed inset-x-4 bottom-4 z-20 flex flex-col gap-3 rounded border border-border-strong bg-surface p-4 text-left text-base leading-6 shadow-[0_2px_0_var(--border)] lg:absolute lg:inset-x-auto lg:top-full lg:right-0 lg:bottom-auto lg:mt-2 lg:w-72"
+          className="fixed inset-x-4 bottom-4 z-20 flex motion-pop flex-col gap-3 rounded border border-border-strong bg-surface p-4 text-left text-base leading-6 shadow-[0_2px_0_var(--border)] lg:absolute lg:inset-x-auto lg:top-full lg:right-0 lg:bottom-auto lg:mt-2 lg:w-72"
         >
           <p>{t("confirm")}</p>
           <div className="flex justify-end gap-2">

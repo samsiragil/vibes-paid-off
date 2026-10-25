@@ -462,7 +462,7 @@ function ReplyForm({
             id={listboxId}
             role="listbox"
             aria-label={t("suggestions")}
-            className="absolute bottom-full left-0 z-10 mb-2 flex w-full max-w-sm flex-col overflow-hidden rounded border border-border-strong bg-surface p-1 shadow-[0_2px_0_var(--border)]"
+            className="absolute bottom-full left-0 z-10 mb-2 flex w-full max-w-sm flex-col overflow-hidden rounded border border-border-strong bg-surface p-1 motion-fade-in shadow-[0_2px_0_var(--border)]"
           >
             {suggestions.map((person, index) => (
               <li

@@ -398,7 +398,7 @@ function ToolDialog({ editing, onClose }: { editing: Editing | null; onClose: ()
       onClick={(event) => {
         if (event.target === event.currentTarget) dialogRef.current?.close();
       }}
-      className="m-0 mt-auto max-h-[92dvh] w-full max-w-none rounded-t-md border border-border bg-bg p-0 text-ink backdrop:bg-ink/40 sm:m-auto sm:max-w-[560px] sm:rounded"
+      className="m-0 mt-auto max-h-[92dvh] w-full max-w-none motion-dialog rounded-t-md border border-border bg-bg p-0 text-ink backdrop:bg-ink/40 sm:m-auto sm:max-w-[560px] sm:rounded"
     >
       {editing ? (
         <ToolForm

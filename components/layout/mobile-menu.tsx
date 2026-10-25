@@ -53,7 +53,7 @@ export function MobileMenu({ children }: { children: ReactNode }) {
       <div
         id={panelId}
         hidden={!isOpen}
-        className="absolute inset-x-0 top-full z-40 border-b border-border bg-bg px-4 pt-2 pb-6 shadow-sm"
+        className="absolute inset-x-0 top-full z-40 motion-pop border-b border-border bg-bg px-4 pt-2 pb-6 shadow-sm"
       >
         {children}
       </div>
