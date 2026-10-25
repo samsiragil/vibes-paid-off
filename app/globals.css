@@ -142,6 +142,12 @@
   }
 }
 
+@keyframes vt-fade {
+  from {
+    opacity: 0;
+  }
+}
+
 @layer base {
   html {
     -webkit-text-size-adjust: 100%;
@@ -161,6 +167,23 @@
   /* Clicks pass through to the live page while a view transition plays. */
   ::view-transition {
     pointer-events: none;
+  }
+
+  /* Theme and language change: the browser's own whole-page crossfade, at the motion token. */
+  ::view-transition-group(root),
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: var(--duration-base);
+    animation-timing-function: var(--ease-standard);
+  }
+
+  /* `<ViewTransition … ="fade">`: the old view leaves quickly, the new one settles in. */
+  ::view-transition-old(.fade) {
+    animation: vt-fade var(--duration-fast) var(--ease-standard) both reverse;
+  }
+
+  ::view-transition-new(.fade) {
+    animation: vt-fade var(--duration-base) var(--ease-standard) both;
   }
 
   /* Reduced motion (README §11): every transition and view transition is instant. */

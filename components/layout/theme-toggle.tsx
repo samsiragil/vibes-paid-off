@@ -3,7 +3,9 @@
 import { useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
 import { useSyncExternalStore } from "react";
+import { flushSync } from "react-dom";
 import { cn } from "@/lib/cn";
+import { prefersReducedMotion } from "@/lib/motion";
 
 const order = ["system", "light", "dark"] as const;
 type Mode = (typeof order)[number];
@@ -22,10 +24,20 @@ export function ThemeToggle({ className }: { className?: string }) {
   const mode: Mode = mounted && order.includes(theme as Mode) ? (theme as Mode) : "system";
   const next = order[(order.indexOf(mode) + 1) % order.length];
 
+  // The whole page crossfades between the old and new colors (README §11). next-themes applies
+  // the theme in an effect, which flushSync runs before the browser takes the new snapshot.
+  function change() {
+    if (!document.startViewTransition || prefersReducedMotion()) {
+      setTheme(next);
+      return;
+    }
+    document.startViewTransition(() => flushSync(() => setTheme(next)));
+  }
+
   return (
     <button
       type="button"
-      onClick={() => setTheme(next)}
+      onClick={change}
       aria-label={t("current", { theme: t(mode) })}
       title={t("current", { theme: t(mode) })}
       className={cn(
