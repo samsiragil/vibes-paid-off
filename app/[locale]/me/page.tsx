@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { Suspense } from "react";
 import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { Button, buttonStyles } from "@/components/ui/button";
+import { PageTransition, Reveal } from "@/components/ui/transitions";
 import { signOut } from "@/lib/auth/actions";
 import { getCurrentUser, isCurrentUserAdmin } from "@/lib/auth/current-user";
 import { getMyProfileForm, getMyProjects } from "@/lib/profiles/me";
@@ -21,14 +21,14 @@ export async function generateMetadata(): Promise<Metadata> {
 // Per-user dashboard (VPO-Me): everything below the heading depends on the session.
 export default function MePage({ searchParams }: PageProps<"/[locale]/me">) {
   return (
-    <>
+    <PageTransition>
       <main className="mx-auto w-full max-w-[1120px] px-4 pt-10 sm:px-6 sm:pt-12">
-        <Suspense fallback={<MeSkeleton />}>
+        <Reveal fallback={<MeSkeleton />}>
           <MeContent searchParams={searchParams} />
-        </Suspense>
+        </Reveal>
       </main>
       <SiteFooter />
-    </>
+    </PageTransition>
   );
 }
 

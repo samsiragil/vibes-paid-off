@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Suspense, type ReactNode } from "react";
+import type { ReactNode } from "react";
 import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { HomeHeroCard } from "@/components/discovery/home-hero";
@@ -12,6 +12,7 @@ import { SystemAvatar } from "@/components/ui/avatar";
 import { SystemMessage } from "@/components/ui/bubble";
 import { buttonStyles } from "@/components/ui/button";
 import { pillStyles } from "@/components/ui/pill";
+import { PageTransition, Reveal } from "@/components/ui/transitions";
 import { cn } from "@/lib/cn";
 import { getHomeData } from "@/lib/projects/discovery";
 import { localeAlternates, localeUrl } from "@/lib/seo";
@@ -28,7 +29,7 @@ export default async function HomePage() {
   const locale = await getLocale();
 
   return (
-    <>
+    <PageTransition>
       <JsonLd
         data={{
           "@context": "https://schema.org",
@@ -66,15 +67,15 @@ export default async function HomePage() {
             </div>
           </div>
           <div className="min-w-0 lg:flex-[1_1_560px]">
-            <Suspense fallback={<HeroSkeleton />}>
+            <Reveal fallback={<HeroSkeleton />}>
               <Hero />
-            </Suspense>
+            </Reveal>
           </div>
         </section>
 
-        <Suspense fallback={<ListsSkeleton />}>
+        <Reveal fallback={<ListsSkeleton />}>
           <HomeLists />
-        </Suspense>
+        </Reveal>
 
         <section className="mt-20 flex flex-col gap-5 rounded border border-border bg-surface px-5 py-8 sm:px-10 sm:py-10">
           <div className="flex items-center gap-3">
@@ -95,7 +96,7 @@ export default async function HomePage() {
         </section>
       </main>
       <SiteFooter variant="full" />
-    </>
+    </PageTransition>
   );
 }
 

@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
-import { Suspense, type ReactNode } from "react";
+import type { ReactNode } from "react";
 import { getFormatter, getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { Badge, Label } from "@/components/ui/badge";
 import { PromptBubble, SystemMessage } from "@/components/ui/bubble";
 import { buttonStyles } from "@/components/ui/button";
+import { PageTransition, Reveal } from "@/components/ui/transitions";
 import { cn } from "@/lib/cn";
 import { donateLink, type DonateChannel } from "@/lib/donate";
 import { getLatestWeeklyPick } from "@/lib/projects/weekly-pick";
@@ -32,7 +33,7 @@ export default async function SupportPage() {
   const t = await getTranslations("support");
 
   return (
-    <>
+    <PageTransition>
       <main className="mx-auto w-full max-w-[1120px] px-4 pt-10 sm:px-6 sm:pt-12">
         <div className="flex flex-col gap-12 lg:flex-row lg:items-start lg:gap-14">
           <section className="flex min-w-0 grow flex-col gap-4">
@@ -84,7 +85,7 @@ export default async function SupportPage() {
         <HowWePick />
       </main>
       <SiteFooter />
-    </>
+    </PageTransition>
   );
 }
 
@@ -220,13 +221,13 @@ async function HowWePick() {
         ))}
       </ul>
 
-      <Suspense
+      <Reveal
         fallback={
           <div aria-hidden="true" className="mt-4 h-40 rounded border border-border bg-surface" />
         }
       >
         <PickExample />
-      </Suspense>
+      </Reveal>
     </section>
   );
 }

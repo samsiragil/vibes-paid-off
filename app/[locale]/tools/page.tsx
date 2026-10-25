@@ -3,6 +3,7 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { pillStyles } from "@/components/ui/pill";
+import { PageTransition } from "@/components/ui/transitions";
 import { cn } from "@/lib/cn";
 import { getToolCatalog } from "@/lib/projects/catalog";
 import { TOOL_KINDS } from "@/lib/projects/types";
@@ -27,7 +28,7 @@ export default async function ToolsIndexPage() {
   ]);
 
   return (
-    <>
+    <PageTransition>
       <main className="mx-auto w-full max-w-[1120px] px-4 pt-10 sm:px-6 sm:pt-12">
         <h1 className="text-[30px] leading-9 font-bold break-words sm:text-[40px] sm:leading-11">
           {t("titleLead")} {t("titleTail")}
@@ -78,6 +79,6 @@ export default async function ToolsIndexPage() {
         </div>
       </main>
       <SiteFooter />
-    </>
+    </PageTransition>
   );
 }

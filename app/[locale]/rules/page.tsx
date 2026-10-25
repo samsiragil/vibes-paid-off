@@ -3,6 +3,7 @@ import { getFormatter, getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SystemMessage } from "@/components/ui/bubble";
+import { PageTransition } from "@/components/ui/transitions";
 import { cn } from "@/lib/cn";
 import { localeAlternates } from "@/lib/seo";
 import { PICKING_ANCHOR } from "@/lib/site";
@@ -32,7 +33,7 @@ export default async function RulesPage() {
   const [t, format] = await Promise.all([getTranslations("communityRules"), getFormatter()]);
 
   return (
-    <>
+    <PageTransition>
       <main className="mx-auto w-full max-w-[1120px] px-4 pt-10 sm:px-6 sm:pt-12">
         <div className="flex max-w-[820px] flex-col gap-5">
           <h1 className="text-[30px] leading-9 font-bold break-words sm:text-[40px] sm:leading-11">
@@ -90,6 +91,6 @@ export default async function RulesPage() {
         <p className="mt-8 max-w-[68ch] text-base leading-6 text-ink-2">{t("closing")}</p>
       </main>
       <SiteFooter />
-    </>
+    </PageTransition>
   );
 }

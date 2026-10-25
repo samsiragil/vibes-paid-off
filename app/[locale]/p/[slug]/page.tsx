@@ -13,6 +13,7 @@ import { ProjectDetailView } from "@/components/project/project-detail";
 import { JsonLd } from "@/components/seo/json-ld";
 import { SystemMessage } from "@/components/ui/bubble";
 import { buttonStyles } from "@/components/ui/button";
+import { PageTransition, Reveal } from "@/components/ui/transitions";
 import { getCurrentUser, isCurrentUserAdmin } from "@/lib/auth/current-user";
 import {
   getOwnProject,
@@ -58,12 +59,12 @@ export async function generateMetadata({
 
 export default function ProjectPage({ params }: PageProps<"/[locale]/p/[slug]">) {
   return (
-    <>
-      <Suspense fallback={<ProjectSkeleton />}>
+    <PageTransition>
+      <Reveal fallback={<ProjectSkeleton />}>
         <ProjectContent params={params} />
-      </Suspense>
+      </Reveal>
       <SiteFooter />
-    </>
+    </PageTransition>
   );
 }
 

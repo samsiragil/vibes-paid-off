@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { Suspense, type ReactNode } from "react";
+import type { ReactNode } from "react";
 import { getFormatter, getLocale, getTranslations } from "next-intl/server";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { ProjectGridCard } from "@/components/project/project-grid-card";
@@ -11,6 +11,7 @@ import { PromptBubble, SystemMessage } from "@/components/ui/bubble";
 import { buttonStyles } from "@/components/ui/button";
 import { CopyLinkField } from "@/components/ui/copy-link";
 import { ExternalLink } from "@/components/ui/external-link";
+import { PageTransition, Reveal } from "@/components/ui/transitions";
 import { getPublicProfile, PROFILE_LINK_KEYS, type PublicProfile } from "@/lib/profiles/public";
 import { localeAlternates, localeUrl, ogLocale } from "@/lib/seo";
 import { displayUrl, siteUrl } from "@/lib/site";
@@ -49,12 +50,12 @@ export async function generateMetadata({
 
 export default function ProfilePage({ params }: PageProps<"/[locale]/u/[username]">) {
   return (
-    <>
-      <Suspense fallback={<ProfileSkeleton />}>
+    <PageTransition>
+      <Reveal fallback={<ProfileSkeleton />}>
         <ProfileContent params={params} />
-      </Suspense>
+      </Reveal>
       <SiteFooter />
-    </>
+    </PageTransition>
   );
 }
 

@@ -5,6 +5,7 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { Label } from "@/components/ui/badge";
 import { SystemMessage } from "@/components/ui/bubble";
 import { SiteFooter } from "@/components/layout/site-footer";
+import { PageTransition } from "@/components/ui/transitions";
 import { signInWithProvider } from "@/lib/auth/actions";
 import { getCurrentUser } from "@/lib/auth/current-user";
 import { safeNextPath } from "@/lib/auth/next-path";
@@ -21,7 +22,7 @@ export default async function LoginPage({ searchParams }: PageProps<"/[locale]/l
   const t = await getTranslations("auth");
 
   return (
-    <>
+    <PageTransition>
       <main className="mx-auto flex w-full max-w-[520px] flex-col gap-5 px-4 pt-12 pb-20 sm:px-6 sm:pt-20">
         <Label>{t("eyebrow")}</Label>
         <h1 className="text-[30px] leading-9 font-bold break-words sm:text-[40px] sm:leading-11">
@@ -35,7 +36,7 @@ export default async function LoginPage({ searchParams }: PageProps<"/[locale]/l
         <p className="text-sm leading-5 text-muted">{t("note")}</p>
       </main>
       <SiteFooter />
-    </>
+    </PageTransition>
   );
 }
 

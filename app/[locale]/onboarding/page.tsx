@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { Suspense } from "react";
 import { getLocale, getTranslations } from "next-intl/server";
 import { Label } from "@/components/ui/badge";
 import { SystemMessage } from "@/components/ui/bubble";
 import { SiteFooter } from "@/components/layout/site-footer";
+import { PageTransition, Reveal } from "@/components/ui/transitions";
 import { getCurrentUser } from "@/lib/auth/current-user";
 import { safeNextPath } from "@/lib/auth/next-path";
 import { OnboardingForm } from "./onboarding-form";
@@ -19,23 +19,23 @@ export default async function OnboardingPage({ searchParams }: PageProps<"/[loca
   const t = await getTranslations("onboarding");
 
   return (
-    <>
+    <PageTransition>
       <main className="mx-auto flex w-full max-w-[560px] flex-col gap-5 px-4 pt-12 pb-20 sm:px-6 sm:pt-20">
         <Label>{t("eyebrow")}</Label>
         <h1 className="text-[30px] leading-9 font-bold break-words sm:text-[40px] sm:leading-11">
           {t("titleLead")} {t("titleTail")}
         </h1>
         <SystemMessage>{t("intro")}</SystemMessage>
-        <Suspense
+        <Reveal
           fallback={
             <div className="h-72 rounded border border-border bg-surface" aria-hidden="true" />
           }
         >
           <OnboardingContent searchParams={searchParams} />
-        </Suspense>
+        </Reveal>
       </main>
       <SiteFooter />
-    </>
+    </PageTransition>
   );
 }
 

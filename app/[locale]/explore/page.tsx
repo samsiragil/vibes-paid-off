@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Suspense } from "react";
 import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import {
@@ -16,6 +15,7 @@ import {
 import { SiteFooter } from "@/components/layout/site-footer";
 import { ProjectGridCard } from "@/components/project/project-grid-card";
 import { SystemMessage } from "@/components/ui/bubble";
+import { PageTransition, Reveal } from "@/components/ui/transitions";
 import { getCategories, getToolCatalog } from "@/lib/projects/catalog";
 import { searchProjects } from "@/lib/projects/discovery";
 import {
@@ -42,17 +42,17 @@ export default async function ExplorePage({ searchParams }: PageProps<"/[locale]
   const t = await getTranslations("explore");
 
   return (
-    <>
+    <PageTransition>
       <main className="mx-auto w-full max-w-[1120px] px-4 pt-10 sm:px-6 sm:pt-12">
         <h1 className="text-[30px] leading-9 font-bold break-words sm:text-[40px] sm:leading-11">
           {t("titleLead")} {t("titleTail")}
         </h1>
-        <Suspense fallback={<ExploreSkeleton />}>
+        <Reveal fallback={<ExploreSkeleton />}>
           <ExploreBody searchParams={searchParams} />
-        </Suspense>
+        </Reveal>
       </main>
       <SiteFooter />
-    </>
+    </PageTransition>
   );
 }
 

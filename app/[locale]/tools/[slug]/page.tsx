@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { Suspense } from "react";
 import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { ResultsGrid } from "@/components/discovery/explore-client";
@@ -11,6 +10,7 @@ import { SystemMessage } from "@/components/ui/bubble";
 import { buttonStyles } from "@/components/ui/button";
 import { ExternalLink } from "@/components/ui/external-link";
 import { pillStyles } from "@/components/ui/pill";
+import { PageTransition, Reveal } from "@/components/ui/transitions";
 import { getToolCatalog, quickPickIds } from "@/lib/projects/catalog";
 import { getToolPage, searchProjects, type ToolPageData } from "@/lib/projects/discovery";
 import { emptyFilters, type ExploreFilters } from "@/lib/projects/explore-params";
@@ -42,12 +42,12 @@ export async function generateMetadata({
 
 export default function ToolPage({ params }: PageProps<"/[locale]/tools/[slug]">) {
   return (
-    <>
-      <Suspense fallback={<ToolSkeleton />}>
+    <PageTransition>
+      <Reveal fallback={<ToolSkeleton />}>
         <ToolContent params={params} />
-      </Suspense>
+      </Reveal>
       <SiteFooter />
-    </>
+    </PageTransition>
   );
 }
 

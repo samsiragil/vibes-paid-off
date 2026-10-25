@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
-import { Suspense } from "react";
 import { getLocale, getTranslations } from "next-intl/server";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { FormSkeleton } from "@/components/project/form-skeleton";
 import { ProjectForm } from "@/components/project/project-form";
 import { SystemMessage } from "@/components/ui/bubble";
+import { PageTransition, Reveal } from "@/components/ui/transitions";
 import { getCurrentUser } from "@/lib/auth/current-user";
 import { getCategories, getToolCatalog, quickPickIds } from "@/lib/projects/catalog";
 import { getEditableProject } from "@/lib/projects/editable";
@@ -24,17 +24,17 @@ export default async function EditProjectPage({ params }: PageProps<"/[locale]/p
   const t = await getTranslations("projectForm");
 
   return (
-    <>
+    <PageTransition>
       <main className="mx-auto w-full max-w-[1120px] px-4 pt-10 sm:px-6 sm:pt-12">
         <h1 className="text-[30px] leading-9 font-bold break-words sm:text-[40px] sm:leading-11">
           {t("editTitleLead")} {t("editTitleTail")}
         </h1>
-        <Suspense fallback={<FormSkeleton />}>
+        <Reveal fallback={<FormSkeleton />}>
           <EditContent params={params} />
-        </Suspense>
+        </Reveal>
       </main>
       <SiteFooter />
-    </>
+    </PageTransition>
   );
 }
 

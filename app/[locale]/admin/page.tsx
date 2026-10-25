@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
-import { Suspense } from "react";
 import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { SiteFooter } from "@/components/layout/site-footer";
+import { PageTransition, Reveal } from "@/components/ui/transitions";
 import { cn } from "@/lib/cn";
 import { getAdminCounts, type AdminCounts } from "@/lib/admin/data";
 import { getCurrentUser, isCurrentUserAdmin } from "@/lib/auth/current-user";
@@ -25,14 +25,14 @@ type AdminTab = (typeof tabs)[number];
 // unknown page. The tab lives in ?tab= so each one is a plain link and loads only its own data.
 export default function AdminPage({ searchParams }: PageProps<"/[locale]/admin">) {
   return (
-    <>
+    <PageTransition>
       <main className="mx-auto w-full max-w-[1120px] px-4 pt-8 pb-24 sm:px-6 lg:pt-10">
-        <Suspense fallback={<AdminSkeleton />}>
+        <Reveal fallback={<AdminSkeleton />}>
           <AdminContent searchParams={searchParams} />
-        </Suspense>
+        </Reveal>
       </main>
       <SiteFooter />
-    </>
+    </PageTransition>
   );
 }
 
