@@ -30,8 +30,6 @@
   --success: #2f6b47;
   --warning: #805c12;
   --danger: #b42318;
-  /* Legacy chat-bubble fill. Points at placeholder until bubble.tsx and the skeletons move off it. */
-  --bubble: var(--placeholder);
   /* Jejak Jadi logo: brick red on light, white on dark (logo-exploration/jejak-jadi). */
   --logo: #a44732;
   color-scheme: light;
@@ -85,7 +83,6 @@
   --color-success: var(--success);
   --color-warning: var(--warning);
   --color-danger: var(--danger);
-  --color-bubble: var(--bubble);
   --color-logo: var(--logo);
 
   /* Source Sans 3 everywhere; display and mono stay as aliases until the old utilities are gone. */

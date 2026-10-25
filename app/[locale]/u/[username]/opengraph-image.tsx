@@ -17,7 +17,7 @@ export const size = OG_SIZE;
 export const contentType = "image/png";
 export const alt = "Jadinya";
 
-/** Share card for a maker: name, handle, stats, and the bio as a chat bubble. */
+/** Share card for a maker: name, handle, stats, and the bio as a ruled note. */
 export default async function Image({
   params,
 }: {

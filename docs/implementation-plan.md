@@ -24,7 +24,7 @@ Dokumen ini dipakai sebagai acuan implementasi bertahap. Setiap fase bisa di-mer
 
 ### 1.2 Arah desain final (halaman `VPO-*`)
 
-Desain memakai konsep **"Percakapan"**: setiap proyek tampil sebagai obrolan. Bubble gelap/abu di kanan berisi *prompt kunci* dari maker, diikuti label "X jam kemudian", lalu bubble putih di kiri berisi screenshot + judul (hasil dari AI). Istilah di UI:
+Desain memakai konsep **"Percakapan"**: setiap proyek tampil sebagai obrolan, prompt kunci dari maker, diikuti "X jam kemudian", lalu hasilnya (screenshot + judul). Sejak 2026-10-25 obrolan itu digambar sebagai catatan di buku tulis, bukan bubble chat. Istilah di UI:
 
 | Istilah brief | Istilah di desain |
 |---|---|
@@ -34,32 +34,17 @@ Desain memakai konsep **"Percakapan"**: setiap proyek tampil sebagai obrolan. Bu
 | Submit | Pamerin proyekmu |
 | Donasi | Beliin kopi / Traktir kopi |
 
-**Design tokens** (diambil dari artboard):
+**Design system:** token warna, font, bentuk, material, komponen, dan hierarki per halaman mengikuti design system **Buku Tulis** di [`docs/design-system/README.md`](design-system/README.md) (token di §3, tipografi §4, ruang dan bentuk §5, material §6, komponen §7, hierarki §9). Ringkasnya:
 
-| Token | Nilai | Pemakaian |
-|---|---|---|
-| `bg` | `#F7F6F2` | Latar halaman |
-| `surface` | `#FFFFFF` | Kartu, input |
-| `ink` | `#191919` | Teks utama, tombol primer gelap, bubble prompt |
-| `ink-2` | `#4A4A46` | Teks sekunder |
-| `muted` | `#6B6B66` | Label mono, meta |
-| `border` | `#E4E2DB` | Garis pemisah, border kartu |
-| `border-strong` | `#D6D4CC` | Border tombol sekunder/pill |
-| `accent` | `#1E5446` | Aksen tunggal (CTA, avatar, link) |
-| `accent-ink` | `#123A30` | Teks di atas `accent-soft` |
-| `accent-soft` | `#E3EEE9` | Badge, state voted |
-| `bubble` | `#F1F0EA` | Bubble prompt (varian terang) |
-| `placeholder` | `#EFEEE8` | Placeholder screenshot |
-| `dashed` | `#B9B8B1` | Slot upload kosong |
-
-- Font: **Fraunces** (display, sering italic untuk aksen), **Geist** (body/UI), **Geist Mono** (label kecil berhuruf kapital, meta).
-- Bentuk: pill (radius penuh) untuk tombol/chip, kartu radius 22px, bubble dengan satu sudut 4–6px (ekor bubble).
-- Kontainer: `max-width: 1200px`, gutter 24px. Tinggi target sentuh minimal 44px.
-- Avatar AI/sistem: lingkaran outline berisi huruf "V" italic (Fraunces), dipakai untuk pesan sistem (empty state, sukses submit, banner link offline).
+- Warna: kertas `#FBFCFE`, tinta `#292523`, aksen bata `#A44732` dari logo, plus `rule`, `margin`, dan `highlight` (stabilo) untuk material buku. Nilai lengkap terang dan gelap ada di `app/globals.css`.
+- Font: **Source Sans 3** (400, 600, 700) untuk semua teks UI, **Gochi Hand** hanya untuk catatan pendek tulisan tangan ("… kemudian", tanggal di margin). Label kecil memakai Source Sans 3 Semibold 13 px, huruf biasa.
+- Bentuk: kontrol radius 6 px, kartu dan tempelan 4 px, foto maker bulat. Garis baris 32 px untuk blok catatan.
+- Kontainer: `max-width: 1120px`, gutter 16 px (mobile) dan 24 px (desktop). Tinggi target sentuh minimal 44 px.
+- Avatar sistem: lingkaran outline berisi simbol logo Jejak Jadi, dipakai untuk pesan sistem (empty state, sukses submit, banner link offline).
 
 ### 1.3 Inventaris komponen (dari desain)
 
-`SiteHeader` (logo, nav Jelajah/Tools/Dukung kami, toggle ID/EN, avatar ke `/me`, CTA "Pamerin proyekmu"), `SiteFooter` (versi lengkap di beranda, versi ringkas di halaman lain), `PromptBubble`, `ResultBubble` (screenshot + judul), `SystemMessage` (avatar "V" + bubble), `ProjectCard` (kartu obrolan grid), `ProjectRow` (baris "Baru masuk"), `WorthItButton` (toggle, state voted), `Pill`/`Chip` (tools, filter, segmented sort), `Badge` (Live/Offline/Diarsipkan, ID/EN, Maker terpercaya, Pilihan minggu ini), `Avatar` (inisial atau foto), `StatBlock` (profil), `MediaGallery` (3 thumbnail + video), `CommentList` + `CommentForm`, `ReportButton`, `FilterSidebar`, `SearchBar`, `CopyLinkField`, `ProcessTimeline` ("Cara membuatnya"), `ProjectMetaSidebar` (tools, lama bikin, kategori, repo, status link, traktir), `ConversationalForm` (submit), `LiveCardPreview`, `CostTable` (support), `AdminTabs`, `ReviewQueueItem`, `ReportItem`, `ToolsTable`.
+`SiteHeader` (logo, nav Jelajah/Tools/Dukung kami, toggle ID/EN, avatar ke `/me`, CTA "Pamerin proyekmu"), `SiteFooter` (versi lengkap di beranda, versi ringkas di halaman lain), `PromptBubble`, `ResultBubble` (screenshot + judul), `SystemMessage` (avatar sistem + catatan bergaris), `ProjectCard` (kartu obrolan grid), `ProjectRow` (baris "Baru masuk"), `WorthItButton` (toggle, state voted), `Pill`/`Chip` (tools, filter, segmented sort), `Badge` (Live/Offline/Diarsipkan, ID/EN, Maker terpercaya, Pilihan minggu ini), `Avatar` (inisial atau foto), `StatBlock` (profil), `MediaGallery` (3 thumbnail + video), `CommentList` + `CommentForm`, `ReportButton`, `FilterSidebar`, `SearchBar`, `CopyLinkField`, `ProcessTimeline` ("Cara membuatnya"), `ProjectMetaSidebar` (tools, lama bikin, kategori, repo, status link, traktir), `ConversationalForm` (submit), `LiveCardPreview`, `CostTable` (support), `AdminTabs`, `ReviewQueueItem`, `ReportItem`, `ToolsTable`.
 
 ### 1.4 Gap dan konflik brief vs desain
 

@@ -12,7 +12,7 @@ Logo Jejak Jadi sudah terpasang. Jangan dikerjakan ulang:
 - `app/favicon.ico` (16/32/48), `app/icon.svg`, `app/apple-icon.png`, `app/manifest.ts`, `public/brand/icon-192.png`, `public/brand/icon-512.png`. PNG dan ICO dibuat dari `logo-exploration/jejak-jadi/*.svg` dengan sharp.
 - `lib/og.tsx`: `Wordmark` di OG image kini menggambar lockup dari `LOGO_PATHS` dengan warna bata.
 
-Sisanya (font, warna, komponen, halaman) masih desain lama.
+Redesign kemudian diterapkan dalam delapan fase pada 2026-10-25 (§3): token, font, komponen dasar, komponen obrolan, kartu dan daftar, semua halaman, OG image, dan sisa (manifest, dokumen, token `bubble` dihapus). Sisa yang belum: sorotan stabilo untuk kata yang cocok di hasil pencarian (README §6), dan Lighthouse ulang di deployment Vercel.
 
 ## 1. Batas lingkup
 

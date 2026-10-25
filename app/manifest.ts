@@ -9,7 +9,7 @@ export default function manifest(): MetadataRoute.Manifest {
     description: "Tempat maker vibe coding Indonesia memamerkan karya dan berbagi cara membuatnya.",
     start_url: "/",
     display: "browser",
-    background_color: "#f7f6f2",
+    background_color: "#fbfcfe",
     theme_color: "#a44732",
     icons: [
       { src: "/icon.svg", sizes: "any", type: "image/svg+xml" },

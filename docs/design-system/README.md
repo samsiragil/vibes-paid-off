@@ -1,6 +1,6 @@
 # Design system Jadinya: Buku Tulis
 
-Status: **disetujui sebagai arah** (2026-10-25). Belum diterapkan ke halaman; penerapannya dikerjakan di sesi redesign tersendiri. Catatan perubahan untuk sesi itu ada di [catatan-redesign.md](catatan-redesign.md).
+Status: **diterapkan** (2026-10-25) ke seluruh aplikasi: token, font, komponen, halaman, dan OG image. Catatan kerja redesign ada di [catatan-redesign.md](catatan-redesign.md).
 
 Dokumen ini menggantikan token dan aturan visual di `docs/implementation-plan.md` §1.2 (Fraunces, Geist, aksen hijau, bubble chat). Struktur data, rute, peringkat, dan istilah produk tidak berubah.
 
