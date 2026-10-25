@@ -3,6 +3,7 @@ import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { ImageResponse } from "next/og";
 import type { ReactNode } from "react";
+import { LOGO_PATHS } from "@/components/layout/logo";
 
 // Shared pieces of the Open Graph images (next/og). Fonts are the site's own (Fraunces, Geist,
 // Geist Mono; OFL), vendored as WOFF in assets/og because next/og cannot read WOFF2.
@@ -20,6 +21,7 @@ export const og = {
   accent: "#1E5446",
   accentSoft: "#E3EEE9",
   onInk: "#F7F6F2",
+  logo: "#A44732",
 };
 
 const fontFile = (name: string) => readFile(join(process.cwd(), "assets/og", name));
@@ -40,11 +42,20 @@ export function clip(text: string, max: number) {
   return `${cut.slice(0, Math.max(cut.lastIndexOf(" "), max - 12)).trimEnd()}…`;
 }
 
+/** The Jejak Jadi lockup in brick red; `size` is roughly the old text size, as before. */
 export function Wordmark({ size = 30 }: { size?: number }) {
+  const height = Math.round(size * 1.6);
   return (
-    <div style={{ display: "flex", fontFamily: "Fraunces", fontSize: size, color: og.ink }}>
-      Jadi<span style={{ fontStyle: "italic", color: og.accent }}>nya.</span>
-    </div>
+    <svg
+      width={Math.round((height * 823) / 256)}
+      height={height}
+      viewBox="0 0 823 256"
+      fill={og.logo}
+    >
+      <path d={LOGO_PATHS.symbolHook} />
+      <rect x="48" y="40" width="56" height="40" />
+      <path transform="translate(288.152 165.444)" d={LOGO_PATHS.wordmark} />
+    </svg>
   );
 }
 

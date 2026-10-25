@@ -1,6 +1,6 @@
 # Jadinya — eksplorasi logo
 
-**Keputusan:** logo yang dipakai adalah **Jejak Jadi** (opsi 01 dari putaran v02). Belum diimplementasikan ke aplikasi.
+**Keputusan:** logo yang dipakai adalah **Jejak Jadi** (opsi 01 dari putaran v02). Sudah diimplementasikan ke aplikasi (2026-10-25); aturan pakainya ada di [docs/design-system](../docs/design-system/README.md#8-logo-jejak-jadi).
 
 ## Struktur
 
@@ -27,8 +27,11 @@ Arsip disimpan utuh agar halaman perbandingan dan skrip build tetap bisa dijalan
 
 Palet: primary `#A44732`, neutral `#292523`, accent `#E5B786`. Wordmark: Source Sans 3 Semibold (SIL OFL 1.1). Detail konstruksi dan aturan pakai ada di [concept.md](jejak-jadi/concept.md).
 
+## Implementasi
+
+Header dan footer (`components/layout/logo.tsx`), avatar sistem, favicon (`app/favicon.ico` 16/32/48, `app/icon.svg`), `app/apple-icon.png`, `app/manifest.ts` dengan `public/brand/icon-192.png` dan `icon-512.png`, serta OG image (`lib/og.tsx`).
+
 ## Belum dikerjakan
 
-- Implementasi ke aplikasi (favicon, header, manifest, OG image).
-- Paket platform: ICO, PNG berbagai ukuran, apple-touch-icon.
+- Ikon maskable khusus Android (sekarang ikon manifest bertujuan `any`).
 - Pemeriksaan merek dagang.

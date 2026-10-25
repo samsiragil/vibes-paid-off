@@ -5,7 +5,7 @@ import { Avatar } from "@/components/ui/avatar";
 import { buttonStyles } from "@/components/ui/button";
 import { getCurrentUser } from "@/lib/auth/current-user";
 import { LocaleSwitcher } from "./locale-switcher";
-import { Wordmark } from "./logo";
+import { Logo } from "./logo";
 import { MobileMenu } from "./mobile-menu";
 import { NavLink } from "./nav-link";
 import { ThemeToggle } from "./theme-toggle";
@@ -39,7 +39,7 @@ export async function SiteHeader({ user }: { user?: HeaderUser | null }) {
     <header className="relative border-b border-border">
       <div className="mx-auto flex max-w-[1200px] items-center gap-4 px-4 py-3.5 sm:px-6 md:gap-7">
         <Link href="/" aria-label={tBrand("home")} className="shrink-0">
-          <Wordmark />
+          <Logo />
         </Link>
 
         <nav aria-label={t("label")} className="hidden grow gap-[22px] text-sm md:flex">

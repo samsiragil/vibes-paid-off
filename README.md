@@ -32,3 +32,4 @@ Buka http://localhost:3000 (diarahkan ke `/id` atau `/en` sesuai bahasa browser)
 - `messages/id.json`, `messages/en.json` semua teks UI. Jangan menulis teks langsung di komponen.
 - `components/ui/` komponen dasar, `components/layout/` header dan footer.
 - `app/globals.css` design token (light dan dark), dipetakan ke kelas Tailwind seperti `bg-bg`, `text-ink`, `text-accent-text`.
+- `docs/design-system/` design system "Buku Tulis" dan catatan untuk redesign berikutnya. Baca sebelum mengubah tampilan.

@@ -39,6 +39,7 @@ const colorTokens = [
   "success",
   "warning",
   "danger",
+  "logo",
 ];
 
 // A slice of the seed catalog, so the form renders without a database.

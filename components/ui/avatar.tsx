@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { LogoSymbol } from "@/components/layout/logo";
 import { cn } from "@/lib/cn";
 
 const sizes = {
@@ -81,17 +82,17 @@ export function Avatar({
   );
 }
 
-/** The site's own voice: an outlined circle with an italic "V". */
+/** The site's own voice: an outlined circle with the Jejak Jadi symbol. */
 export function SystemAvatar({ className }: { className?: string }) {
   return (
     <span
       aria-hidden="true"
       className={cn(
-        "inline-flex size-9 shrink-0 items-center justify-center rounded-full border border-border-strong bg-surface font-display text-sm text-accent-text italic",
+        "inline-flex size-9 shrink-0 items-center justify-center rounded-full border border-border-strong bg-surface",
         className,
       )}
     >
-      V
+      <LogoSymbol className="size-5" />
     </span>
   );
 }
