@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import localFont from "next/font/local";
+import { Gochi_Hand, Source_Sans_3 } from "next/font/google";
 import { notFound } from "next/navigation";
 import Script from "next/script";
 import { locale as rootLocale } from "next/root-params";
@@ -13,28 +12,20 @@ import { ogLocale } from "@/lib/seo";
 import { siteUrl } from "@/lib/site";
 import "../globals.css";
 
-// Fraunces is only used at weight 400, so it is self-hosted with the weight axis pinned and the
-// optical size axis kept (Google Fonts css2 "ital,opsz,wght@0,9..144,400;1,9..144,400", latin):
-// 75 KB instead of 145 KB for the full variable font, which next/font/google cannot pin.
-const fraunces = localFont({
-  variable: "--font-fraunces",
-  src: [
-    { path: "../../assets/fonts/fraunces-opsz-400-normal.woff2", weight: "400", style: "normal" },
-    { path: "../../assets/fonts/fraunces-opsz-400-italic.woff2", weight: "400", style: "italic" },
-  ],
-  adjustFontFallback: "Times New Roman",
+// One face for all UI, headings and body text (same family as the logo wordmark).
+const sourceSans = Source_Sans_3({
+  variable: "--font-source-sans",
+  subsets: ["latin"],
+  weight: ["400", "600", "700"],
 });
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+// Handwriting is only for short margin notes, never the largest text: no preload, so it does not
+// compete with the fonts of the LCP element on slow connections.
+const gochiHand = Gochi_Hand({
+  variable: "--font-gochi-hand",
   subsets: ["latin"],
-});
-
-// Only small labels use the mono face, never the largest text: no preload, so it does not compete
-// with the fonts of the LCP element on slow connections.
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  weight: "400",
+  display: "swap",
   preload: false,
 });
 
@@ -66,7 +57,7 @@ export default async function LocaleLayout({ children }: LayoutProps<"/[locale]"
     <html
       lang={locale}
       suppressHydrationWarning
-      className={`${fraunces.variable} ${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${sourceSans.variable} ${gochiHand.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col">
         <ThemeProvider>

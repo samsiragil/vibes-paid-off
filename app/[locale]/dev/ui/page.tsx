@@ -93,16 +93,29 @@ export default function UiKitPage() {
       </Section>
 
       <Section title="Tipografi">
-        <p className="font-display text-[68px] leading-[1.02] tracking-[-1.8px]">
-          Kamu bilang apa, <span className="italic">AI bikin apa.</span>
+        {/* Type scale from docs/design-system/README.md §4 (mobile / desktop). */}
+        <p className="text-[32px] leading-9 font-bold sm:text-[44px] sm:leading-12">
+          Display: Kamu bilang apa, AI bikin apa.
         </p>
-        <p className="font-display text-[38px] tracking-[-0.6px]">
-          Obrolan <span className="italic">terpopuler minggu ini</span>
+        <p className="text-[30px] leading-9 font-bold sm:text-[40px] sm:leading-11">
+          H1: Kasir Warung Bu Tini
         </p>
-        <p className="max-w-xl text-lg leading-relaxed text-ink-2">
-          Geist untuk teks badan. Setiap proyek di sini dimulai dari satu pesan.
+        <p className="text-[22px] leading-7 font-semibold sm:text-[26px] sm:leading-8">
+          H2: Obrolan terpopuler minggu ini
         </p>
-        <MonoLabel>Geist Mono · label kecil</MonoLabel>
+        <p className="text-lg leading-6 font-semibold">H3: Jadwal Ronda</p>
+        <p className="max-w-[68ch] text-[17px] leading-8 sm:text-lg">
+          Catatan: Bikin kasir buat warung kelontong, tombolnya gede, bisa dipakai ibu-ibu tanpa
+          tutorial.
+        </p>
+        <p className="max-w-[68ch] text-base leading-6 text-ink-2 sm:text-[17px] sm:leading-7">
+          Isi: Setiap proyek di sini dimulai dari satu pesan. Source Sans 3, berat 400.
+        </p>
+        <p className="text-sm leading-5 text-muted tabular-nums">
+          Kecil: Claude Code · Supabase · 12 balasan
+        </p>
+        <p className="text-[13px] leading-4 font-semibold text-muted">Label: Prompt kunci</p>
+        <p className="font-hand text-xl leading-8 sm:text-[22px]">Tangan: satu weekend kemudian</p>
       </Section>
 
       <Section title="Tombol">
