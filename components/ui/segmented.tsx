@@ -27,7 +27,7 @@ export function Segmented<T extends string>({
           aria-pressed={option.value === value}
           onClick={() => onChange?.(option.value)}
           className={cn(
-            "h-11 rounded-md px-2 text-base transition-colors duration-150 ease-out motion-reduce:transition-none",
+            "h-11 rounded-md px-2 text-base transition-colors ease-out motion-reduce:transition-none",
             option.value === value ? "text-ink" : "text-ink-2 hover:text-ink",
           )}
         >

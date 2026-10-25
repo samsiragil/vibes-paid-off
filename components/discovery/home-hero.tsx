@@ -28,7 +28,7 @@ export async function HomeHeroCard({ hero }: { hero: HomeHero }) {
     <Link
       href={`/p/${project.slug}`}
       aria-label={t("heroLink", { title: project.title })}
-      className="group relative block min-w-0 rounded border border-border bg-surface ruled py-8 pr-4 pl-6 text-ink transition-colors duration-150 hover:border-border-strong sm:pr-8 sm:pl-[72px]"
+      className="group relative block min-w-0 rounded border border-border bg-surface ruled py-8 pr-4 pl-6 text-ink transition-colors hover:border-border-strong sm:pr-8 sm:pl-[72px]"
     >
       <span
         aria-hidden="true"

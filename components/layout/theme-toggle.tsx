@@ -29,7 +29,7 @@ export function ThemeToggle({ className }: { className?: string }) {
       aria-label={t("current", { theme: t(mode) })}
       title={t("current", { theme: t(mode) })}
       className={cn(
-        "inline-flex size-11 items-center justify-center rounded-md text-muted transition-colors duration-150 hover:bg-placeholder hover:text-ink",
+        "inline-flex size-11 items-center justify-center rounded-md text-muted transition-colors hover:bg-placeholder hover:text-ink",
         className,
       )}
     >

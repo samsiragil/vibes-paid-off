@@ -81,7 +81,7 @@ async function AdminNav({ active, counts }: { active: AdminTab; counts: AdminCou
                 href={tab === "queue" ? "/admin" : `/admin?tab=${tab}`}
                 aria-current={active === tab ? "page" : undefined}
                 className={cn(
-                  "flex h-11 items-center justify-between gap-3 rounded-md px-3 text-base whitespace-nowrap transition-colors duration-150",
+                  "flex h-11 items-center justify-between gap-3 rounded-md px-3 text-base whitespace-nowrap transition-colors",
                   active === tab
                     ? "bg-highlight font-semibold text-highlight-ink"
                     : "text-ink hover:bg-placeholder",

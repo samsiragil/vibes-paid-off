@@ -68,7 +68,7 @@ export function StoryMoments({
                     aria-label={t("remove", { moment: t(moment) })}
                     title={t("remove", { moment: t(moment) })}
                     onClick={() => hide(moment)}
-                    className="-mt-2 -mr-2 inline-flex size-11 shrink-0 items-center justify-center rounded-md text-muted transition-colors duration-150 hover:bg-placeholder hover:text-ink"
+                    className="-mt-2 -mr-2 inline-flex size-11 shrink-0 items-center justify-center rounded-md text-muted transition-colors hover:bg-placeholder hover:text-ink"
                   >
                     <svg
                       width="16"

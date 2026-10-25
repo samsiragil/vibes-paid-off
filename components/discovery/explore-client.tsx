@@ -75,7 +75,7 @@ export function SearchForm() {
           q: typeof q === "string" ? q.trim().slice(0, MAX_QUERY_LENGTH) : "",
         });
       }}
-      className="flex h-14 max-w-[760px] items-center gap-3 rounded-md border-[1.5px] border-border-strong bg-surface py-1.5 pr-1.5 pl-4 transition-colors duration-150 focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-accent hover:border-ink"
+      className="flex h-14 max-w-[760px] items-center gap-3 rounded-md border-[1.5px] border-border-strong bg-surface py-1.5 pr-1.5 pl-4 transition-colors focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-accent hover:border-ink"
     >
       <label htmlFor={inputId} className="sr-only">
         {t("searchLabel")}
@@ -180,7 +180,7 @@ export function FilterPanel({
             value={toolQuery}
             onChange={(event) => setToolQuery(event.target.value)}
             placeholder={t("toolSearch")}
-            className="h-11 rounded-md border-[1.5px] border-border-strong bg-surface px-3 text-base text-ink transition-colors duration-150 placeholder:text-muted hover:border-ink"
+            className="h-11 rounded-md border-[1.5px] border-border-strong bg-surface px-3 text-base text-ink transition-colors placeholder:text-muted hover:border-ink"
           />
           {groups.length === 0 ? (
             <p className="text-sm text-muted">{t("toolSearchEmpty")}</p>

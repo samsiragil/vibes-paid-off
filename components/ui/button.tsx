@@ -5,7 +5,7 @@ type Variant = "primary" | "accent" | "outline" | "outline-accent" | "ghost";
 type Size = "sm" | "md" | "lg";
 
 const base =
-  "inline-flex shrink-0 items-center justify-center gap-2 rounded-md font-semibold whitespace-nowrap transition-colors duration-150 ease-out disabled:pointer-events-none disabled:opacity-50 motion-reduce:transition-none";
+  "inline-flex shrink-0 items-center justify-center gap-2 rounded-md font-semibold whitespace-nowrap transition-colors ease-out disabled:pointer-events-none disabled:opacity-50 motion-reduce:transition-none";
 
 // The design system has one filled button (brick). "primary" and "accent" both render it; pages
 // pick one main action per screen and demote the rest to "outline".

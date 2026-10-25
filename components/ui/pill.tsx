@@ -3,7 +3,7 @@ import { cn } from "@/lib/cn";
 
 // Chip: 44 px tap target on phones, 36 px from sm up.
 const base =
-  "inline-flex h-11 items-center gap-1.5 rounded-md border px-3 text-sm transition-colors duration-150 ease-out motion-reduce:transition-none sm:h-9";
+  "inline-flex h-11 items-center gap-1.5 rounded-md border px-3 text-sm transition-colors ease-out motion-reduce:transition-none sm:h-9";
 
 export function pillStyles({
   selected = false,

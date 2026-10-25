@@ -196,9 +196,14 @@ Aturan:
 
 ## 11. Gerak
 
-- 150 ms untuk perubahan warna dan state, `ease-out`.
-- Satu momen khas: panah kait pada jeda waktu boleh tergambar sekali saat pertama terlihat (400 ms). Tanpa animasi lain.
-- `prefers-reduced-motion`: semua transisi mati, panah langsung utuh.
+- Token di `app/globals.css`: `--duration-fast` (150 ms) untuk perubahan warna dan state, `--duration-base` (180 ms) untuk sesuatu yang muncul atau berganti, `--ease-standard` (`ease-out`). `transition-colors` tanpa kelas durasi sudah memakai `--duration-fast`.
+- Satu momen khas: panah kait pada jeda waktu boleh tergambar sekali saat pertama terlihat (400 ms).
+- Selain itu gerak hanya untuk menjelaskan perubahan, tidak untuk hiasan:
+  - Ganti tema, ganti bahasa, pindah halaman, skeleton ke isi: crossfade (`<ViewTransition>`), tanpa geser.
+  - Dialog, sheet, menu mobile, popover: muncul dengan fade dan geser kecil (4–12 px).
+  - Listbox, panel tab, gambar galeri, bagian yang dibuka: fade saja.
+- Tanpa animasi loop (skeleton diam, tanpa spinner), parallax, stagger daftar, angka berhitung, atau kartu yang naik/membesar saat hover. Pesan error muncul seketika.
+- `prefers-reduced-motion`: semua transisi dan view transition mati, panah langsung utuh.
 
 ## 12. Jangan
 

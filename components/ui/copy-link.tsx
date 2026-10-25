@@ -140,13 +140,17 @@ export function ShareButton({ title, className }: { title: string; className?: s
           <path d="M12 3v12M7 8l5-5 5 5" />
         </svg>
       </button>
+      {/* The visible note keeps its text while it fades out; the status below does the announcing. */}
       <span
-        role="status"
+        aria-hidden="true"
         className={cn(
-          "pointer-events-none absolute top-full right-0 mt-2 rounded-md bg-ink px-3 py-1.5 text-sm whitespace-nowrap text-bg transition-opacity motion-reduce:transition-none",
+          "pointer-events-none absolute top-full right-0 mt-2 rounded-md bg-ink px-3 py-1.5 text-sm whitespace-nowrap text-bg transition-opacity",
           copied ? "opacity-100" : "opacity-0",
         )}
       >
+        {t("copiedAnnouncement")}
+      </span>
+      <span role="status" className="sr-only">
         {copied ? t("copiedAnnouncement") : ""}
       </span>
     </span>

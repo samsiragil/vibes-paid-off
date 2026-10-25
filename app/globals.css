@@ -32,6 +32,10 @@
   --danger: #b42318;
   /* Jejak Jadi logo: brick red on light, white on dark (logo-exploration/jejak-jadi). */
   --logo: #a44732;
+  /* Motion (README §11): fast for color and state, base for things that appear or swap. */
+  --duration-fast: 150ms;
+  --duration-base: 180ms;
+  --ease-standard: cubic-bezier(0, 0, 0.2, 1);
   color-scheme: light;
 }
 
@@ -91,6 +95,10 @@
   --font-mono: var(--font-source-sans), system-ui, sans-serif;
   /* Gochi Hand: margin notes only (dates, "… kemudian", one side note per screen). */
   --font-hand: var(--font-gochi-hand), cursive;
+
+  /* `transition-colors` and friends without a duration class run at the motion token. */
+  --default-transition-duration: var(--duration-fast);
+  --default-transition-timing-function: var(--ease-standard);
 }
 
 /* Highlighter stroke over the lower half of the letters: marks matches and selected states. */
@@ -148,5 +156,27 @@
   :focus-visible {
     outline: 2px solid var(--accent);
     outline-offset: 2px;
+  }
+
+  /* Clicks pass through to the live page while a view transition plays. */
+  ::view-transition {
+    pointer-events: none;
+  }
+
+  /* Reduced motion (README §11): every transition and view transition is instant. */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    ::before,
+    ::after,
+    ::backdrop,
+    ::details-content {
+      transition-duration: 0s !important;
+    }
+
+    ::view-transition-group(*),
+    ::view-transition-old(*),
+    ::view-transition-new(*) {
+      animation: none !important;
+    }
   }
 }

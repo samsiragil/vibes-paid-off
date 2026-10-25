@@ -85,7 +85,7 @@ export default async function HomePage() {
           </div>
           <Link
             href="/submit"
-            className="flex min-h-14 flex-wrap items-center gap-3 rounded-md border-[1.5px] border-border-strong bg-bg py-1.5 pr-1.5 pl-4 transition-colors duration-150 hover:border-ink sm:ml-12"
+            className="flex min-h-14 flex-wrap items-center gap-3 rounded-md border-[1.5px] border-border-strong bg-bg py-1.5 pr-1.5 pl-4 transition-colors hover:border-ink sm:ml-12"
           >
             <span className="min-w-0 grow text-base text-muted">{t("ctaPlaceholder")}</span>
             <span className={buttonStyles({ variant: "accent", className: "max-sm:w-full" })}>

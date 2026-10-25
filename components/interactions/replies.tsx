@@ -30,6 +30,7 @@ import {
   type Participant,
 } from "@/lib/interactions/mentions";
 import type { ReplyView } from "@/lib/interactions/replies";
+import { scrollBehavior } from "@/lib/motion";
 import { REPLY_MAX } from "@/lib/validation/interactions";
 import { ReportButton } from "./report-button";
 
@@ -386,7 +387,7 @@ function ReplyForm({
     mention(username) {
       const textarea = textareaRef.current;
       if (!textarea) return;
-      textarea.scrollIntoView({ block: "center", behavior: "smooth" });
+      textarea.scrollIntoView({ block: "center", behavior: scrollBehavior() });
       const already = new RegExp(`(^|[^a-z0-9_@.])@${username}(?![a-z0-9_])`, "i").test(body);
       if (already) {
         textarea.focus();
@@ -484,7 +485,7 @@ function ReplyForm({
             ))}
           </ul>
         ) : null}
-        <div className="flex items-end gap-3 rounded-md border-[1.5px] border-border-strong bg-surface py-1.5 pr-1.5 pl-3 transition-colors duration-150 focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-accent hover:border-ink">
+        <div className="flex items-end gap-3 rounded-md border-[1.5px] border-border-strong bg-surface py-1.5 pr-1.5 pl-3 transition-colors focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-accent hover:border-ink">
           <label htmlFor={inputId} className="sr-only">
             {t("label")}
           </label>

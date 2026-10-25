@@ -38,7 +38,7 @@ export function EffortPicker({
         {BUILD_EFFORTS.map((effort, index) => (
           <label
             key={effort}
-            className="inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-md border-[1.5px] border-border-strong bg-surface px-4 text-base text-ink transition-colors duration-150 hover:border-ink has-checked:border-highlight has-checked:bg-highlight has-checked:font-semibold has-checked:text-highlight-ink has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-accent"
+            className="inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-md border-[1.5px] border-border-strong bg-surface px-4 text-base text-ink transition-colors hover:border-ink has-checked:border-highlight has-checked:bg-highlight has-checked:font-semibold has-checked:text-highlight-ink has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-accent"
           >
             <input
               type="radio"

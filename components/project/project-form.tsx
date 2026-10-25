@@ -21,6 +21,7 @@ import { autofillFromLinks, type AutofillSuggestion } from "@/lib/autofill/actio
 import { cn } from "@/lib/cn";
 import { donateUrl } from "@/lib/donate";
 import type { ProjectMedia } from "@/lib/media/limits";
+import { scrollBehavior } from "@/lib/motion";
 import { saveProject, type SaveProjectError } from "@/lib/projects/actions";
 import {
   clearDraft,
@@ -177,11 +178,12 @@ function ProjectFormBody({
     focusErrorRef.current = false;
     const first = document.querySelector<HTMLElement>('form [aria-invalid="true"]');
     first?.focus();
-    first?.scrollIntoView({ block: "center", behavior: "smooth" });
+    first?.scrollIntoView({ block: "center", behavior: scrollBehavior() });
   }, [errors]);
 
   useEffect(() => {
-    if (success) successRef.current?.scrollIntoView({ block: "center", behavior: "smooth" });
+    if (!success) return;
+    successRef.current?.scrollIntoView({ block: "center", behavior: scrollBehavior() });
   }, [success]);
 
   // "Tambah cerita" links to /p/[slug]/edit#cerita; the form renders after hydration, so the
@@ -525,7 +527,7 @@ function ProjectFormBody({
           {/* The page's main field: a ruled note with the margin line (README §6). */}
           <div
             className={cn(
-              "relative overflow-hidden rounded-md border-[1.5px] bg-surface transition-colors duration-150 focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-accent",
+              "relative overflow-hidden rounded-md border-[1.5px] bg-surface transition-colors focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-accent",
               errors.keyPrompt ? "border-danger" : "border-border-strong hover:border-ink",
             )}
           >

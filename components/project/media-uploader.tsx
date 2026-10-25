@@ -317,7 +317,7 @@ export function MediaUploader({
                 {index === items.length ? (
                   <label
                     htmlFor={inputId}
-                    className="flex aspect-[4/3] cursor-pointer flex-col items-center justify-center gap-1.5 rounded border-[1.5px] border-dashed border-(--dashed) bg-surface px-2 text-center text-sm font-semibold text-ink-2 transition-colors duration-150 hover:border-ink hover:text-ink has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-accent"
+                    className="flex aspect-[4/3] cursor-pointer flex-col items-center justify-center gap-1.5 rounded border-[1.5px] border-dashed border-(--dashed) bg-surface px-2 text-center text-sm font-semibold text-ink-2 transition-colors hover:border-ink hover:text-ink has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-accent"
                   >
                     <PlusIcon />
                     {t("add")}
@@ -465,7 +465,7 @@ function IconButton({
       title={label}
       disabled={disabled}
       onClick={onClick}
-      className="inline-flex size-8 items-center justify-center rounded-md border border-border-strong bg-surface text-ink transition-colors duration-150 hover:border-ink disabled:pointer-events-none disabled:opacity-40"
+      className="inline-flex size-8 items-center justify-center rounded-md border border-border-strong bg-surface text-ink transition-colors hover:border-ink disabled:pointer-events-none disabled:opacity-40"
     >
       <svg
         width="16"

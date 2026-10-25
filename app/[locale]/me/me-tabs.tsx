@@ -66,7 +66,7 @@ export function MeTabs({
             tabIndex={active === tab ? 0 : -1}
             onClick={() => select(tab)}
             className={cn(
-              "h-11 shrink-0 px-3 text-base whitespace-nowrap transition-colors duration-150",
+              "h-11 shrink-0 px-3 text-base whitespace-nowrap transition-colors",
               active === tab ? "font-semibold text-ink" : "text-ink-2 hover:text-ink",
             )}
           >

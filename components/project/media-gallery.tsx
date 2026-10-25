@@ -60,7 +60,7 @@ export function MediaGallery({
                   aria-pressed={index === selected}
                   onClick={() => setSelected(index)}
                   className={cn(
-                    "rounded border p-1 transition-colors duration-150",
+                    "rounded border p-1 transition-colors",
                     index === selected
                       ? "border-highlight bg-highlight"
                       : "border-border bg-surface hover:border-border-strong",

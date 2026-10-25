@@ -93,7 +93,7 @@ export function ProfileForm({
       >
         <div
           className={cn(
-            "flex h-11 items-center rounded-md border-[1.5px] border-border-strong bg-surface pl-3 text-base text-muted transition-colors duration-150 focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-accent hover:border-ink",
+            "flex h-11 items-center rounded-md border-[1.5px] border-border-strong bg-surface pl-3 text-base text-muted transition-colors focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-accent hover:border-ink",
             errors.username && "border-danger",
           )}
         >

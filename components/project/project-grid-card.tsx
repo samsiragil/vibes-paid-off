@@ -50,7 +50,7 @@ export function ProjectGridCard({
         eager={eager}
         lang={showLang ? project.contentLang.toUpperCase() : undefined}
         status={<LinkStatusText status={project.linkStatus} />}
-        className="h-full transition-colors duration-150 group-hover:border-border-strong"
+        className="h-full transition-colors group-hover:border-border-strong"
       />
     </Link>
   );

@@ -2,7 +2,7 @@ import type { ComponentProps, ReactNode } from "react";
 import { cn } from "@/lib/cn";
 
 const control =
-  "w-full rounded-md border-[1.5px] border-border-strong bg-surface px-3 text-base text-ink placeholder:text-muted transition-colors duration-150 ease-out hover:border-ink aria-invalid:border-danger motion-reduce:transition-none";
+  "w-full rounded-md border-[1.5px] border-border-strong bg-surface px-3 text-base text-ink placeholder:text-muted transition-colors ease-out hover:border-ink aria-invalid:border-danger motion-reduce:transition-none";
 
 /**
  * Label + control + hint/error. Pass the same `id` you give the control so the
