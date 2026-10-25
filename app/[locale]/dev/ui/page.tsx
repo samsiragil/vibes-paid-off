@@ -6,6 +6,8 @@ import { PromptBubble, ResultBubble, SystemMessage, TimeGap } from "@/components
 import { Button } from "@/components/ui/button";
 import { CopyLinkField } from "@/components/ui/copy-link";
 import { LinkStatusBadge } from "@/components/project/link-status-badge";
+import { ProjectCardView } from "@/components/project/project-card";
+import { worthItStyles } from "@/components/interactions/worth-it-styles";
 import { Field, Input, Select, Textarea } from "@/components/ui/field";
 import { pillStyles } from "@/components/ui/pill";
 import { MediaUploader } from "@/components/project/media-uploader";
@@ -216,6 +218,25 @@ export default function UiKitPage() {
         <SystemMessage tone="soft" className="max-w-xl">
           Proyekmu sudah masuk! Kami review paling lama 2×24 jam.
         </SystemMessage>
+      </Section>
+
+      <Section title="Kartu obrolan dan Worth it">
+        <div className="grid gap-6 md:grid-cols-[320px_1fr]">
+          <ProjectCardView
+            makerName="Nina Kurnia"
+            category="Komunitas"
+            prompt="Pengingat jadwal ronda RT, kirim lewat WhatsApp tiap sore, bisa ganti jadwal dari HP."
+            timeLabel="beberapa jam kemudian"
+            story="ada cerita build"
+            title="Jadwal Ronda"
+            tools="Lovable, WhatsApp Cloud API"
+            worthIt="Worth it · 94"
+          />
+          <div className="flex flex-wrap items-start gap-3">
+            <span className={worthItStyles(false)}>Worth it · 128</span>
+            <span className={worthItStyles(true)}>Worth it ✓ · 129</span>
+          </div>
+        </div>
       </Section>
 
       <Section title="Form">

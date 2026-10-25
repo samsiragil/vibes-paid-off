@@ -44,19 +44,13 @@ export function WorthItButton({
         type="button"
         aria-pressed={optimistic.voted}
         onClick={toggle}
-        className={worthItStyles(
-          optimistic.voted,
-          optimistic.voted ? "hover:bg-accent-soft/70" : "hover:border-ink",
-        )}
+        className={worthItStyles(optimistic.voted, "hover:border-ink")}
       >
         {optimistic.voted ? t("voted") : t("label")}
         <span aria-hidden="true">·</span>
         <span className="tabular-nums">{format.number(optimistic.count)}</span>
       </button>
-      <span
-        role="alert"
-        className="absolute top-full left-0 mt-1 w-60 text-xs text-red-700 dark:text-red-400"
-      >
+      <span role="alert" className="absolute top-full left-0 mt-1 w-60 text-sm text-danger">
         {error ? t(`errors.${error}`) : ""}
       </span>
     </span>

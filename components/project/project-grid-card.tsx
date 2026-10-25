@@ -29,10 +29,7 @@ export function ProjectGridCard({
   const summary = toolsSummary(project.tools);
 
   return (
-    <Link
-      href={`/p/${project.slug}`}
-      className="group block rounded-[22px] transition-transform hover:-translate-y-0.5"
-    >
+    <Link href={`/p/${project.slug}`} className="group block rounded">
       <ProjectCardView
         makerName={project.maker.displayName}
         makerAvatarUrl={project.maker.avatarUrl}
@@ -53,7 +50,7 @@ export function ProjectGridCard({
         eager={eager}
         lang={showLang ? project.contentLang.toUpperCase() : undefined}
         status={<LinkStatusText status={project.linkStatus} />}
-        className="h-full transition-colors group-hover:border-border-strong"
+        className="h-full transition-colors duration-150 group-hover:border-border-strong"
       />
     </Link>
   );

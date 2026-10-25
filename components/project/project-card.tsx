@@ -53,18 +53,13 @@ export function ProjectCardView({
 }) {
   return (
     <article
-      className={cn(
-        "flex flex-col gap-2.5 rounded-[22px] border border-border bg-surface p-[18px]",
-        className,
-      )}
+      className={cn("flex flex-col gap-3 rounded border border-border bg-surface p-4", className)}
     >
       {showMaker ? (
-        <div className="flex items-center gap-2 text-xs text-muted">
+        <div className="flex min-h-6 items-center gap-2 text-sm text-ink-2">
           <Avatar name={makerName} src={makerAvatarUrl} size="xs" />
           <span className="min-w-0 truncate">{makerName}</span>
-          {category ? (
-            <span className="ml-auto shrink-0 font-mono text-[11px]">{category}</span>
-          ) : null}
+          {category ? <span className="ml-auto shrink-0 text-muted">{category}</span> : null}
           {lang ? (
             <Badge variant="lang" className={category ? undefined : "ml-auto"}>
               {lang}
@@ -72,15 +67,17 @@ export function ProjectCardView({
           ) : null}
         </div>
       ) : (
-        <div className="flex min-h-[26px] items-center justify-between gap-3 font-mono text-[11px] text-muted uppercase">
+        <div className="flex min-h-6 items-center justify-between gap-3 text-sm text-muted">
           <span className="min-w-0 truncate">{category}</span>
           {status}
         </div>
       )}
-      <PromptBubble className={cn("break-words", muted && "text-muted")}>{prompt}</PromptBubble>
+      <PromptBubble className={cn("line-clamp-3 break-words", muted && "text-muted")}>
+        {prompt}
+      </PromptBubble>
       <TimeGap note={story}>{timeLabel}</TimeGap>
       <ResultBubble>
-        <div className="relative h-[130px] overflow-hidden rounded-[10px] bg-placeholder">
+        <div className="relative h-[150px] overflow-hidden rounded-sm bg-placeholder">
           {imageUrl ? (
             <Image
               src={imageUrl}
@@ -94,15 +91,18 @@ export function ProjectCardView({
             />
           ) : null}
         </div>
-        <h3 className={cn("px-1 text-sm font-semibold break-words", muted && "text-muted")}>
+        <h3
+          className={cn(
+            "px-1 pb-1 text-lg leading-6 font-semibold break-words group-hover:underline",
+            muted && "text-muted",
+          )}
+        >
           {title}
         </h3>
       </ResultBubble>
-      <div className="flex items-center justify-between gap-3 pt-0.5 text-xs text-muted">
+      <div className="mt-auto flex items-center justify-between gap-3 text-sm text-muted">
         <span className="min-w-0 truncate">{tools}</span>
-        <span className="inline-flex h-[30px] shrink-0 items-center rounded-full border border-border-strong px-3 font-medium text-ink">
-          {worthIt}
-        </span>
+        <span className="shrink-0 font-semibold text-ink-2 tabular-nums">{worthIt}</span>
       </div>
     </article>
   );

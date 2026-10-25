@@ -1,14 +1,14 @@
 import Image from "next/image";
 import { getFormatter, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
-import { Avatar } from "@/components/ui/avatar";
 import { mediaUrl } from "@/lib/media/url";
 import type { ProjectCardData } from "@/lib/projects/cards";
 import { toolsSummary } from "@/lib/projects/types";
 
 /**
- * One "Baru masuk" line on the home page: maker and date, the key prompt, a thumbnail with the
- * title, and Worth it. Four columns on desktop, stacked on phones.
+ * One "Baru masuk" entry on the home page, written like a notebook entry: the date handwritten in
+ * the margin, the title, one line of the key prompt, then maker, tools and Worth it. On phones the
+ * margin narrows to its line and the date moves above the title.
  */
 export async function ProjectRow({ project }: { project: ProjectCardData }) {
   const t = await getTranslations("home");
@@ -24,45 +24,50 @@ export async function ProjectRow({ project }: { project: ProjectCardData }) {
   return (
     <Link
       href={`/p/${project.slug}`}
-      className="group grid gap-3 border-t border-border py-[18px] text-ink lg:grid-cols-[220px_minmax(0,1fr)_minmax(0,0.9fr)_140px] lg:items-center lg:gap-6"
+      className="group relative grid grid-cols-[minmax(0,1fr)_72px] items-start gap-x-4 border-b border-rule py-4 pl-6 text-ink sm:grid-cols-[88px_minmax(0,1fr)_96px] sm:gap-x-6 sm:pl-0"
     >
-      <div className="flex min-w-0 items-center gap-2.5">
-        <Avatar name={project.maker.displayName} src={project.maker.avatarUrl} size="sm" />
-        <div className="min-w-0">
-          <div className="truncate text-sm font-semibold">{project.maker.displayName}</div>
-          {project.publishedAt ? (
-            <time dateTime={project.publishedAt} className="block font-mono text-[11px] text-muted">
-              {format.dateTime(new Date(project.publishedAt), { day: "numeric", month: "short" })}
-            </time>
-          ) : null}
-        </div>
+      <span
+        aria-hidden="true"
+        className="absolute inset-y-0 left-3 w-[1.5px] bg-margin sm:left-[100px]"
+      />
+      {project.publishedAt ? (
+        <time
+          dateTime={project.publishedAt}
+          className="col-span-2 font-hand text-xl leading-8 whitespace-nowrap text-ink-2 sm:col-span-1 sm:text-right"
+        >
+          {format.dateTime(new Date(project.publishedAt), { day: "numeric", month: "short" })}
+        </time>
+      ) : (
+        <span className="hidden sm:block" />
+      )}
+      <div className="flex min-w-0 flex-col gap-1">
+        <h3 className="text-lg leading-8 font-semibold break-words group-hover:underline">
+          {project.title}
+        </h3>
+        <p className="truncate text-base leading-6 text-ink-2">{project.keyPrompt}</p>
+        {/* A no-break space before each dot keeps it at the end of a line when the meta wraps. */}
+        <p className="text-sm leading-5 break-words text-muted">
+          {project.maker.displayName}
+          {" · "}
+          {tools ? t("latestMeta", { tools, time: effort }) : effort}
+          {" · "}
+          <span className="font-semibold whitespace-nowrap text-ink-2 tabular-nums">
+            {tCard("worthIt", { count: project.upvoteCount })}
+          </span>
+        </p>
       </div>
-      <p className="justify-self-start rounded-2xl rounded-br-sm bg-bubble px-4 py-3 text-[15px] leading-[1.45] break-words max-lg:ml-auto max-lg:max-w-[92%]">
-        {project.keyPrompt}
-      </p>
-      <div className="flex min-w-0 items-center gap-3">
-        <div className="relative h-[52px] w-[72px] shrink-0 overflow-hidden rounded-[10px] border border-border bg-placeholder">
-          {project.coverKey ? (
-            <Image
-              src={mediaUrl(project.coverKey)}
-              alt=""
-              fill
-              unoptimized
-              sizes="72px"
-              className="object-cover"
-            />
-          ) : null}
-        </div>
-        <div className="min-w-0">
-          <h3 className="truncate text-sm font-semibold group-hover:underline">{project.title}</h3>
-          <p className="truncate text-xs text-muted">
-            {tools ? t("latestMeta", { tools, time: effort }) : effort}
-          </p>
-        </div>
+      <div className="relative mt-1 aspect-[4/3] overflow-hidden rounded-sm border border-border bg-placeholder">
+        {project.coverKey ? (
+          <Image
+            src={mediaUrl(project.coverKey)}
+            alt=""
+            fill
+            unoptimized
+            sizes="96px"
+            className="object-cover"
+          />
+        ) : null}
       </div>
-      <span className="inline-flex h-8 items-center justify-self-start rounded-full border border-border-strong px-3 text-[13px] lg:justify-self-end">
-        {tCard("worthIt", { count: project.upvoteCount })}
-      </span>
     </Link>
   );
 }

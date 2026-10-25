@@ -14,6 +14,7 @@ import {
 import { Link } from "@/i18n/navigation";
 import { Turnstile, type TurnstileHandle } from "@/components/project/turnstile";
 import { Avatar } from "@/components/ui/avatar";
+import { SystemMessage } from "@/components/ui/bubble";
 import { buttonStyles } from "@/components/ui/button";
 import {
   deleteReply,
@@ -40,10 +41,10 @@ export type ReplyViewer =
   | { kind: "user"; id: string };
 
 const actionClass =
-  "inline-flex min-h-11 items-center px-1 text-xs text-muted sm:min-h-8 underline-offset-2 hover:text-ink hover:underline";
+  "inline-flex min-h-11 items-center px-1 text-sm text-muted sm:min-h-8 underline-offset-3 hover:text-ink hover:underline";
 
 /**
- * "Balasan" under a project (VPO-Proyek): one flat, chat-like list of replies, the reply form,
+ * "Balasan" under a project (VPO-Proyek): one flat list of notes at the foot of the page, the reply form,
  * and per reply "Balas" (tags the author), "Laporkan", or "Hapus" on your own. Typing "@" in the
  * form suggests people from this conversation; their @username becomes a profile link. The list
  * comes from the shared cache; replies posted or deleted here show at once.
@@ -88,15 +89,20 @@ export function RepliesSection({
       aria-labelledby={headingId}
       className="flex scroll-mt-24 flex-col gap-4 pt-6"
     >
-      <h2 id={headingId} className="text-xl font-semibold">
+      <h2
+        id={headingId}
+        className="text-[22px] leading-7 font-semibold sm:text-[26px] sm:leading-8"
+      >
         {t("title")}{" "}
-        <span className="font-mono text-sm font-normal text-muted tabular-nums">{list.length}</span>
+        <span className="text-base font-normal text-muted tabular-nums">{list.length}</span>
       </h2>
 
       {list.length === 0 ? (
-        <p className="text-[15px] text-muted">{t("empty")}</p>
+        <SystemMessage tone="soft" className="max-w-xl">
+          {t("empty")}
+        </SystemMessage>
       ) : (
-        <ol className="flex flex-col gap-4">
+        <ol className="flex flex-col border-t border-border">
           {list.map((reply) => (
             <ReplyItem
               key={reply.id}
@@ -123,14 +129,14 @@ export function RepliesSection({
       ) : viewer.kind === "loading" ? (
         <div
           aria-hidden="true"
-          className="mt-2 h-[58px] rounded-[29px] border border-border bg-surface"
+          className="mt-2 h-[60px] rounded-md border-[1.5px] border-border bg-surface"
         />
       ) : (
-        <p className="mt-2 flex min-h-[58px] flex-wrap items-center justify-between gap-3 rounded-[29px] border border-border-strong bg-surface py-2 pr-2 pl-5 text-[15px] text-ink-2">
+        <p className="mt-2 flex min-h-[60px] flex-wrap items-center justify-between gap-3 rounded border border-border bg-surface py-2 pr-2 pl-4 text-base text-ink-2">
           <span>{viewer.kind === "anon" ? t("loginPrompt") : t("usernamePrompt")}</span>
           <a
             href={viewer.kind === "anon" ? viewer.loginHref : viewer.onboardingHref}
-            className={buttonStyles({ variant: "primary", className: "h-[42px]" })}
+            className={buttonStyles({ variant: "primary" })}
           >
             {viewer.kind === "anon" ? t("login") : t("pickUsername")}
           </a>
@@ -162,31 +168,35 @@ function ReplyItem({
   const date = new Date(reply.createdAt);
 
   return (
-    <li className="flex items-end gap-3">
+    <li className="flex items-start gap-3 border-b border-border py-4">
       <Avatar
         name={reply.author.displayName}
         src={reply.author.avatarUrl}
         size="sm"
-        className="mb-6 hidden sm:inline-flex"
+        className="hidden sm:inline-flex"
       />
-      <div className="max-w-full min-w-0 sm:max-w-[76%]">
-        <p className="mb-1 ml-1 flex flex-wrap items-baseline gap-x-2 text-xs text-muted">
+      <div className="max-w-[68ch] min-w-0 grow">
+        <p className="flex flex-wrap items-baseline gap-x-2 text-sm leading-5 text-muted">
           <Link
             href={`/u/${reply.author.username}`}
             className="font-semibold text-ink underline-offset-2 hover:underline"
           >
             {reply.author.displayName}
           </Link>
-          {isMaker ? <span className="font-mono text-accent-text">{t("maker")}</span> : null}
+          {isMaker ? (
+            <span className="text-[13px] leading-4 font-semibold text-accent-text">
+              {t("maker")}
+            </span>
+          ) : null}
           <time dateTime={reply.createdAt}>{format.dateTime(date, { dateStyle: "medium" })}</time>
         </p>
-        <div className="rounded-[18px] rounded-bl-md border border-border bg-surface px-4 py-3 text-[15px] leading-normal break-words whitespace-pre-line">
+        <div className="mt-1 text-base leading-6 break-words whitespace-pre-line text-ink">
           {splitMentions(reply.body, linkable).map((segment, index) =>
             segment.kind === "mention" ? (
               <Link
                 key={index}
                 href={`/u/${segment.username}`}
-                className="font-medium text-accent-text underline-offset-2 hover:underline"
+                className="font-semibold text-accent-text underline-offset-3 hover:underline"
               >
                 {segment.text}
               </Link>
@@ -195,7 +205,7 @@ function ReplyItem({
             ),
           )}
         </div>
-        <div className="ml-1 flex flex-wrap items-center gap-x-2">
+        <div className="-ml-1 flex flex-wrap items-center gap-x-2">
           {isOwn ? (
             <DeleteReplyButton replyId={reply.id} onDeleted={onDeleted} />
           ) : viewer.kind === "loading" ? null : (
@@ -268,7 +278,7 @@ function DeleteReplyButton({ replyId, onDeleted }: { replyId: string; onDeleted:
           {t("delete")}
         </button>
         {error ? (
-          <span role="alert" className="ml-2 text-xs text-red-700 dark:text-red-400">
+          <span role="alert" className="ml-2 text-sm text-danger">
             {t(`errors.${error}`)}
           </span>
         ) : null}
@@ -283,13 +293,13 @@ function DeleteReplyButton({ replyId, onDeleted }: { replyId: string; onDeleted:
       onKeyDown={(event) => {
         if (event.key === "Escape") setConfirming(false);
       }}
-      className="inline-flex flex-wrap items-center gap-2 text-xs text-ink-2"
+      className="inline-flex flex-wrap items-center gap-2 text-sm text-ink-2"
     >
       {t("deleteConfirm")}
       <button
         type="button"
         onClick={() => setConfirming(false)}
-        className={buttonStyles({ variant: "ghost", size: "sm", className: "h-9 px-2.5 text-xs" })}
+        className={buttonStyles({ variant: "ghost", size: "sm", className: "px-2.5" })}
       >
         {t("cancel")}
       </button>
@@ -298,7 +308,7 @@ function DeleteReplyButton({ replyId, onDeleted }: { replyId: string; onDeleted:
         type="button"
         disabled={pending}
         onClick={remove}
-        className={buttonStyles({ variant: "primary", size: "sm", className: "h-9 px-3 text-xs" })}
+        className={buttonStyles({ variant: "primary", size: "sm", className: "px-3" })}
       >
         {pending ? t("deleting") : t("deleteYes")}
       </button>
@@ -451,7 +461,7 @@ function ReplyForm({
             id={listboxId}
             role="listbox"
             aria-label={t("suggestions")}
-            className="absolute bottom-full left-0 z-10 mb-2 flex w-full max-w-sm flex-col overflow-hidden rounded-2xl border border-border bg-surface p-1.5 shadow-lg"
+            className="absolute bottom-full left-0 z-10 mb-2 flex w-full max-w-sm flex-col overflow-hidden rounded border border-border-strong bg-surface p-1 shadow-[0_2px_0_var(--border)]"
           >
             {suggestions.map((person, index) => (
               <li
@@ -463,18 +473,18 @@ function ReplyForm({
                 onMouseDown={(event) => event.preventDefault()}
                 onMouseEnter={() => setActive(index)}
                 onClick={() => choose(person)}
-                className="flex min-h-11 cursor-pointer items-center gap-2.5 rounded-xl px-2.5 text-sm aria-selected:bg-bubble"
+                className="flex min-h-11 cursor-pointer items-center gap-2.5 rounded-sm px-2.5 text-sm aria-selected:bg-placeholder"
               >
                 <Avatar name={person.displayName} src={person.avatarUrl} size="xs" />
                 <span className="min-w-0 truncate">
-                  <span className="font-medium">{person.displayName}</span>{" "}
-                  <span className="font-mono text-xs text-muted">@{person.username}</span>
+                  <span className="font-semibold">{person.displayName}</span>{" "}
+                  <span className="text-muted">@{person.username}</span>
                 </span>
               </li>
             ))}
           </ul>
         ) : null}
-        <div className="flex items-end gap-3 rounded-[29px] border border-border-strong bg-surface py-2 pr-2 pl-5 transition-colors focus-within:border-accent-text">
+        <div className="flex items-end gap-3 rounded-md border-[1.5px] border-border-strong bg-surface py-1.5 pr-1.5 pl-3 transition-colors duration-150 focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-accent hover:border-ink">
           <label htmlFor={inputId} className="sr-only">
             {t("label")}
           </label>
@@ -518,41 +528,31 @@ function ReplyForm({
             aria-invalid={error === "too_long" || error === "required" ? true : undefined}
             aria-describedby={error ? `${inputId}-error` : `${inputId}-hint`}
             placeholder={t("placeholder")}
-            className="field-sizing-content max-h-60 min-h-[42px] min-w-0 grow resize-none bg-transparent py-[9px] text-[15px] leading-normal text-ink placeholder:text-muted focus:outline-none"
+            className="field-sizing-content max-h-60 min-h-11 min-w-0 grow resize-none bg-transparent py-2.5 text-base leading-6 text-ink placeholder:text-muted focus:outline-none"
           />
-          <button
-            type="submit"
-            disabled={pending}
-            className={buttonStyles({ variant: "primary", className: "h-[42px] px-[18px]" })}
-          >
+          <button type="submit" disabled={pending} className={buttonStyles({ variant: "primary" })}>
             {pending ? t("sending") : t("send")}
           </button>
         </div>
       </div>
-      <div className="flex flex-wrap items-start justify-between gap-x-4 gap-y-2 px-2">
+      <div className="flex flex-wrap items-start justify-between gap-x-4 gap-y-2">
         {error ? (
-          <p
-            id={`${inputId}-error`}
-            role="alert"
-            className="text-[13px] text-red-700 dark:text-red-400"
-          >
+          <p id={`${inputId}-error`} role="alert" className="text-sm text-danger">
             {t(`errors.${error}`)}
           </p>
         ) : (
-          <p id={`${inputId}-hint`} className="text-[13px] text-muted">
+          <p id={`${inputId}-hint`} className="text-sm text-muted">
             {participants.length > 0 ? t("mentionHint") : ""}
           </p>
         )}
         {trimmed.length > REPLY_MAX - 100 ? (
-          <span
-            className={`font-mono text-xs ${tooLong ? "text-red-700 dark:text-red-400" : "text-muted"}`}
-          >
+          <span className={`text-[13px] tabular-nums ${tooLong ? "text-danger" : "text-muted"}`}>
             {trimmed.length}/{REPLY_MAX}
           </span>
         ) : null}
       </div>
       {turnstileSiteKey && wantsCaptcha ? (
-        <div className="px-2">
+        <div>
           <Turnstile
             ref={turnstileRef}
             action="reply"

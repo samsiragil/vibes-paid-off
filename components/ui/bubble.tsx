@@ -127,17 +127,22 @@ export function TimeGap({
   children: ReactNode;
 }) {
   return (
-    <div className={cn("flex flex-wrap items-center gap-x-2", className)}>
-      <HookArrow />
-      <span className="font-hand text-xl leading-8 whitespace-nowrap text-ink-2 sm:text-[22px]">
-        {children}
-      </span>
-      {note ? (
-        <span className="text-sm leading-5 whitespace-nowrap text-accent-text">
-          <span aria-hidden="true">· </span>
-          {note}
+    <div className={className}>
+      {/* The arrow hangs in the padding, so a wrapped note lines up under the handwriting. */}
+      <div className="flex flex-wrap items-center gap-x-2 pl-7">
+        <span className="-ml-7 flex">
+          <HookArrow />
         </span>
-      ) : null}
+        <span className="font-hand text-xl leading-8 whitespace-nowrap text-ink-2 sm:text-[22px]">
+          {children}
+        </span>
+        {note ? (
+          <span className="text-sm leading-5 whitespace-nowrap text-accent-text">
+            <span aria-hidden="true">· </span>
+            {note}
+          </span>
+        ) : null}
+      </div>
     </div>
   );
 }
