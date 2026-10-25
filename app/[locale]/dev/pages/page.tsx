@@ -24,6 +24,7 @@ import type { ProjectDetail } from "@/lib/projects/detail";
 import type { BuildEffort } from "@/lib/projects/types";
 import { MeTabs } from "../../me/me-tabs";
 import { MyProjects, OfflineNotice, ReviewNotice, StoryNudge } from "../../me/my-projects";
+import { AvatarField } from "../../me/avatar-field";
 import { ProfileForm } from "../../me/profile-form";
 import { ActionLogProvider } from "../../admin/action-log";
 import { ReportCard } from "../../admin/reports";
@@ -632,20 +633,26 @@ async function Preview({
                 <MyProjects projects={view === "me" ? myProjects : []} isTrusted={view === "me"} />
               ),
               profile: (
-                <ProfileForm
-                  profileHost="jadinya.dev/u/"
-                  initialValues={{
-                    displayName: "Ragil Samsi",
-                    username: "ragil",
-                    bio: "Halo! Aku bikin alat kecil untuk warung dan kampung, bersama AI.",
-                    location: "Indonesia",
-                    tipUrl: "",
-                    github: "https://github.com/example",
-                    linkedin: "",
-                    x: "",
-                    website: "",
-                  }}
-                />
+                <>
+                  <AvatarField name="Ragil Samsi" initialUrl={null} initialUploaded={false} />
+                  <ProfileForm
+                    profileHost="jadinya.dev/u/"
+                    initialValues={{
+                      displayName: "Ragil Samsi",
+                      username: "ragil",
+                      bio: "Halo! Aku bikin alat kecil untuk warung dan kampung, bersama AI.",
+                      location: "Indonesia",
+                      tipUrl: "",
+                      github: "example",
+                      linkedin: "",
+                      x: "",
+                      threads: "",
+                      instagram: "example.dev",
+                      tiktok: "",
+                      website: "",
+                    }}
+                  />
+                </>
               ),
             }}
           />

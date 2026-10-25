@@ -11,8 +11,10 @@ import { PromptBubble, SystemMessage } from "@/components/ui/bubble";
 import { buttonStyles } from "@/components/ui/button";
 import { CopyLinkField } from "@/components/ui/copy-link";
 import { ExternalLink } from "@/components/ui/external-link";
+import { SocialIcon } from "@/components/ui/social-icon";
 import { PageTransition, Reveal } from "@/components/ui/transitions";
-import { getPublicProfile, PROFILE_LINK_KEYS, type PublicProfile } from "@/lib/profiles/public";
+import { getPublicProfile, type PublicProfile } from "@/lib/profiles/public";
+import { PROFILE_LINK_KEYS } from "@/lib/profiles/social";
 import { localeAlternates, localeUrl, ogLocale } from "@/lib/seo";
 import { displayUrl, siteUrl } from "@/lib/site";
 
@@ -196,9 +198,12 @@ async function SocialLinks({ profile }: { profile: PublicProfile }) {
           <ExternalLink
             href={link.url}
             rel="me"
-            className="inline-flex min-h-11 items-center text-base font-semibold text-accent-text underline underline-offset-3"
+            className="group inline-flex min-h-11 items-center gap-2 text-base font-semibold text-accent-text"
           >
-            {t(link.key)}
+            <SocialIcon name={link.key} />
+            <span className="underline underline-offset-3 group-hover:decoration-2">
+              {t(link.key)}
+            </span>
           </ExternalLink>
         </li>
       ))}

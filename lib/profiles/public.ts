@@ -4,10 +4,9 @@ import { makerTag, usernameTag } from "@/lib/cache-tags";
 import { PROJECT_CARD_SELECT, toProjectCard, type ProjectCardData } from "@/lib/projects/cards";
 import { createPublicClient } from "@/lib/supabase/public";
 import { usernamePattern } from "@/app/[locale]/onboarding/username";
+import { PROFILE_LINK_KEYS, type ProfileLinkKey } from "./social";
 
-export type ProfileLinks = { github?: string; linkedin?: string; x?: string; website?: string };
-
-export const PROFILE_LINK_KEYS = ["github", "linkedin", "x", "website"] as const;
+export type ProfileLinks = Partial<Record<ProfileLinkKey, string>>;
 
 export type PublicProfile = {
   id: string;

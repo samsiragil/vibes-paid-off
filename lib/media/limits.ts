@@ -22,6 +22,12 @@ export const MAX_IMAGE_SIDE = 1600;
  */
 export const MAX_INPUT_SIDE = 2048;
 
+/** Side of the square profile photo, in the browser and again on the server. */
+export const AVATAR_SIDE = 512;
+
+/** Largest compressed photo the avatar action accepts (server actions take 1 MB at most). */
+export const MAX_AVATAR_UPLOAD_BYTES = 900 * 1024;
+
 /** Size budget for the stored WebP. */
 export const MAX_STORED_BYTES = 300 * 1024;
 

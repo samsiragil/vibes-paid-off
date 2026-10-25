@@ -8,7 +8,10 @@ import { PageTransition, Reveal } from "@/components/ui/transitions";
 import { signOut } from "@/lib/auth/actions";
 import { getCurrentUser, isCurrentUserAdmin } from "@/lib/auth/current-user";
 import { getMyProfileForm, getMyProjects } from "@/lib/profiles/me";
+import { mediaKeyOf } from "@/lib/media/url";
+import { isAvatarKeyOf } from "@/lib/r2/keys";
 import { displayUrl } from "@/lib/site";
+import { AvatarField } from "./avatar-field";
 import { MeTabs, type MeTab } from "./me-tabs";
 import { MyProjects, OfflineNotice, ReviewNotice, StoryNudge } from "./my-projects";
 import { ProfileForm } from "./profile-form";
@@ -114,7 +117,14 @@ async function MeContent({
         panels={{
           projects: <MyProjects projects={projects} isTrusted={user.isTrusted} />,
           profile: profileValues ? (
-            <ProfileForm initialValues={profileValues} profileHost={displayUrl("/u/")} />
+            <>
+              <AvatarField
+                name={name}
+                initialUrl={user.avatarUrl}
+                initialUploaded={isUploadedAvatar(user.id, user.avatarUrl)}
+              />
+              <ProfileForm initialValues={profileValues} profileHost={displayUrl("/u/")} />
+            </>
           ) : null,
         }}
       />
@@ -134,4 +144,10 @@ function MeSkeleton() {
       </div>
     </div>
   );
+}
+
+/** Whether the photo was uploaded on /me (it can then be removed) rather than the account's. */
+function isUploadedAvatar(userId: string, avatarUrl: string | null) {
+  const key = avatarUrl ? mediaKeyOf(avatarUrl) : null;
+  return key !== null && isAvatarKeyOf(userId, key);
 }

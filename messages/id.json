@@ -153,19 +153,39 @@
       "locationPlaceholder": "Misalnya Yogyakarta",
       "tipUrl": "Link traktir saya",
       "tipUrlHint": "Saweria, Trakteer, Ko-fi, atau sejenisnya. Muncul sebagai tombol di profil dan proyekmu.",
+      "linksTitle": "Media sosial & website",
+      "linksHint": "Cukup isi username-nya. Tempel link profil juga bisa, nanti dirapikan otomatis. Kosongkan yang tidak kamu pakai.",
       "links": {
         "github": "GitHub",
         "linkedin": "LinkedIn",
         "x": "X",
+        "threads": "Threads",
+        "instagram": "Instagram",
+        "tiktok": "TikTok",
         "website": "Website"
       },
-      "linkPlaceholders": {
-        "github": "https://github.com/…",
-        "linkedin": "https://linkedin.com/in/…",
-        "x": "https://x.com/…",
-        "website": "https://…"
+      "usernamePlaceholder": "username",
+      "avatar": {
+        "label": "Foto profil",
+        "hint": "JPG, PNG, atau WebP. Foto dipotong jadi persegi dan langsung tersimpan.",
+        "hintOauth": "Sekarang memakai foto dari akun GitHub atau Google kamu.",
+        "upload": "Unggah foto",
+        "change": "Ganti foto",
+        "remove": "Pakai foto akun",
+        "uploading": "Mengunggah…",
+        "removing": "Menghapus…",
+        "saved": "Foto profil tersimpan.",
+        "removed": "Kembali memakai foto dari akun login.",
+        "errors": {
+          "unauthorized": "Sesi login habis. Masuk lagi, lalu coba lagi.",
+          "unsupported_type": "Pakai file JPG, PNG, atau WebP.",
+          "too_large": "Ukuran foto terlalu besar. Maksimal 20 MB.",
+          "invalid_image": "Foto ini tidak bisa dibaca. Coba file lain.",
+          "rate_limit": "Terlalu sering mengganti foto. Coba lagi sejam lagi.",
+          "unavailable": "Unggah foto sedang tidak tersedia. Coba lagi nanti.",
+          "failed": "Gagal menyimpan foto. Coba lagi, ya."
+        }
       },
-      "avatarNote": "Foto profil diambil dari akun GitHub atau Google yang kamu pakai untuk masuk.",
       "cancel": "Batal",
       "save": "Simpan profil",
       "saving": "Menyimpan…",
@@ -178,7 +198,8 @@
         "taken": "Username ini sudah dipakai. Coba yang lain.",
         "invalid": "Isian tidak valid.",
         "unauthorized": "Sesi login habis. Masuk lagi, lalu coba lagi.",
-        "failed": "Gagal menyimpan. Coba lagi, ya."
+        "failed": "Gagal menyimpan. Coba lagi, ya.",
+        "invalid_handle": "Username tidak valid. Isi username-nya saja, atau tempel link profil dari platform ini."
       }
     },
     "archive": {
@@ -615,6 +636,9 @@
       "github": "GitHub",
       "linkedin": "LinkedIn",
       "x": "X",
+      "threads": "Threads",
+      "instagram": "Instagram",
+      "tiktok": "TikTok",
       "website": "Website"
     },
     "stats": {

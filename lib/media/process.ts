@@ -1,11 +1,24 @@
 import "server-only";
 import sharp from "sharp";
-import { MAX_IMAGE_SIDE, MAX_INPUT_SIDE, MAX_STORED_BYTES } from "./limits";
+import { AVATAR_SIDE, MAX_IMAGE_SIDE, MAX_INPUT_SIDE, MAX_STORED_BYTES } from "./limits";
 
 export class InvalidImageError extends Error {}
 
 const qualities = [82, 74, 66, 58, 50];
 const inputFormats = new Set(["jpeg", "png", "webp"]);
+
+/** Refuses anything but a JPEG, PNG or WebP within MAX_INPUT_SIDE, before decoding it. */
+async function checkInput(input: Uint8Array) {
+  const { format, width, height } = await sharp(input)
+    .metadata()
+    .catch(() => {
+      throw new InvalidImageError("Unreadable image.");
+    });
+  if (!format || !inputFormats.has(format)) throw new InvalidImageError(`Unsupported ${format}.`);
+  if (!width || !height || width > MAX_INPUT_SIDE || height > MAX_INPUT_SIDE) {
+    throw new InvalidImageError("Image dimensions out of range.");
+  }
+}
 
 /**
  * Re-encodes an uploaded image to WebP without metadata, lowering the quality (then the size)
@@ -16,16 +29,7 @@ const inputFormats = new Set(["jpeg", "png", "webp"]);
  * it is rotated and resized a single time into raw pixels that every quality/size attempt reuses.
  */
 export async function encodeWebp(input: Uint8Array) {
-  const { format, width, height } = await sharp(input)
-    .metadata()
-    .catch(() => {
-      throw new InvalidImageError("Unreadable image.");
-    });
-  if (!format || !inputFormats.has(format)) throw new InvalidImageError(`Unsupported ${format}.`);
-  if (!width || !height || width > MAX_INPUT_SIDE || height > MAX_INPUT_SIDE) {
-    throw new InvalidImageError("Image dimensions out of range.");
-  }
-
+  await checkInput(input);
   try {
     // rotate() applies the EXIF orientation; output carries no metadata (EXIF, GPS, ICC) by default.
     const base = await sharp(input, {
@@ -72,4 +76,22 @@ export async function encodeWebp(input: Uint8Array) {
     throw new InvalidImageError("Could not decode the image.", { cause: error });
   }
   throw new InvalidImageError("Image does not fit the size budget.");
+}
+
+/** Profile photo: center-cropped to an AVATAR_SIDE square, WebP without metadata. */
+export async function encodeAvatar(input: Uint8Array) {
+  await checkInput(input);
+  try {
+    const data = await sharp(input, {
+      limitInputPixels: MAX_INPUT_SIDE * MAX_INPUT_SIDE,
+      failOn: "error",
+    })
+      .rotate()
+      .resize({ width: AVATAR_SIDE, height: AVATAR_SIDE, fit: "cover", position: "attention" })
+      .webp({ quality: 80, effort: 4 })
+      .toBuffer();
+    return new Uint8Array(data);
+  } catch (error) {
+    throw new InvalidImageError("Could not decode the image.", { cause: error });
+  }
 }

@@ -1,5 +1,12 @@
 import { z } from "zod";
 import { usernamePattern } from "@/app/[locale]/onboarding/username";
+import {
+  parseSocial,
+  PROFILE_LINK_KEYS,
+  SOCIAL_KEYS,
+  socialInputValue,
+  type SocialKey,
+} from "@/lib/profiles/social";
 import { httpsUrlPattern } from "./project";
 
 // Profile rules shared by the "Edit profil" form (browser) and the updateProfile action
@@ -14,7 +21,7 @@ export const PROFILE_LIMITS = {
 } as const;
 
 export type ProfileErrorCode =
-  "required" | "too_long" | "invalid_url" | "invalid_username" | "invalid";
+  "required" | "too_long" | "invalid_url" | "invalid_username" | "invalid_handle" | "invalid";
 
 const error = (code: ProfileErrorCode) => ({ error: code });
 
@@ -26,15 +33,31 @@ const optionalHttpsUrl = z
   .max(PROFILE_LIMITS.url, error("too_long"))
   .refine((value) => value === "" || httpsUrlPattern.test(value), error("invalid_url"));
 
+/** A username (or pasted profile link) for one platform, stored as the full https link. */
+const social = (key: SocialKey) =>
+  z
+    .string()
+    .trim()
+    .max(PROFILE_LIMITS.url, error("too_long"))
+    .transform((value, context) => {
+      const parsed = parseSocial(key, value);
+      if (parsed.ok) return parsed.url;
+      context.addIssue({ code: "custom", message: "invalid_handle" });
+      return z.NEVER;
+    });
+
 export const profileSchema = z.object({
   displayName: text(PROFILE_LIMITS.displayName).min(1, error("required")),
   username: z.string().trim().toLowerCase().regex(usernamePattern, error("invalid_username")),
   bio: text(PROFILE_LIMITS.bio),
   location: text(PROFILE_LIMITS.location),
   tipUrl: optionalHttpsUrl,
-  github: optionalHttpsUrl,
-  linkedin: optionalHttpsUrl,
-  x: optionalHttpsUrl,
+  github: social("github"),
+  linkedin: social("linkedin"),
+  x: social("x"),
+  threads: social("threads"),
+  instagram: social("instagram"),
+  tiktok: social("tiktok"),
   website: optionalHttpsUrl,
 });
 
@@ -49,6 +72,9 @@ export const PROFILE_FIELDS = [
   "github",
   "linkedin",
   "x",
+  "threads",
+  "instagram",
+  "tiktok",
   "website",
 ] as const satisfies readonly (keyof ProfileInput)[];
 
@@ -64,7 +90,13 @@ export function readProfileForm(formData: FormData): ProfileFormValues {
 /** Field → first error code. */
 export type ProfileFieldErrors = Partial<Record<keyof ProfileInput, ProfileErrorCode | "taken">>;
 
-const knownCodes = new Set<string>(["required", "too_long", "invalid_url", "invalid_username"]);
+const knownCodes = new Set<string>([
+  "required",
+  "too_long",
+  "invalid_url",
+  "invalid_username",
+  "invalid_handle",
+]);
 
 export function profileFieldErrors(zodError: z.ZodError): ProfileFieldErrors {
   const errors: ProfileFieldErrors = {};
@@ -79,9 +111,7 @@ export function profileFieldErrors(zodError: z.ZodError): ProfileFieldErrors {
 /** The row update for public.profiles (empty optional fields become null). */
 export function toProfileUpdate(profile: ProfileInput) {
   const links = Object.fromEntries(
-    (["github", "linkedin", "x", "website"] as const).flatMap((key) =>
-      profile[key] ? [[key, profile[key]]] : [],
-    ),
+    PROFILE_LINK_KEYS.flatMap((key) => (profile[key] ? [[key, profile[key]]] : [])),
   );
   return {
     display_name: profile.displayName,
@@ -91,4 +121,13 @@ export function toProfileUpdate(profile: ProfileInput) {
     tip_url: profile.tipUrl || null,
     links,
   };
+}
+
+/** Saved values back in the form's shape (links shown as usernames again). */
+export function toProfileFormValues(profile: ProfileInput): ProfileFormValues {
+  const values = Object.fromEntries(
+    PROFILE_FIELDS.map((field) => [field, profile[field]]),
+  ) as ProfileFormValues;
+  for (const key of SOCIAL_KEYS) values[key] = socialInputValue(key, profile[key]);
+  return values;
 }

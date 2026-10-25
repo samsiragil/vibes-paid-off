@@ -74,3 +74,33 @@ export function Textarea({ className, ...props }: ComponentProps<"textarea">) {
 export function Select({ className, ...props }: ComponentProps<"select">) {
   return <select className={cn(control, "h-11 pr-10", className)} {...props} />;
 }
+
+/**
+ * Input with fixed text in front ("jadinya.dev/u/", "github.com/"), so only the part that
+ * changes is typed. The prefix is decoration; say what it is in the label or hint.
+ */
+export function PrefixInput({
+  prefix,
+  className,
+  ...props
+}: ComponentProps<"input"> & { prefix: ReactNode }) {
+  return (
+    <div
+      className={cn(
+        "flex h-11 items-center rounded-md border-[1.5px] border-border-strong bg-surface pl-3 text-base text-muted transition-colors ease-out focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-accent hover:border-ink has-[input[aria-invalid=true]]:border-danger motion-reduce:transition-none",
+        className,
+      )}
+    >
+      <span aria-hidden="true" className="max-w-[55%] shrink-0 truncate">
+        {prefix}
+      </span>
+      <input
+        autoCapitalize="none"
+        autoCorrect="off"
+        spellCheck={false}
+        {...props}
+        className="h-full min-w-0 grow bg-transparent pr-4 text-ink placeholder:text-muted focus:outline-none"
+      />
+    </div>
+  );
+}

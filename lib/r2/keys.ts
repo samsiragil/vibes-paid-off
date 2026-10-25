@@ -16,3 +16,13 @@ export function isTmpKeyOf(userId: string, key: string) {
 export function projectMediaKey(projectId: string) {
   return `p/${projectId}/${crypto.randomUUID()}.webp`;
 }
+
+/** Final, public location of a profile photo. A new key per upload, so caches never go stale. */
+export function avatarKey(userId: string) {
+  return `a/${userId}/${crypto.randomUUID()}.webp`;
+}
+
+/** True only for a profile photo key of this user. */
+export function isAvatarKeyOf(userId: string, key: string) {
+  return new RegExp(`^a/${userId}/${uuid}\\.webp$`).test(key);
+}

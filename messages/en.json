@@ -153,19 +153,39 @@
       "locationPlaceholder": "For example Yogyakarta",
       "tipUrl": "Tip me link",
       "tipUrlHint": "Ko-fi, Buy Me a Coffee, Saweria or similar. Shows as a button on your profile and projects.",
+      "linksTitle": "Social media & website",
+      "linksHint": "Just the username is enough. Pasting a profile link works too; it gets tidied up. Leave the ones you don't use empty.",
       "links": {
         "github": "GitHub",
         "linkedin": "LinkedIn",
         "x": "X",
+        "threads": "Threads",
+        "instagram": "Instagram",
+        "tiktok": "TikTok",
         "website": "Website"
       },
-      "linkPlaceholders": {
-        "github": "https://github.com/…",
-        "linkedin": "https://linkedin.com/in/…",
-        "x": "https://x.com/…",
-        "website": "https://…"
+      "usernamePlaceholder": "username",
+      "avatar": {
+        "label": "Profile photo",
+        "hint": "JPG, PNG or WebP. The photo is cropped square and saved right away.",
+        "hintOauth": "Currently using the photo from your GitHub or Google account.",
+        "upload": "Upload photo",
+        "change": "Change photo",
+        "remove": "Use account photo",
+        "uploading": "Uploading…",
+        "removing": "Removing…",
+        "saved": "Profile photo saved.",
+        "removed": "Back to the photo from your sign-in account.",
+        "errors": {
+          "unauthorized": "Your session expired. Sign in again, then retry.",
+          "unsupported_type": "Use a JPG, PNG or WebP file.",
+          "too_large": "That photo is too large. 20 MB at most.",
+          "invalid_image": "This photo can't be read. Try another file.",
+          "rate_limit": "Too many photo changes. Try again in an hour.",
+          "unavailable": "Photo upload is unavailable right now. Try again later.",
+          "failed": "Could not save the photo. Please try again."
+        }
       },
-      "avatarNote": "Your profile photo comes from the GitHub or Google account you sign in with.",
       "cancel": "Cancel",
       "save": "Save profile",
       "saving": "Saving…",
@@ -178,7 +198,8 @@
         "taken": "That username is taken. Try another one.",
         "invalid": "This value isn't valid.",
         "unauthorized": "Your session expired. Sign in again, then retry.",
-        "failed": "Couldn't save. Please try again."
+        "failed": "Couldn't save. Please try again.",
+        "invalid_handle": "That username isn't valid. Type only the username, or paste a profile link from this platform."
       }
     },
     "archive": {
@@ -615,6 +636,9 @@
       "github": "GitHub",
       "linkedin": "LinkedIn",
       "x": "X",
+      "threads": "Threads",
+      "instagram": "Instagram",
+      "tiktok": "TikTok",
       "website": "Website"
     },
     "stats": {

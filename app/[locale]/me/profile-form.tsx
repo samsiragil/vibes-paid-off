@@ -3,9 +3,9 @@
 import { useTranslations } from "next-intl";
 import { useActionState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
-import { Field, Input, Textarea } from "@/components/ui/field";
+import { Field, Input, PrefixInput, Textarea } from "@/components/ui/field";
 import { updateProfile, type ProfileFormState } from "@/lib/profiles/actions";
-import { cn } from "@/lib/cn";
+import { SOCIAL_KEYS, socialPrefix, tidySocialInput } from "@/lib/profiles/social";
 import {
   PROFILE_LIMITS,
   profileFieldErrors,
@@ -15,9 +15,7 @@ import {
   type ProfileInput,
 } from "@/lib/validation/profile";
 
-const LINK_FIELDS = ["github", "linkedin", "x", "website"] as const;
-
-/** "Edit profil" on /me: the public profile fields (photo comes from the OAuth account, Q14). */
+/** "Edit profil" on /me: the public profile fields. The photo has its own uploader above. */
 export function ProfileForm({
   initialValues,
   profileHost,
@@ -91,29 +89,16 @@ export function ProfileForm({
         hint={t("usernameHint")}
         error={errorText("username")}
       >
-        <div
-          className={cn(
-            "flex h-11 items-center rounded-md border-[1.5px] border-border-strong bg-surface pl-3 text-base text-muted transition-colors focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-accent hover:border-ink",
-            errors.username && "border-danger",
-          )}
-        >
-          <span aria-hidden="true" className="max-w-[55%] shrink-0 truncate">
-            {profileHost}
-          </span>
-          <input
-            id="profile-username"
-            name="username"
-            defaultValue={values.username}
-            maxLength={20}
-            autoCapitalize="none"
-            autoCorrect="off"
-            spellCheck={false}
-            required
-            aria-invalid={Boolean(errors.username)}
-            aria-describedby={describedBy("username", true)}
-            className="h-full min-w-0 grow bg-transparent pr-4 text-ink focus:outline-none"
-          />
-        </div>
+        <PrefixInput
+          prefix={profileHost}
+          id="profile-username"
+          name="username"
+          defaultValue={values.username}
+          maxLength={20}
+          required
+          aria-invalid={Boolean(errors.username)}
+          aria-describedby={describedBy("username", true)}
+        />
       </Field>
 
       <Field
@@ -167,27 +152,48 @@ export function ProfileForm({
         />
       </Field>
 
-      {LINK_FIELDS.map((field) => (
+      <fieldset className="grid gap-x-6 gap-y-[18px] border-t border-border pt-6 sm:col-span-2 sm:grid-cols-2">
+        <legend className="float-left mb-1 text-base font-semibold text-ink sm:col-span-2">
+          {t("linksTitle")}
+          <span className="mt-1 block text-sm font-normal text-muted">{t("linksHint")}</span>
+        </legend>
+
+        {SOCIAL_KEYS.map((key) => (
+          <Field key={key} id={`profile-${key}`} label={t(`links.${key}`)} error={errorText(key)}>
+            <PrefixInput
+              prefix={socialPrefix(key)}
+              id={`profile-${key}`}
+              name={key}
+              defaultValue={values[key]}
+              maxLength={PROFILE_LIMITS.url}
+              placeholder={t("usernamePlaceholder")}
+              onBlur={(event) => {
+                event.currentTarget.value = tidySocialInput(key, event.currentTarget.value);
+              }}
+              aria-invalid={Boolean(errors[key])}
+              aria-describedby={describedBy(key)}
+            />
+          </Field>
+        ))}
+
         <Field
-          key={field}
-          id={`profile-${field}`}
-          label={t(`links.${field}`)}
-          error={errorText(field)}
+          id="profile-website"
+          label={t("links.website")}
+          error={errorText("website")}
+          className="sm:col-span-2"
         >
           <Input
-            id={`profile-${field}`}
-            name={field}
+            id="profile-website"
+            name="website"
             type="url"
             inputMode="url"
-            defaultValue={values[field]}
-            placeholder={t(`linkPlaceholders.${field}`)}
-            aria-invalid={Boolean(errors[field])}
-            aria-describedby={describedBy(field)}
+            defaultValue={values.website}
+            placeholder="https://…"
+            aria-invalid={Boolean(errors.website)}
+            aria-describedby={describedBy("website")}
           />
         </Field>
-      ))}
-
-      <p className="text-[13px] text-muted sm:col-span-2">{t("avatarNote")}</p>
+      </fieldset>
 
       <div className="flex flex-col-reverse gap-3 pt-2 sm:col-span-2 sm:flex-row sm:items-center sm:justify-end">
         <p role="status" className="text-sm text-ink-2 sm:mr-auto">

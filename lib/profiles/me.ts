@@ -3,6 +3,7 @@ import type { LinkStatus, ProjectStatus } from "@/lib/projects/types";
 import { createClient } from "@/lib/supabase/server";
 import type { ProfileFormValues } from "@/lib/validation/profile";
 import { parseProfileLinks } from "./public";
+import { SOCIAL_KEYS, socialInputValue } from "./social";
 
 const RECENT_APPROVAL_MS = 7 * 24 * 3_600_000;
 /** "Ceritain dong" nudge: a published project without a story, once people noticed it… */
@@ -89,9 +90,9 @@ export async function getMyProfileForm(userId: string): Promise<ProfileFormValue
     bio: data.bio ?? "",
     location: data.location ?? "",
     tipUrl: data.tip_url ?? "",
-    github: links.github ?? "",
-    linkedin: links.linkedin ?? "",
-    x: links.x ?? "",
+    ...(Object.fromEntries(
+      SOCIAL_KEYS.map((key) => [key, socialInputValue(key, links[key] ?? "")]),
+    ) as Record<(typeof SOCIAL_KEYS)[number], string>),
     website: links.website ?? "",
   };
 }

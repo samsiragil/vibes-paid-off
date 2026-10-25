@@ -10,3 +10,13 @@ export function mediaUrl(key: string) {
   }
   return `${baseUrl}/${key.split("/").map(encodeURIComponent).join("/")}`;
 }
+
+/** The key of an image on our media domain (an uploaded profile photo), or null for other URLs. */
+export function mediaKeyOf(url: string) {
+  if (!baseUrl || !url.startsWith(`${baseUrl}/`)) return null;
+  return url
+    .slice(baseUrl.length + 1)
+    .split("/")
+    .map(decodeURIComponent)
+    .join("/");
+}

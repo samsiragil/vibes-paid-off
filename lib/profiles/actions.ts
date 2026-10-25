@@ -4,10 +4,10 @@ import { updateTag } from "next/cache";
 import { LISTINGS_TAG, makerTag, usernameTag } from "@/lib/cache-tags";
 import { createClient } from "@/lib/supabase/server";
 import {
-  PROFILE_FIELDS,
   profileFieldErrors,
   profileSchema,
   readProfileForm,
+  toProfileFormValues,
   toProfileUpdate,
   type ProfileFieldErrors,
   type ProfileFormValues,
@@ -82,11 +82,5 @@ export async function updateProfile(
     updateTag(usernameTag(before.username));
   }
 
-  const saved = parsed.data;
-  return {
-    status: "saved",
-    values: Object.fromEntries(
-      PROFILE_FIELDS.map((field) => [field, saved[field]]),
-    ) as ProfileFormValues,
-  };
+  return { status: "saved", values: toProfileFormValues(parsed.data) };
 }

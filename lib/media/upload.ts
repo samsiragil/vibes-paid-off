@@ -1,8 +1,10 @@
 // Browser side of the image pipeline (§2.4): compress, presign, upload to R2, finalize.
 import {
+  AVATAR_SIDE,
   isAcceptedImageType,
   MAX_IMAGE_SIDE,
   MAX_SOURCE_BYTES,
+  MAX_AVATAR_UPLOAD_BYTES,
   MAX_UPLOAD_BYTES,
   type MediaErrorCode,
   type ProjectMedia,
@@ -50,6 +52,45 @@ export async function compressImage(file: File): Promise<Blob> {
   const blob = webp?.type === "image/webp" ? webp : await toBlob(canvas, "image/jpeg", 0.9);
   if (!blob) throw new MediaUploadError("invalid_image");
   if (blob.size > MAX_UPLOAD_BYTES) throw new MediaUploadError("too_large");
+  return blob;
+}
+
+/** Profile photo: the centered square, AVATAR_SIDE wide. The server crops and re-encodes again. */
+export async function compressAvatar(file: File): Promise<Blob> {
+  if (!isAcceptedImageType(file.type)) throw new MediaUploadError("unsupported_type");
+  if (file.size > MAX_SOURCE_BYTES) throw new MediaUploadError("too_large");
+
+  let bitmap: ImageBitmap;
+  try {
+    bitmap = await createImageBitmap(file);
+  } catch {
+    throw new MediaUploadError("invalid_image");
+  }
+
+  const side = Math.min(bitmap.width, bitmap.height);
+  const canvas = document.createElement("canvas");
+  canvas.width = canvas.height = Math.min(AVATAR_SIDE, side);
+  const context = canvas.getContext("2d");
+  if (!context) throw new MediaUploadError("failed");
+  context.fillStyle = "#ffffff";
+  context.fillRect(0, 0, canvas.width, canvas.height);
+  context.drawImage(
+    bitmap,
+    (bitmap.width - side) / 2,
+    (bitmap.height - side) / 2,
+    side,
+    side,
+    0,
+    0,
+    canvas.width,
+    canvas.height,
+  );
+  bitmap.close();
+
+  const webp = await toBlob(canvas, "image/webp", 0.9);
+  const blob = webp?.type === "image/webp" ? webp : await toBlob(canvas, "image/jpeg", 0.9);
+  if (!blob) throw new MediaUploadError("invalid_image");
+  if (blob.size > MAX_AVATAR_UPLOAD_BYTES) throw new MediaUploadError("too_large");
   return blob;
 }
 
