@@ -60,7 +60,7 @@ export function StoryMoments({
         return (
           <li key={moment} className="rounded border border-border bg-bg px-4 py-3">
             {isOpen ? (
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-2 motion-fade-in">
                 <div className="flex items-start justify-between gap-3">
                   <p className="text-base leading-6 font-semibold text-ink">{t(moment)}</p>
                   <button

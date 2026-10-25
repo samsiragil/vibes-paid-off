@@ -628,7 +628,7 @@ function ProjectFormBody({
 
           <details
             open={extrasOpen}
-            className="group rounded border border-border bg-surface px-4 py-2"
+            className="group motion-details rounded border border-border bg-surface px-4 py-2"
           >
             <summary className="flex min-h-9 cursor-pointer list-none items-center gap-2 text-base font-semibold text-ink [&::-webkit-details-marker]:hidden">
               <svg
@@ -844,7 +844,7 @@ function AutofillAbout() {
   ];
 
   return (
-    <details className="group -mt-1.5 text-sm leading-5 text-ink-2">
+    <details className="group -mt-1.5 motion-details text-sm leading-5 text-ink-2">
       <summary className="inline-flex min-h-6 cursor-pointer list-none items-center gap-1.5 underline-offset-3 hover:underline [&::-webkit-details-marker]:hidden">
         <svg
           width="14"
@@ -923,7 +923,7 @@ function SuccessMessage({
     );
 
   return (
-    <div ref={ref} className="flex max-w-[760px] flex-col gap-5 pt-10">
+    <div ref={ref} className="flex max-w-[760px] flex-col gap-5 pt-10 motion-fade-in">
       <SystemMessage>
         <span role="status">
           {t.rich(success.status === "published" ? "published" : "pending", { link })}

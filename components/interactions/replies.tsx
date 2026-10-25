@@ -16,6 +16,7 @@ import { Turnstile, type TurnstileHandle } from "@/components/project/turnstile"
 import { Avatar } from "@/components/ui/avatar";
 import { SystemMessage } from "@/components/ui/bubble";
 import { buttonStyles } from "@/components/ui/button";
+import { cn } from "@/lib/cn";
 import {
   deleteReply,
   postReply,
@@ -110,6 +111,7 @@ export function RepliesSection({
               reply={reply}
               isMaker={reply.author.id === maker.id}
               isOwn={reply.author.id === viewerId}
+              fresh={!known.has(reply.id)}
               linkable={linkable}
               viewer={viewer}
               onReply={() => formRef.current?.mention(reply.author.username)}
@@ -151,6 +153,7 @@ function ReplyItem({
   reply,
   isMaker,
   isOwn,
+  fresh,
   linkable,
   viewer,
   onReply,
@@ -159,6 +162,8 @@ function ReplyItem({
   reply: ReplyView;
   isMaker: boolean;
   isOwn: boolean;
+  /** Posted in this visit (not in the server list yet): it fades in. */
+  fresh: boolean;
   linkable: ReadonlySet<string>;
   viewer: ReplyViewer;
   onReply: () => void;
@@ -169,7 +174,12 @@ function ReplyItem({
   const date = new Date(reply.createdAt);
 
   return (
-    <li className="flex items-start gap-3 border-b border-border py-4">
+    <li
+      className={cn(
+        "flex items-start gap-3 border-b border-border py-4",
+        fresh && "motion-fade-in",
+      )}
+    >
       <Avatar
         name={reply.author.displayName}
         src={reply.author.avatarUrl}

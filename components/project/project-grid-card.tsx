@@ -1,5 +1,6 @@
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
+import { cn } from "@/lib/cn";
 import { mediaUrl } from "@/lib/media/url";
 import type { ProjectCardData } from "@/lib/projects/cards";
 import { toolsSummary } from "@/lib/projects/types";
@@ -16,6 +17,7 @@ export function ProjectGridCard({
   showMaker = true,
   showLang = false,
   eager = false,
+  className,
 }: {
   project: ProjectCardData;
   showMaker?: boolean;
@@ -23,13 +25,14 @@ export function ProjectGridCard({
   showLang?: boolean;
   /** First card of a grid: its screenshot is likely the LCP image (§ Fase 10 performance). */
   eager?: boolean;
+  className?: string;
 }) {
   const t = useTranslations("projectCard");
   const tCategories = useTranslations("categories");
   const summary = toolsSummary(project.tools);
 
   return (
-    <Link href={`/p/${project.slug}`} className="group block rounded">
+    <Link href={`/p/${project.slug}`} className={cn("group block rounded", className)}>
       <ProjectCardView
         makerName={project.maker.displayName}
         makerAvatarUrl={project.maker.avatarUrl}

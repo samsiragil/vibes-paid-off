@@ -407,7 +407,12 @@ export function ResultsGrid({
       <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
         {children}
         {extra.map((project) => (
-          <ProjectGridCard key={project.id} project={project} showLang={showLang} />
+          <ProjectGridCard
+            key={project.id}
+            project={project}
+            showLang={showLang}
+            className="motion-fade-in"
+          />
         ))}
       </div>
       {cursor ? (

@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { startTransition, useState, ViewTransition } from "react";
 import { ResultBubble } from "@/components/ui/bubble";
 import { ExternalLink } from "@/components/ui/external-link";
 import { MediaImage } from "@/components/ui/media-image";
@@ -31,16 +31,18 @@ export function MediaGallery({
       <ResultBubble taped className="p-2">
         <div className="relative aspect-[16/10] overflow-hidden rounded-sm bg-placeholder">
           {current ? (
-            <MediaImage
-              key={current.id}
-              mediaKey={current.key}
-              alt={t("imageAlt", { position: selected + 1, title })}
-              width={current.width}
-              height={current.height}
-              sizes="(min-width: 1024px) 760px, 100vw"
-              priority={selected === 0}
-              className="size-full object-contain"
-            />
+            // A new key swaps the image, and the swap crossfades (README §11).
+            <ViewTransition key={current.id} enter="fade" exit="fade" default="none">
+              <MediaImage
+                mediaKey={current.key}
+                alt={t("imageAlt", { position: selected + 1, title })}
+                width={current.width}
+                height={current.height}
+                sizes="(min-width: 1024px) 760px, 100vw"
+                priority={selected === 0}
+                className="size-full object-contain"
+              />
+            </ViewTransition>
           ) : (
             <p className="flex size-full items-center justify-center px-6 text-center text-base text-muted">
               {t("empty")}
@@ -58,7 +60,7 @@ export function MediaGallery({
                   type="button"
                   aria-label={t("show", { position: index + 1 })}
                   aria-pressed={index === selected}
-                  onClick={() => setSelected(index)}
+                  onClick={() => startTransition(() => setSelected(index))}
                   className={cn(
                     "rounded border p-1 transition-colors",
                     index === selected

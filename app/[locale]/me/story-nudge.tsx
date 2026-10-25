@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { useState, useTransition, type ReactNode } from "react";
+import { useState, useTransition, ViewTransition, type ReactNode } from "react";
 import { SystemMessage } from "@/components/ui/bubble";
 import { Button } from "@/components/ui/button";
 import { dismissStoryNudge } from "@/lib/projects/actions";
@@ -26,25 +26,29 @@ export function DismissibleNudge({
 
   if (hidden) return null;
 
+  // Fades out when dismissed instead of vanishing (README §11).
   return (
-    <SystemMessage>
-      <span role="status">{children}</span>
-      <span className="mt-3 flex flex-wrap items-center gap-2">
-        {action}
-        <Button
-          variant="ghost"
-          size="sm"
-          disabled={pending}
-          onClick={() =>
-            startTransition(async () => {
-              const result = await dismissStoryNudge(projectId);
-              if (result.ok) setHidden(true);
-            })
-          }
-        >
-          {t("dismiss")}
-        </Button>
-      </span>
-    </SystemMessage>
+    <ViewTransition exit="fade" default="none">
+      <SystemMessage>
+        <span role="status">{children}</span>
+        <span className="mt-3 flex flex-wrap items-center gap-2">
+          {action}
+          <Button
+            variant="ghost"
+            size="sm"
+            disabled={pending}
+            onClick={() =>
+              startTransition(async () => {
+                const result = await dismissStoryNudge(projectId);
+                // After an await the update needs its own transition to run the exit fade.
+                if (result.ok) startTransition(() => setHidden(true));
+              })
+            }
+          >
+            {t("dismiss")}
+          </Button>
+        </span>
+      </SystemMessage>
+    </ViewTransition>
   );
 }

@@ -201,7 +201,7 @@ Aturan:
 - Selain itu gerak hanya untuk menjelaskan perubahan, tidak untuk hiasan:
   - Ganti tema, ganti bahasa, pindah halaman, skeleton ke isi: crossfade (`<ViewTransition>`), tanpa geser.
   - Dialog, sheet, menu mobile, popover: muncul dengan fade dan geser kecil (4–12 px).
-  - Listbox, panel tab, gambar galeri, bagian yang dibuka: fade saja.
+  - Listbox, panel tab, gambar galeri, bagian yang dibuka, isi yang baru masuk: fade saja. `<details>` membuka dan menutup tingginya.
 - Tanpa animasi loop (skeleton diam, tanpa spinner), parallax, stagger daftar, angka berhitung, atau kartu yang naik/membesar saat hover. Pesan error muncul seketika.
 - `prefers-reduced-motion`: semua transisi dan view transition mati, panah langsung utuh.
 

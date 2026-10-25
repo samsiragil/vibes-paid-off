@@ -190,6 +190,24 @@
   }
 }
 
+/* <details> that opens and closes its height instead of jumping. Where unsupported, it jumps. */
+@utility motion-details {
+  interpolate-size: allow-keywords;
+
+  &::details-content {
+    block-size: 0;
+    overflow-y: clip;
+    transition-property: block-size, content-visibility;
+    transition-duration: var(--duration-base);
+    transition-timing-function: var(--ease-standard);
+    transition-behavior: allow-discrete;
+  }
+
+  &[open]::details-content {
+    block-size: auto;
+  }
+}
+
 /* The one signature motion (README §11): a stroke that draws itself once, 400 ms. */
 @utility draw-once {
   stroke-dasharray: 1;

@@ -83,7 +83,7 @@ export function MeTabs({
           aria-labelledby={`${id}-${tab}-tab`}
           hidden={active !== tab}
           tabIndex={0}
-          className="focus-visible:outline-offset-4"
+          className="motion-fade-in focus-visible:outline-offset-4"
         >
           {panels[tab]}
         </div>
