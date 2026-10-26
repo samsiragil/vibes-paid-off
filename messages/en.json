@@ -418,7 +418,10 @@
       "suggestAdd": "Add",
       "suggestCancel": "Cancel",
       "suggestNote": "It shows as plain text on your project until an admin adds it to the catalog.",
-      "selected": "Your tools",
+      "selected": "{count, plural, =0 {Your tools} other {Your other tools (#)}}",
+      "detected": "We checked your repo and picked {count, plural, one {# tool} other {# tools}}. Remove any you did not use.",
+      "added": "{name} added",
+      "removed": "{name} removed",
       "remove": "Remove {name}",
       "suggested": "new",
       "hint": "At least one AI tool (agent, app builder, or AI assistant)."

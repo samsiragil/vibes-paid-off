@@ -19,6 +19,8 @@ export type AutofillSuggestion = {
   imageUrl: string | null;
   contentLang: ContentLang | null;
   effort: BuildEffort | null;
+  /** Catalog tool slugs a public repo shows it uses (config files, dependencies, languages). */
+  toolSlugs: string[];
   /** Commit stats of a public repo, null otherwise. */
   repo: { commits: number; activeDays: number } | null;
   /** "not_found": GitHub has the account but not the repo, so it is private (or a typo). */
@@ -102,6 +104,7 @@ export async function autofillFromLinks(request: {
         [title, longText].filter(Boolean).join(" "),
       ),
       effort: repo?.effort ?? null,
+      toolSlugs: repo?.toolSlugs ?? [],
       repo: repo ? { commits: repo.commits, activeDays: repo.activeDays } : null,
       repoState: lookup.status,
       pageFailed: Boolean(liveUrl) && (!meta || !(meta.title || meta.description || meta.image)),

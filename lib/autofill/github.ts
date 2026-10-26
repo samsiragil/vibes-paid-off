@@ -1,10 +1,12 @@
 import "server-only";
 import {
   activeDays,
+  detectStack,
   estimateEffort,
   parseGithubRepo,
   readmeSummary,
   type BuildEffortGuess,
+  type RepoManifests,
 } from "./parse";
 
 // Public GitHub repos through the REST API. GITHUB_TOKEN (optional, no scopes needed) raises the
@@ -15,6 +17,7 @@ const TIMEOUT_MS = 8_000;
 /** Commit pages read for active days (100 commits each); the very first commit is read separately. */
 const MAX_COMMIT_PAGES = 3;
 const MAX_README_BYTES = 64 * 1024;
+const MAX_MANIFEST_BYTES = 64 * 1024;
 
 export type RepoInfo = {
   description: string | null;
@@ -22,7 +25,35 @@ export type RepoInfo = {
   commits: number;
   activeDays: number;
   effort: BuildEffortGuess | null;
+  /** Catalog slugs the repo shows it uses (detectStack). */
+  toolSlugs: string[];
 };
+
+/** Root dependency manifests, read only when the root listing shows them. */
+const MANIFEST_FILES: Record<string, keyof RepoManifests> = {
+  "package.json": "packageJson",
+  "requirements.txt": "python",
+  "pyproject.toml": "python",
+  "composer.json": "composerJson",
+  "pubspec.yaml": "pubspec",
+  Gemfile: "gemfile",
+};
+
+async function readManifests(base: string, rootNames: string[], signal: AbortSignal) {
+  const manifests: RepoManifests = {};
+  const files = Object.keys(MANIFEST_FILES).filter((file) => rootNames.includes(file));
+  const texts = await Promise.all(
+    files.map(async (file) => {
+      const response = await get(`${base}/contents/${file}`, signal, "application/vnd.github.raw");
+      return response ? (await response.text()).slice(0, MAX_MANIFEST_BYTES) : "";
+    }),
+  );
+  files.forEach((file, index) => {
+    const key = MANIFEST_FILES[file];
+    manifests[key] = [manifests[key], texts[index]].filter(Boolean).join("\n");
+  });
+  return manifests;
+}
 
 /**
  * GitHub answers 404 for a private repo and for one that does not exist, so a 404 under an
@@ -86,10 +117,12 @@ export async function getRepoInfo(repoUrl: string): Promise<RepoLookup> {
   const signal = AbortSignal.timeout(TIMEOUT_MS);
 
   try {
-    const [meta, readme, firstPage] = await Promise.all([
+    const [meta, readme, firstPage, rootListing, languageStats] = await Promise.all([
       request(base, signal),
       get(`${base}/readme`, signal, "application/vnd.github.raw"),
       get(`${base}/commits?per_page=100`, signal),
+      get(`${base}/contents`, signal),
+      get(`${base}/languages`, signal),
     ]);
     if (!meta.ok) {
       await meta.body?.cancel().catch(() => {});
@@ -132,6 +165,14 @@ export async function getRepoInfo(repoUrl: string): Promise<RepoLookup> {
 
     const readmeText = readme ? (await readme.text()).slice(0, MAX_README_BYTES) : "";
 
+    const rootNames = rootListing
+      ? ((await rootListing.json()) as { name?: string }[]).flatMap((entry) => entry.name ?? [])
+      : [];
+    const languages = languageStats
+      ? Object.keys((await languageStats.json()) as Record<string, number>)
+      : [];
+    const manifests = await readManifests(base, rootNames, signal);
+
     const info: RepoInfo = {
       description: description?.trim() || null,
       summary: readmeText ? readmeSummary(readmeText) : null,
@@ -142,6 +183,7 @@ export async function getRepoInfo(repoUrl: string): Promise<RepoLookup> {
         pages > MAX_COMMIT_PAGES
           ? "longer"
           : estimateEffort({ commits, activeDays: days, spanHours }),
+      toolSlugs: detectStack({ rootNames, languages, manifests }),
     };
     return { status: "public", info };
   } catch {

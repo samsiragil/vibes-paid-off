@@ -25,6 +25,7 @@ export function ToolPicker({
   tools,
   quickPickIds,
   selectedIds,
+  detectedIds,
   suggestions,
   error,
   onSelectedChange,
@@ -35,6 +36,8 @@ export function ToolPicker({
   tools: CatalogTool[];
   quickPickIds: number[];
   selectedIds: number[];
+  /** Tools the repo check picked; a note says so while they are still selected. */
+  detectedIds: number[];
   suggestions: SuggestionValues[];
   error?: string;
   /** Updates take the latest list, so quick successive clicks never work on a stale copy. */
@@ -51,6 +54,7 @@ export function ToolPicker({
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState(0);
+  const [announcement, setAnnouncement] = useState("");
   const [draft, setDraft] = useState<{ name: string; url: string; error?: string } | null>(null);
   const listRef = useRef<HTMLDivElement>(null);
   const draftNameRef = useRef<HTMLInputElement>(null);
@@ -90,6 +94,8 @@ export function ToolPicker({
   }, [open, activeIndex]);
 
   function toggle(toolId: number) {
+    const name = byId.get(toolId)?.name ?? "";
+    setAnnouncement(t(selected.has(toolId) ? "removed" : "added", { name }));
     onSelectedChange((ids) =>
       ids.includes(toolId) ? ids.filter((existing) => existing !== toolId) : [...ids, toolId],
     );
@@ -98,6 +104,9 @@ export function ToolPicker({
   function choose(option: Option) {
     if (option.type === "tool") {
       toggle(option.tool.id);
+      // Clear the box so the pick shows up in the list above instead of under an open dropdown.
+      setQuery("");
+      setOpen(false);
       return;
     }
     setOpen(false);
@@ -166,6 +175,9 @@ export function ToolPicker({
   const extraSelected = selectedIds.flatMap((toolId) =>
     quickPickSet.has(toolId) ? [] : (byId.get(toolId) ?? []),
   );
+  const detectedStill = detectedIds.flatMap((toolId) =>
+    selected.has(toolId) ? (byId.get(toolId) ?? []) : [],
+  );
   const toolIndex = new Map(
     options.flatMap((option, index) =>
       option.type === "tool" ? [[option.tool.id, index] as const] : [],
@@ -174,6 +186,10 @@ export function ToolPicker({
 
   return (
     <div className="flex flex-col gap-3">
+      {detectedStill.length > 0 ? (
+        <p className="text-sm text-muted">{t("detected", { count: detectedStill.length })}</p>
+      ) : null}
+
       <div role="group" aria-label={t("quickPicks")} className="flex flex-wrap gap-2">
         {quickPicks.map((tool) => (
           <Pill key={tool.id} selected={selected.has(tool.id)} onClick={() => toggle(tool.id)}>
@@ -181,6 +197,47 @@ export function ToolPicker({
           </Pill>
         ))}
       </div>
+
+      {extraSelected.length > 0 || suggestions.length > 0 ? (
+        <div className="flex flex-col gap-2">
+          <span className="text-[13px] text-muted">
+            {t("selected", { count: extraSelected.length + suggestions.length })}
+          </span>
+          <ul className="flex flex-wrap gap-2">
+            {extraSelected.map((tool) => (
+              <li key={tool.id} className="motion-fade-in">
+                <button
+                  type="button"
+                  aria-label={t("remove", { name: tool.name })}
+                  onClick={() => toggle(tool.id)}
+                  className={pillStyles({ selected: true })}
+                >
+                  {tool.name}
+                  <CrossIcon />
+                </button>
+              </li>
+            ))}
+            {suggestions.map((suggestion) => (
+              <li key={suggestion.key} className="motion-fade-in">
+                <button
+                  type="button"
+                  aria-label={t("remove", { name: suggestion.name })}
+                  onClick={() =>
+                    onSuggestionsChange((current) =>
+                      current.filter((item) => item.key !== suggestion.key),
+                    )
+                  }
+                  className={pillStyles({ className: "border-dashed" })}
+                >
+                  {suggestion.name}
+                  <span className="text-[13px] text-muted">{t("suggested")}</span>
+                  <CrossIcon />
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
 
       <div className="relative">
         <label htmlFor={id} className="sr-only">
@@ -339,45 +396,9 @@ export function ToolPicker({
         </div>
       ) : null}
 
-      {extraSelected.length > 0 || suggestions.length > 0 ? (
-        <div className="flex flex-col gap-2">
-          <span className="text-[13px] text-muted">{t("selected")}</span>
-          <ul className="flex flex-wrap gap-2">
-            {extraSelected.map((tool) => (
-              <li key={tool.id}>
-                <button
-                  type="button"
-                  aria-label={t("remove", { name: tool.name })}
-                  onClick={() => toggle(tool.id)}
-                  className={pillStyles({ selected: true })}
-                >
-                  {tool.name}
-                  <CrossIcon />
-                </button>
-              </li>
-            ))}
-            {suggestions.map((suggestion) => (
-              <li key={suggestion.key}>
-                <button
-                  type="button"
-                  aria-label={t("remove", { name: suggestion.name })}
-                  onClick={() =>
-                    onSuggestionsChange((current) =>
-                      current.filter((item) => item.key !== suggestion.key),
-                    )
-                  }
-                  className={pillStyles({ className: "border-dashed" })}
-                >
-                  {suggestion.name}
-                  <span className="text-[13px] text-muted">{t("suggested")}</span>
-                  <CrossIcon />
-                </button>
-              </li>
-            ))}
-          </ul>
-        </div>
-      ) : null}
-
+      <p aria-live="polite" className="sr-only">
+        {announcement}
+      </p>
       {error ? (
         <p id={hintId} className="text-sm text-danger">
           {error}

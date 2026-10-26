@@ -418,7 +418,10 @@
       "suggestAdd": "Tambah",
       "suggestCancel": "Batal",
       "suggestNote": "Tampil sebagai teks dulu di proyekmu, lalu admin memasukkannya ke katalog.",
-      "selected": "Tools pilihanmu",
+      "selected": "{count, plural, =0 {Tools pilihanmu} other {Tools lain pilihanmu (#)}}",
+      "detected": "Kami cek repo kamu dan memilihkan {count} tools. Hapus yang tidak kamu pakai.",
+      "added": "{name} ditambahkan",
+      "removed": "{name} dihapus",
       "remove": "Hapus {name}",
       "suggested": "baru",
       "hint": "Minimal satu tools AI (agen, app builder, atau asisten AI)."

@@ -48,6 +48,7 @@ import {
   type ProjectStatus,
 } from "@/lib/projects/types";
 import {
+  PROJECT_LIMITS,
   projectFieldErrors,
   projectSchema,
   type ProjectFieldErrors,
@@ -164,6 +165,8 @@ function ProjectFormBody({
   const [found, setFound] = useState<Found | null>(null);
   const [autofilled, setAutofilled] = useState<ReadonlySet<string>>(new Set());
   const [suggestedEffort, setSuggestedEffort] = useState<BuildEffort | null>(null);
+  /** Tools the repo check picked, marked in the tool picker until the maker changes the list. */
+  const [detectedToolIds, setDetectedToolIds] = useState<number[]>([]);
 
   const uploaderRef = useRef<MediaUploaderHandle>(null);
   const turnstileRef = useRef<TurnstileHandle>(null);
@@ -371,6 +374,13 @@ function ProjectFormBody({
   /** Only empty fields are filled, so whatever the maker typed stays. */
   function fillFrom(suggestion: AutofillSuggestion) {
     const filled = autofillKeys.filter((key) => !values[key].trim() && suggestion[key]);
+    const toolIdBySlug = new Map(tools.map((tool) => [tool.slug, tool.id]));
+    const detected = values.toolIds.length
+      ? []
+      : suggestion.toolSlugs
+          .flatMap((slug) => toolIdBySlug.get(slug) ?? [])
+          .slice(0, PROJECT_LIMITS.maxTools);
+    setDetectedToolIds(detected);
     setValues((previous) => ({
       ...previous,
       title: previous.title.trim() ? previous.title : (suggestion.title ?? previous.title),
@@ -384,6 +394,7 @@ function ProjectFormBody({
       contentLang:
         isCreate && suggestion.contentLang ? suggestion.contentLang : previous.contentLang,
       buildEffort: previous.buildEffort || (suggestion.effort ?? ""),
+      toolIds: previous.toolIds.length ? previous.toolIds : detected,
     }));
     setAutofilled((previous) => new Set([...previous, ...filled]));
     setSuggestedEffort(suggestion.effort);
@@ -481,6 +492,7 @@ function ProjectFormBody({
     setFound(null);
     setAutofilled(new Set());
     setSuggestedEffort(null);
+    setDetectedToolIds([]);
     checkedForRef.current = null;
   }
 
@@ -628,6 +640,7 @@ function ProjectFormBody({
             {...stepProps}
             updateList={updateList}
             suggestedEffort={suggestedEffort}
+            detectedToolIds={detectedToolIds}
             tools={tools}
             quickPickIds={quickPickIds}
             categories={categories}

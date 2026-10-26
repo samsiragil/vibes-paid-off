@@ -21,6 +21,7 @@ export function StepBuild({
   update,
   updateList,
   suggestedEffort,
+  detectedToolIds,
   tools,
   quickPickIds,
   categories,
@@ -30,6 +31,7 @@ export function StepBuild({
     change: (previous: ProjectFormValues[K]) => ProjectFormValues[K],
   ) => void;
   suggestedEffort: BuildEffort | null;
+  detectedToolIds: number[];
   tools: CatalogTool[];
   quickPickIds: number[];
   categories: string[];
@@ -67,6 +69,7 @@ export function StepBuild({
           tools={tools}
           quickPickIds={quickPickIds}
           selectedIds={values.toolIds}
+          detectedIds={detectedToolIds}
           suggestions={values.suggestions}
           error={fieldError("toolIds") ?? fieldError("suggestions")}
           onSelectedChange={(change) => updateList("toolIds", change)}
