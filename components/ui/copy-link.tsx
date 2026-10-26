@@ -6,7 +6,7 @@ import { buttonStyles } from "@/components/ui/button";
 import { cn } from "@/lib/cn";
 
 /** Copies text; true when it worked. */
-async function copyText(text: string) {
+export async function copyText(text: string) {
   try {
     await navigator.clipboard.writeText(text);
     return true;
@@ -16,7 +16,7 @@ async function copyText(text: string) {
 }
 
 /** "Copied" for a moment after a successful copy. */
-function useCopied() {
+export function useCopied() {
   const [copied, setCopied] = useState(false);
   const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
   useEffect(() => () => clearTimeout(timer.current), []);
@@ -31,7 +31,7 @@ function useCopied() {
 }
 
 /** Confirmation mark next to "Tersalin". */
-function CheckIcon() {
+export function CheckIcon() {
   return (
     <svg
       width="16"

@@ -388,6 +388,24 @@
     },
     "keyPrompt": "Key prompt",
     "keyPromptPlaceholder": "Build a cashier app for a corner shop, big buttons, usable without a tutorial.",
+    "promptHelper": {
+      "show": "Show the prompt",
+      "label": "Prompt for your AI agent",
+      "copy": "Copy prompt",
+      "copied": "Prompt copied",
+      "prompt": {
+        "toggle": "Not sure what to write?",
+        "hint": "Copy our prompt into your AI and let it read your project and write the key prompt.",
+        "note": "Works in an AI agent opened in your project folder (Claude Code, Cursor, Codex) or in ChatGPT/Claude.",
+        "after": "Paste the result into the box above, then tidy it up if needed."
+      },
+      "story": {
+        "toggle": "Can't remember the story?",
+        "hint": "Copy our prompt into your AI and let it check your git history and draft the story.",
+        "note": "Works best in an AI agent opened in your project folder (Claude Code, Cursor, Codex), since it can read your git history.",
+        "after": "Pick the moments that fit, press Tell it, then paste and tidy up."
+      }
+    },
     "title": "Title",
     "titlePlaceholder": "Bu Tini's Shop Cashier",
     "tagline": "Tagline",

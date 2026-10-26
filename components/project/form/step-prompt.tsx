@@ -3,6 +3,7 @@
 import { useTranslations } from "next-intl";
 import { cn } from "@/lib/cn";
 import { PROJECT_LIMITS } from "@/lib/validation/project";
+import { AiPromptHelper } from "./ai-prompt-helper";
 import { Answer, fieldId, StepQuestion, type StepProps } from "./parts";
 
 /** Step 3: the key prompt alone, as the page's ruled note with the margin line (README §6). */
@@ -49,6 +50,7 @@ export function StepPrompt({ values, fieldError, errorProps, update }: StepProps
             {values.keyPrompt.length}/{PROJECT_LIMITS.keyPrompt}
           </span>
         </div>
+        <AiPromptHelper step="prompt" values={values} />
       </Answer>
     </>
   );

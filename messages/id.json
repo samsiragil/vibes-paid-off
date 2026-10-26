@@ -388,6 +388,24 @@
     },
     "keyPrompt": "Prompt kunci",
     "keyPromptPlaceholder": "Bikin kasir buat warung kelontong, tombolnya gede, bisa dipakai ibu-ibu tanpa tutorial.",
+    "promptHelper": {
+      "show": "Lihat prompt-nya",
+      "label": "Prompt untuk agen AI",
+      "copy": "Salin prompt",
+      "copied": "Prompt tersalin",
+      "prompt": {
+        "toggle": "Bingung nulisnya?",
+        "hint": "Salin prompt dari kami ke AI-mu, biar dia yang bacain proyekmu dan nulisin prompt kuncinya.",
+        "note": "Bisa dipakai di agen AI yang dibuka di folder proyekmu (Claude Code, Cursor, Codex) atau di ChatGPT/Claude.",
+        "after": "Tempel hasilnya di kolom atas, lalu rapikan kalau perlu."
+      },
+      "story": {
+        "toggle": "Lupa ceritanya?",
+        "hint": "Salin prompt dari kami ke AI-mu, biar dia yang ngecek riwayat git dan nyusun draf ceritanya.",
+        "note": "Paling pas di agen AI yang dibuka di folder proyekmu (Claude Code, Cursor, Codex), karena dia bisa membaca riwayat git.",
+        "after": "Pilih momen yang cocok, tekan Ceritain, lalu tempel dan rapikan."
+      }
+    },
     "title": "Judul",
     "titlePlaceholder": "Kasir Warung Bu Tini",
     "tagline": "Tagline",

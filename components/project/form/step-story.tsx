@@ -4,6 +4,7 @@ import { useTranslations } from "next-intl";
 import type { ProjectFormValues } from "@/lib/projects/form-values";
 import type { StoryMoment } from "@/lib/projects/types";
 import { StoryMoments } from "../story-moments";
+import { AiPromptHelper } from "./ai-prompt-helper";
 import { Answer, fieldId, StepQuestion, type StepProps } from "./parts";
 
 /** Story moments and the form values that hold them ("redo" is lessons). */
@@ -32,6 +33,7 @@ export function StepStory({
           fieldError={(moment) => fieldError(momentKeys[moment])}
           onChange={(moment, value) => update(momentKeys[moment], value)}
         />
+        <AiPromptHelper step="story" values={values} />
         {legacySessions > 0 ? (
           <p className="text-[13px] leading-normal text-muted">
             {t("moments.legacy", { count: legacySessions })}
